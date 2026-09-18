@@ -23,8 +23,9 @@ export default function App() {
   })
 
   return (
-    <div className="app-shell">
+    <>
       <div className="page-bg" aria-hidden="true" />
+      <div className="app-shell">
       <Header live={live} />
       <main>
         <Hero />
@@ -58,6 +59,7 @@ export default function App() {
         </section>
       </main>
       <Footer />
-    </div>
+      </div>
+    </>
   )
 }

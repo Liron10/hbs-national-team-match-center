@@ -35,10 +35,10 @@ body {
 .page-bg {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   background:
-    linear-gradient(180deg, rgba(8, 9, 12, 0.72) 0%, rgba(8, 9, 12, 0.84) 42%, rgba(7, 8, 11, 0.94) 100%),
-    linear-gradient(90deg, rgba(160, 0, 20, 0.18), transparent 46%),
+    linear-gradient(180deg, rgba(8, 9, 12, 0.52) 0%, rgba(8, 9, 12, 0.7) 48%, rgba(7, 8, 11, 0.86) 100%),
+    linear-gradient(90deg, rgba(160, 0, 20, 0.14), transparent 42%),
     url('./assets/stadium-bg.png') center top / cover no-repeat;
   pointer-events: none;
 }
@@ -61,6 +61,8 @@ a:focus-visible {
 }
 
 .app-shell {
+  position: relative;
+  z-index: 1;
   width: min(1120px, calc(100% - 1.5rem));
   margin-inline: auto;
   padding-block: 1.25rem 3rem;
@@ -328,11 +330,17 @@ a:focus-visible {
 
 .match-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9rem;
+  width: 100%;
 }
 
 .match-card {
   padding: 1rem;
+}
+
+.match-card__comp {
+  text-align: center;
 }
 
 .match-card__meta,
@@ -350,26 +358,25 @@ a:focus-visible {
 
 .match-card__line {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 0.5rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.65rem;
   align-items: center;
+  justify-items: center;
   margin: 0.85rem 0 0;
 }
 
 .match-team span {
   line-height: 1.3;
+  text-align: center;
 }
 
 .match-team {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-weight: 700;
-}
-
-.match-team--end {
-  justify-content: flex-end;
-  flex-direction: row-reverse;
+  width: 100%;
 }
 
 .match-card__players h3 {
@@ -616,6 +623,6 @@ a:focus-visible {
 
 @media (min-width: 1024px) {
   .match-list {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

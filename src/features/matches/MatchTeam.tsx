@@ -4,12 +4,11 @@ import { Flag } from '../../components/Flag'
 interface MatchTeamProps {
   team: TeamSide
   label: string
-  align?: 'start' | 'end'
 }
 
-export function MatchTeam({ team, label, align = 'start' }: MatchTeamProps) {
+export function MatchTeam({ team, label }: MatchTeamProps) {
   return (
-    <div className={`match-team match-team--${align}`}>
+    <div className="match-team">
       <Flag code={team.code} title={label} />
       <span>{label}</span>
     </div>
