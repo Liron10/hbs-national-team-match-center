@@ -12,7 +12,7 @@ const emptyCopy: Record<MatchFilter, string> = {
   all: 'אין משחקים כרגע',
   live: 'אין כרגע משחקים בשידור חי',
   today: 'אין משחקים היום',
-  upcoming: 'אין משחקים קרובים',
+  upcoming: 'אין משחקים שטרם התחילו',
   finished: 'אין משחקים שהסתיימו',
 }
 
