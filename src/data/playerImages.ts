@@ -2,12 +2,44 @@ export const playerImages: Record<
   string,
   { file: string; verified: boolean; source?: string }
 > = {
-  'eliel-peretz': { file: 'players/eliel-peretz.svg', verified: false },
-  'idan-nachmias': { file: 'players/idan-nachmias.svg', verified: false },
-  'guy-mizrahi': { file: 'players/guy-mizrahi.svg', verified: false },
-  'niv-yehoshua': { file: 'players/niv-yehoshua.svg', verified: false },
-  'mohammed-abu-rumi': { file: 'players/mohammed-abu-rumi.svg', verified: false },
-  'adrian-ugarriza': { file: 'players/adrian-ugarriza.svg', verified: false },
-  'yoan-stoyanov': { file: 'players/yoan-stoyanov.svg', verified: false },
-  'javon-east': { file: 'players/javon-east.svg', verified: false },
+  "eliel-peretz": {
+    "file": "players/eliel-peretz.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "idan-nachmias": {
+    "file": "players/idan-nachmias.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "guy-mizrahi": {
+    "file": "players/guy-mizrahi.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "niv-yehoshua": {
+    "file": "players/niv-yehoshua.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "mohammed-abu-rumi": {
+    "file": "players/mohammed-abu-rumi.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "adrian-ugarriza": {
+    "file": "players/adrian-ugarriza.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "yoan-stoyanov": {
+    "file": "players/yoan-stoyanov.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  },
+  "javon-east": {
+    "file": "players/javon-east.webp",
+    "verified": true,
+    "source": "transfermarkt"
+  }
 }

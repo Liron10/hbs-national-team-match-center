@@ -1,9 +1,10 @@
 # Player image fetch report
 
-Transfermarkt profile pages were verified manually (club: Hapoel Beer Sheva, matching nationality). Automatic portrait download was not used:
-
-- Wikipedia returned a multi-player match photo for Eliel Peretz, so it was discarded.
-- Direct Transfermarkt CDN URLs without the site's hashed filename did not return usable portraits.
-- No CAPTCHA/Cloudflare bypass was attempted.
-
-All eight players currently use local SVG placeholders in `public/players/`. Replace them with official portraits when available, then update `src/data/playerImages.ts`.
+- Eliel Peretz: saved public/players/eliel-peretz.webp
+- Idan Nachmias: saved public/players/idan-nachmias.webp
+- Guy Mizrahi: saved public/players/guy-mizrahi.webp
+- Niv Yehoshua: saved public/players/niv-yehoshua.webp
+- Muhammad Abu Rumi: saved public/players/mohammed-abu-rumi.webp
+- Adrián Ugarriza: saved public/players/adrian-ugarriza.webp
+- Yoan Stoyanov: saved public/players/yoan-stoyanov.webp
+- Javon East: saved public/players/javon-east.webp

@@ -66,11 +66,10 @@ npm run fetch-player-images
 
 הסקריפט:
 
-1. מאמת את מזהה Transfermarkt הידוע
-2. מנסה תמונת Wikipedia ציבורית אם קיימת
-3. מנסה URL ישיר של CDN תמונות, בלי לעקוף CAPTCHA / Cloudflare
-4. שומר עותק מקומי ב־`public/players/`
-5. משאיר placeholder אם ההורדה נחסמת
+1. נכנס לעמוד Transfermarkt המאומת של כל שחקן
+2. קורא את דיוקן ה־`og:image` רק אם כתובת התמונה כוללת את מזהה השחקן
+3. שומר עותק מקומי ב־`public/players/`
+4. לא עוקף CAPTCHA / Cloudflare; אם העמוד חסום נשאר placeholder
 
 אין hotlink קבוע ל־Transfermarkt.
 

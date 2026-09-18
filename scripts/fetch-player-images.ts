@@ -1,156 +1,81 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { PLAYER_IMAGE_CATALOG, placeholderSvg } from './player-catalog.ts'
 
-interface CatalogPlayer {
-  id: string
-  nameHe: string
-  nameEn: string
-  nationalTeam: string
-  transfermarktId: string
-  transfermarktUrl: string
-  wikipediaTitle?: string
-  initials: string
+const BROWSER_UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+
+interface FetchResult {
+  ok: boolean
+  blocked: boolean
+  status?: number
+  bytes?: Uint8Array
+  contentType?: string
+  text?: string
 }
 
-export const PLAYER_IMAGE_CATALOG: CatalogPlayer[] = [
-  {
-    id: 'eliel-peretz',
-    nameHe: 'אליאל פרץ',
-    nameEn: 'Eliel Peretz',
-    nationalTeam: 'Israel',
-    transfermarktId: '444018',
-    transfermarktUrl: 'https://www.transfermarkt.com/eliel-peretz/profil/spieler/444018',
-    wikipediaTitle: 'Eliel Peretz',
-    initials: 'אפ',
-  },
-  {
-    id: 'idan-nachmias',
-    nameHe: 'עידן נחמיאס',
-    nameEn: 'Idan Nachmias',
-    nationalTeam: 'Israel',
-    transfermarktId: '408422',
-    transfermarktUrl: 'https://www.transfermarkt.com/idan-nachmias/profil/spieler/408422',
-    wikipediaTitle: 'Idan Nachmias',
-    initials: 'ענ',
-  },
-  {
-    id: 'guy-mizrahi',
-    nameHe: 'גיא מזרחי',
-    nameEn: 'Guy Mizrahi',
-    nationalTeam: 'Israel',
-    transfermarktId: '704071',
-    transfermarktUrl: 'https://www.transfermarkt.com/guy-mizrahi/profil/spieler/704071',
-    wikipediaTitle: 'Guy Mizrahi',
-    initials: 'גמ',
-  },
-  {
-    id: 'niv-yehoshua',
-    nameHe: 'ניב יהושע',
-    nameEn: 'Niv Yehoshua',
-    nationalTeam: 'Israel U21',
-    transfermarktId: '926457',
-    transfermarktUrl: 'https://www.transfermarkt.com/niv-yehoshua/profil/spieler/926457',
-    wikipediaTitle: 'Niv Yehoshua',
-    initials: 'ני',
-  },
-  {
-    id: 'mohammed-abu-rumi',
-    nameHe: 'מוחמד אבו רומי',
-    nameEn: 'Muhammad Abu Rumi',
-    nationalTeam: 'Israel U21',
-    transfermarktId: '1078063',
-    transfermarktUrl:
-      'https://www.transfermarkt.com/muhammad-abu-rumi/profil/spieler/1078063',
-    wikipediaTitle: 'Muhammad Abu Rumi',
-    initials: 'מא',
-  },
-  {
-    id: 'adrian-ugarriza',
-    nameHe: 'אדריאן אוגריסה',
-    nameEn: 'Adrián Ugarriza',
-    nationalTeam: 'Peru',
-    transfermarktId: '325726',
-    transfermarktUrl: 'https://www.transfermarkt.com/adrian-ugarriza/profil/spieler/325726',
-    wikipediaTitle: 'Adrián Ugarriza',
-    initials: 'או',
-  },
-  {
-    id: 'yoan-stoyanov',
-    nameHe: 'יואן סטויאנוב',
-    nameEn: 'Yoan Stoyanov',
-    nationalTeam: 'Bulgaria',
-    transfermarktId: '848641',
-    transfermarktUrl: 'https://www.transfermarkt.com/yoan-stoyanov/profil/spieler/848641',
-    wikipediaTitle: 'Yoni Stoyanov',
-    initials: 'יס',
-  },
-  {
-    id: 'javon-east',
-    nameHe: 'ג׳בון איסט',
-    nameEn: 'Javon East',
-    nationalTeam: 'Jamaica',
-    transfermarktId: '563479',
-    transfermarktUrl: 'https://www.transfermarkt.com/javon-east/profil/spieler/563479',
-    wikipediaTitle: 'Javon East',
-    initials: 'גי',
-  },
-]
-
-function placeholderSvg(initials: string, name: string): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="${name}">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2a1114"/>
-      <stop offset="1" stop-color="#14161d"/>
-    </linearGradient>
-  </defs>
-  <rect width="256" height="256" fill="url(#g)"/>
-  <circle cx="128" cy="96" r="42" fill="#3a181c"/>
-  <ellipse cx="128" cy="210" rx="78" ry="54" fill="#3a181c"/>
-  <text x="128" y="112" text-anchor="middle" fill="#ffd3d0" font-size="42" font-family="Arial, sans-serif">${initials}</text>
-</svg>
-`
-}
-
-async function tryFetch(url: string): Promise<{ ok: boolean; blocked: boolean; bytes?: Uint8Array; contentType?: string }> {
+async function request(url: string, accept: string): Promise<FetchResult> {
   try {
     const response = await fetch(url, {
       redirect: 'follow',
       headers: {
-        Accept: 'image/*,application/json;q=0.9,*/*;q=0.1',
-        'User-Agent': 'HBSMatchCenter/1.0 (educational local asset fetch; +https://github.com/)',
+        Accept: accept,
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': BROWSER_UA,
+        Referer: 'https://www.transfermarkt.com/',
       },
     })
     const status = response.status
     if (status === 403 || status === 429 || status === 503) {
-      return { ok: false, blocked: true }
+      return { ok: false, blocked: true, status }
     }
-    if (!response.ok) return { ok: false, blocked: false }
+    if (!response.ok) return { ok: false, blocked: false, status }
     const contentType = response.headers.get('content-type') ?? ''
-    if (contentType.includes('text/html')) return { ok: false, blocked: true }
     const bytes = new Uint8Array(await response.arrayBuffer())
-    if (bytes.byteLength < 800) return { ok: false, blocked: false }
-    return { ok: true, blocked: false, bytes, contentType }
+    const text = new TextDecoder('utf-8', { fatal: false }).decode(bytes)
+    return { ok: true, blocked: false, status, bytes, contentType, text }
   } catch {
     return { ok: false, blocked: false }
   }
 }
 
-function extensionFor(contentType: string, url: string): string {
-  if (contentType.includes('webp') || url.endsWith('.webp')) return 'webp'
-  if (contentType.includes('png') || url.endsWith('.png')) return 'png'
-  if (contentType.includes('jpeg') || contentType.includes('jpg') || url.endsWith('.jpg')) {
-    return 'jpg'
+function looksProtected(html: string): boolean {
+  return /just a moment|cf-browser-verification|attention required|access denied|captcha/i.test(
+    html,
+  )
+}
+
+function extractOgImage(html: string): string | undefined {
+  const patterns = [
+    /property=["']og:image["'][^>]*content=["']([^"']+)["']/i,
+    /content=["']([^"']+)["'][^>]*property=["']og:image["']/i,
+  ]
+  for (const pattern of patterns) {
+    const match = html.replaceAll('\n', ' ').match(pattern)
+    if (match?.[1]) return match[1]
   }
-  return 'img'
+  return undefined
+}
+
+function isPlayerPortrait(url: string, transfermarktId: string): boolean {
+  const lower = url.toLowerCase()
+  if (!lower.includes('transfermarkt.technology/portrait/')) return false
+  if (lower.includes('default') || lower.includes('placeholder') || lower.includes('kplacehalter')) {
+    return false
+  }
+  return lower.includes(`/${transfermarktId}-`) || lower.includes(`/${transfermarktId}.`)
+}
+
+function extensionFor(contentType: string, url: string): string {
+  if (contentType.includes('webp') || url.includes('.webp')) return 'webp'
+  if (contentType.includes('png') || url.includes('.png')) return 'png'
+  return 'jpg'
 }
 
 async function main() {
   const outDir = path.resolve('public/players')
   await mkdir(outDir, { recursive: true })
   const report: string[] = ['# Player image fetch report', '']
-  let blocked = false
   const imageMap: Record<string, { file: string; verified: boolean; source?: string }> = {}
 
   for (const player of PLAYER_IMAGE_CATALOG) {
@@ -161,50 +86,58 @@ async function main() {
     )
     imageMap[player.id] = { file: `players/${player.id}.svg`, verified: false }
 
-    const candidates = [
-      `https://img.a.transfermarkt.technology/portrait/header/${player.transfermarktId}.jpg`,
-      `https://tmssl.akamaized.net/images/portrait/header/${player.transfermarktId}.jpg`,
-    ]
+    const page = await request(player.transfermarktUrl, 'text/html,application/xhtml+xml')
+    if (page.blocked || (page.text && looksProtected(page.text))) {
+      report.push(`- ${player.nameEn}: Transfermarkt blocked the request. Placeholder kept.`)
+      continue
+    }
+    if (!page.ok || !page.text) {
+      report.push(`- ${player.nameEn}: profile page was not readable. Placeholder kept.`)
+      continue
+    }
 
-    let saved = false
-    for (const url of candidates) {
-      const result = await tryFetch(url)
-      if (result.blocked) {
-        blocked = true
-        report.push(`- ${player.nameEn}: blocked by remote protection, left placeholder.`)
-        saved = true
-        break
-      }
-      if (result.ok && result.bytes && result.contentType) {
-        const ext = extensionFor(result.contentType, url)
-        const file = `${player.id}.${ext}`
-        await writeFile(path.join(outDir, file), result.bytes)
-        imageMap[player.id] = {
-          file: `players/${file}`,
-          verified: true,
-          source: 'transfermarkt-cdn',
-        }
-        report.push(`- ${player.nameEn}: saved public/players/${file}`)
-        saved = true
-        break
-      }
+    const ogImage = extractOgImage(page.text)
+    if (!ogImage || !isPlayerPortrait(ogImage, player.transfermarktId)) {
+      report.push(
+        `- ${player.nameEn}: no verified portrait URL for ID ${player.transfermarktId}. Placeholder kept.`,
+      )
+      continue
     }
-    if (!saved) {
-      report.push(`- ${player.nameEn}: no public image downloaded, placeholder kept.`)
+
+    const image = await request(ogImage, 'image/jpeg,image/webp,image/png,image/*')
+    if (image.blocked) {
+      report.push(`- ${player.nameEn}: image CDN blocked the request. Placeholder kept.`)
+      continue
     }
-    await new Promise((resolve) => setTimeout(resolve, 400))
+    if (
+      !image.ok ||
+      !image.bytes ||
+      (image.contentType && image.contentType.includes('text/html')) ||
+      image.bytes.byteLength < 1500
+    ) {
+      report.push(`- ${player.nameEn}: portrait download failed. Placeholder kept.`)
+      continue
+    }
+
+    const ext = extensionFor(image.contentType ?? '', ogImage)
+    const file = `${player.id}.${ext}`
+    await writeFile(path.join(outDir, file), image.bytes)
+    imageMap[player.id] = {
+      file: `players/${file}`,
+      verified: true,
+      source: 'transfermarkt',
+    }
+    report.push(`- ${player.nameEn}: saved public/players/${file}`)
+    await new Promise((resolve) => setTimeout(resolve, 900))
   }
 
-  report.push('')
-  report.push(blocked ? 'Stopped additional Transfermarkt scraping after protection signals.' : '')
-  await writeFile(path.resolve('public/players/FETCH-REPORT.md'), report.join('\n'), 'utf8')
-  const serialized = JSON.stringify(imageMap, null, 2)
+  await writeFile(path.resolve('public/players/FETCH-REPORT.md'), `${report.join('\n')}\n`, 'utf8')
   await writeFile(
     path.resolve('src/data/playerImages.ts'),
     `export const playerImages: Record<
   string,
   { file: string; verified: boolean; source?: string }
-> = ${serialized}
+> = ${JSON.stringify(imageMap, null, 2)}
 `,
     'utf8',
   )
