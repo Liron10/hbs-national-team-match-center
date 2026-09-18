@@ -1,4 +1,5 @@
 import type { Match } from '../../types'
+import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { formatMatchDate, formatMatchTime } from '../../utils/datetime'
 import { hasVerifiedAppearance, matchLineup } from '../../utils/matchLine'
@@ -34,6 +35,7 @@ export function MatchCard({ match, now }: MatchCardProps) {
         </p>
         <MatchTeam team={right.team} label={right.label} align="end" />
       </div>
+      <KickoffCountdown kickoff={match.kickoff} status={match.status} />
       {showPlayers ? (
         <section className="match-card__players" aria-label="שחקני הפועל באר שבע">
           <h3>שחקני הפועל באר שבע</h3>

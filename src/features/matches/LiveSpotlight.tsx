@@ -1,5 +1,6 @@
 import type { Match } from '../../types'
 import { Flag } from '../../components/Flag'
+import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { isLiveStatus } from '../../utils/matchStatus'
 import { matchHeadline, matchLineup } from '../../utils/matchLine'
 
@@ -27,6 +28,7 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
         <span>{right.label}</span>
         <Flag code={right.team.code} title={right.label} className="flag--lg" />
       </div>
+      <KickoffCountdown kickoff={match.kickoff} status={match.status} />
     </section>
   )
 }

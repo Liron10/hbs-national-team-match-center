@@ -346,6 +346,27 @@ a:focus-visible {
   font-size: 0.92rem;
 }
 
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.countdown__time {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: Oswald, Heebo, sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
 .appearance {
   gap: 0.75rem;
   padding: 0.55rem 0;
