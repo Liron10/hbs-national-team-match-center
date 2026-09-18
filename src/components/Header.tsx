@@ -1,28 +1,27 @@
-import { Shield } from 'lucide-react'
+import { ClubLogo } from './ClubLogo'
 
 interface HeaderProps {
   live: boolean
+  windowLabel: string
 }
 
-export function Header({ live }: HeaderProps) {
+export function Header({ live, windowLabel }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="site-header__brand">
-        <span className="site-header__mark" aria-hidden="true">
-          <Shield size={18} />
-        </span>
+        <ClubLogo />
         <div>
           <p className="site-header__kicker">הפועל באר שבע</p>
-          <p className="site-header__title">Match Center</p>
+          <p className="site-header__title">האדומים בנבחרות</p>
         </div>
       </div>
       {live ? (
         <p className="site-header__live" aria-live="polite">
           <span className="live-dot" />
-          יש משחק חי עכשיו
+          LIVE
         </p>
       ) : (
-        <p className="site-header__meta">פגרת הנבחרות 2026/27</p>
+        <p className="site-header__meta">{windowLabel}</p>
       )}
     </header>
   )

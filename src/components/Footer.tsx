@@ -1,8 +1,10 @@
+import { ClubLogo } from './ClubLogo'
+
 export function Footer() {
   return (
     <footer className="site-footer">
-      <p>מוצר אוהדים לא רשמי של הפועל באר שבע.</p>
-      <p>הנתונים מגיעים מקובץ מקומי שניתן לעדכן בלי לגעת בממשק.</p>
+      <ClubLogo className="club-logo--footer" />
+      <p>© {new Date().getFullYear()} הפועל באר שבע | כל הזכויות שמורות</p>
     </footer>
   )
 }

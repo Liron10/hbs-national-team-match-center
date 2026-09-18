@@ -37,7 +37,7 @@ export function Flag({ code, title, className = '' }: FlagProps) {
         viewBox={israel ? '0 0 220 154' : '0 0 60 42'}
         role="img"
         aria-label={title}
-        className="h-full w-full rounded-[3px] shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+        className="flag__svg"
       >
         <title>{title}</title>
         <g dangerouslySetInnerHTML={{ __html: flagSvgs[code] }} />

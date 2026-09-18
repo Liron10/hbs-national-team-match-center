@@ -10,9 +10,10 @@ import { PlayerAppearanceRow } from './PlayerAppearanceRow'
 interface MatchCardProps {
   match: Match
   now: Date
+  showCountdown?: boolean
 }
 
-export function MatchCard({ match, now }: MatchCardProps) {
+export function MatchCard({ match, now, showCountdown = false }: MatchCardProps) {
   const status = displayStatus(match, now)
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const center = hasScore
@@ -30,15 +31,18 @@ export function MatchCard({ match, now }: MatchCardProps) {
       <p className="match-card__comp">{match.competitionHe}</p>
       <div className="match-card__line">
         <MatchTeam team={left.team} label={left.label} />
-        <p className="match-card__score" aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}>
-          {center}
-        </p>
+        <div className="match-card__center">
+          {hasScore ? null : <span className="match-card__vs">VS</span>}
+          <p className="match-card__score" aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}>
+            {center}
+          </p>
+        </div>
         <MatchTeam team={right.team} label={right.label} />
       </div>
-      <KickoffCountdown kickoff={match.kickoff} status={match.status} />
+      {showCountdown ? <KickoffCountdown kickoff={match.kickoff} status={match.status} /> : null}
       {showPlayers ? (
-        <section className="match-card__players" aria-label="שחקני הפועל באר שבע">
-          <h3>שחקני הפועל באר שבע</h3>
+        <section className="match-card__players" aria-label="נציגי הפועל באר שבע">
+          <h3>נציגי הפועל באר שבע</h3>
           {match.players.map((appearance) => (
             <PlayerAppearanceRow
               key={appearance.playerId}

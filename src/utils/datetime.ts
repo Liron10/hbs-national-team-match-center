@@ -47,3 +47,29 @@ export function isSameJerusalemDay(a: string | Date, b: string | Date = new Date
 export function isBeforeJerusalemDay(iso: string, now = new Date()): boolean {
   return dayKeyFormatter.format(toJerusalemDate(iso)) < dayKeyFormatter.format(now)
 }
+
+const updatedDateFormatter = new Intl.DateTimeFormat('he-IL', {
+  day: 'numeric',
+  month: 'numeric',
+  year: '2-digit',
+  timeZone: TIME_ZONE,
+})
+
+export function formatUpdatedAt(iso: string): string {
+  const date = toJerusalemDate(iso)
+  const day = updatedDateFormatter.format(date).replaceAll('/', '.')
+  return `${day} | ${timeFormatter.format(date)}`
+}
+
+export function formatWindowLabel(window: string): string {
+  const [year, month] = window.split('-').map(Number)
+  if (!year || !month) return 'פגרת הנבחרות'
+  const label = new Intl.DateTimeFormat('he-IL', { month: 'long', year: 'numeric' }).format(
+    new Date(year, month - 1, 1),
+  )
+  return `פגרת הנבחרות | ${label}`
+}
+
+export function latestUpdateIso(timestamps: string[], fallback: string): string {
+  return timestamps.reduce((latest, value) => (value > latest ? value : latest), fallback)
+}

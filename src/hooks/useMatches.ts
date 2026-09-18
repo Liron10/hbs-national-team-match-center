@@ -16,7 +16,7 @@ export function useMatches() {
       const next = await provider.getMatches()
       setMatches(next)
     } catch {
-      setError('לא ניתן לטעון את לוח המשחקים כרגע.')
+      setError('לא ניתן להציג את המשחקים כרגע.')
     } finally {
       setLoading(false)
     }
