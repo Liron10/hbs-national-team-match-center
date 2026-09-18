@@ -1,37 +1,15 @@
+import { assetUrl } from '../utils/paths'
+
 interface ClubLogoProps {
   className?: string
 }
 
 export function ClubLogo({ className = '' }: ClubLogoProps) {
   return (
-    <svg
+    <img
+      src={assetUrl('hbs-crest.png')}
+      alt="הפועל באר שבע"
       className={`club-logo ${className}`.trim()}
-      viewBox="0 0 200 228"
-      role="img"
-      aria-label="הפועל באר שבע"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polygon
-        fill="#d4a017"
-        points="100,6 108.5,28 132,28 113,42 120.5,64 100,50 79.5,64 87,42 68,28 91.5,28"
-      />
-      <circle cx="100" cy="128" r="92" fill="#e10600" />
-      <circle cx="100" cy="128" r="82" fill="none" stroke="#fff" strokeWidth="4" />
-      <circle cx="100" cy="128" r="74" fill="#c10a00" />
-      <path
-        d="M100 54c-41 0-74 33-74 74 0 12 3 24 8 34 18-28 40-42 66-42s48 14 66 42c5-10 8-22 8-34 0-41-33-74-74-74z"
-        fill="#fff"
-      />
-      <rect x="88" y="72" width="24" height="38" fill="#e10600" />
-      <rect x="82" y="64" width="36" height="10" fill="#e10600" />
-      <rect x="94" y="78" width="5" height="8" fill="#fff" />
-      <rect x="102" y="78" width="5" height="8" fill="#fff" />
-      <rect x="94" y="90" width="5" height="8" fill="#fff" />
-      <rect x="102" y="90" width="5" height="8" fill="#fff" />
-      <path d="M26 128h148c0 41-33 74-74 74s-74-33-74-74z" fill="#1a1a1a" />
-      <path d="M100 196l18-14-7 22z" fill="#fff" />
-      <path d="M82 182h36l-18 14z" fill="#fff" />
-      <circle cx="100" cy="168" r="10" fill="none" stroke="#fff" strokeWidth="2.4" />
-    </svg>
+    />
   )
 }

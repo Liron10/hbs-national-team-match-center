@@ -90,7 +90,7 @@ a:focus-visible {
 .club-logo {
   display: block;
   width: 2.85rem;
-  height: 3.25rem;
+  height: auto;
   flex-shrink: 0;
 }
 
