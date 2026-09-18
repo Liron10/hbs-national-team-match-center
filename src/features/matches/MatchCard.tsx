@@ -1,7 +1,7 @@
 import type { Match } from '../../types'
 import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
-import { formatMatchDate, formatMatchTime } from '../../utils/datetime'
+import { formatMatchDate, formatMatchTime, formatOvernightContext } from '../../utils/datetime'
 import { matchLineup } from '../../utils/matchLine'
 import { displayStatus } from '../../utils/matchStatus'
 import { MatchTeam } from './MatchTeam'
@@ -20,6 +20,7 @@ export function MatchCard({ match, now }: MatchCardProps) {
     : formatMatchTime(match.kickoff)
   const { left, right } = matchLineup(match)
   const showPlayers = match.players.length > 0
+  const overnight = formatOvernightContext(match.kickoff)
 
   return (
     <article className="match-card">
@@ -38,6 +39,7 @@ export function MatchCard({ match, now }: MatchCardProps) {
         </div>
         <MatchTeam team={right.team} label={right.label} />
       </div>
+      {overnight ? <p className="overnight-note">{overnight}</p> : null}
       <KickoffCountdown kickoff={match.kickoff} status={match.status} />
       {showPlayers ? (
         <section className="match-card__players" aria-label="נציגי הפועל באר שבע">
