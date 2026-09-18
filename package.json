@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "preview": "vite preview",
-    "test": "tsx --test src/utils/matchStatus.test.ts src/utils/sortMatches.test.ts src/utils/datetime.test.ts",
+    "test": "tsx --test src/utils/matchStatus.test.ts src/utils/sortMatches.test.ts src/utils/datetime.test.ts src/utils/matchLine.test.ts",
     "fetch-player-images": "tsx scripts/fetch-player-images.ts",
     "refresh-data": "tsx scripts/refresh-data.ts"
   },

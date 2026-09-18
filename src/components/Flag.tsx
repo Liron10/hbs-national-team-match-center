@@ -7,8 +7,8 @@ interface FlagProps {
 }
 
 const flagSvgs: Record<CountryCode, string> = {
-  ISR: `<rect width="60" height="42" fill="#fff"/><rect y="8" width="60" height="5" fill="#0038b8"/><rect y="29" width="60" height="5" fill="#0038b8"/><polygon points="30,13 33.5,23.5 22,17 38,17 26.5,23.5" fill="none" stroke="#0038b8" stroke-width="1.4"/>`,
-  'ISR-U21': `<rect width="60" height="42" fill="#fff"/><rect y="8" width="60" height="5" fill="#0038b8"/><rect y="29" width="60" height="5" fill="#0038b8"/><polygon points="30,13 33.5,23.5 22,17 38,17 26.5,23.5" fill="none" stroke="#0038b8" stroke-width="1.4"/>`,
+  ISR: `<rect width="220" height="154" fill="#fff"/><rect y="22" width="220" height="22" fill="#0038b8"/><rect y="110" width="220" height="22" fill="#0038b8"/><path fill="none" stroke="#0038b8" stroke-width="5.2" stroke-linejoin="miter" d="M110 49 L137 96 H83 Z"/><path fill="none" stroke="#0038b8" stroke-width="5.2" stroke-linejoin="miter" d="M110 105 L83 58 H137 Z"/>`,
+  'ISR-U21': `<rect width="220" height="154" fill="#fff"/><rect y="22" width="220" height="22" fill="#0038b8"/><rect y="110" width="220" height="22" fill="#0038b8"/><path fill="none" stroke="#0038b8" stroke-width="5.2" stroke-linejoin="miter" d="M110 49 L137 96 H83 Z"/><path fill="none" stroke="#0038b8" stroke-width="5.2" stroke-linejoin="miter" d="M110 105 L83 58 H137 Z"/>`,
   PER: `<rect width="20" height="42" fill="#d91023"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#d91023"/>`,
   BGR: `<rect width="60" height="14" fill="#fff"/><rect y="14" width="60" height="14" fill="#00966e"/><rect y="28" width="60" height="14" fill="#d62612"/>`,
   JAM: `<polygon points="0,0 60,0 30,21" fill="#000"/><polygon points="0,42 60,42 30,21" fill="#000"/><polygon points="0,0 0,42 30,21" fill="#009b3a"/><polygon points="60,0 60,42 30,21" fill="#009b3a"/><polygon points="0,0 60,42 56,42 0,4" fill="#fed100"/><polygon points="60,0 4,42 0,42 56,0" fill="#fed100"/>`,
@@ -30,10 +30,11 @@ const flagSvgs: Record<CountryCode, string> = {
 }
 
 export function Flag({ code, title, className = '' }: FlagProps) {
+  const israel = code === 'ISR' || code === 'ISR-U21'
   return (
     <span className={`flag ${className}`.trim()} title={title}>
       <svg
-        viewBox="0 0 60 42"
+        viewBox={israel ? '0 0 220 154' : '0 0 60 42'}
         role="img"
         aria-label={title}
         className="h-full w-full rounded-[3px] shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"

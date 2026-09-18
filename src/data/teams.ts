@@ -47,7 +47,7 @@ export const teams: Record<CountryCode, TeamSide> = {
   AUT: { code: 'AUT', nameHe: 'אוסטריה', nameEn: 'Austria' },
   IRL: { code: 'IRL', nameHe: 'אירלנד', nameEn: 'Republic of Ireland' },
   XKX: { code: 'XKX', nameHe: 'קוסובו', nameEn: 'Kosovo' },
-  USA: { code: 'USA', nameHe: 'ארצות הברית', nameEn: 'United States' },
+  USA: { code: 'USA', nameHe: 'ארה״ב', nameEn: 'United States' },
   MEX: { code: 'MEX', nameHe: 'מקסיקו', nameEn: 'Mexico' },
   CAN: { code: 'CAN', nameHe: 'קנדה', nameEn: 'Canada' },
   COL: { code: 'COL', nameHe: 'קולומביה', nameEn: 'Colombia' },

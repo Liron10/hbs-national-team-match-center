@@ -6,7 +6,6 @@ import { MatchListSkeleton } from './components/MatchListSkeleton'
 import { FilterTabs } from './features/matches/FilterTabs'
 import { LiveSpotlight } from './features/matches/LiveSpotlight'
 import { MatchList } from './features/matches/MatchList'
-import { PlayersGrid } from './features/players/PlayersGrid'
 import { useMatchBoard } from './hooks/useMatchBoard'
 import { useMatches } from './hooks/useMatches'
 import { useNow } from './hooks/useNow'
@@ -16,7 +15,7 @@ import { sortMatches } from './utils/sortMatches'
 export default function App() {
   const now = useNow()
   const { matches, loading, error, refresh } = useMatches()
-  const { filter, setFilter, playerId, togglePlayer, visible } = useMatchBoard(matches, now)
+  const { filter, setFilter, visible } = useMatchBoard(matches, now)
   const live = hasLiveMatches(matches, now)
   const spotlight = sortMatches(matches, now).find((match) => {
     const bucket = deriveBucket(match, now)
@@ -34,7 +33,6 @@ export default function App() {
           </p>
         ) : null}
         {spotlight ? <LiveSpotlight match={spotlight} /> : null}
-        <PlayersGrid matches={matches} selectedId={playerId} onSelect={togglePlayer} />
         <section className="board" aria-labelledby="board-heading">
           <div className="section-heading">
             <h2 id="board-heading">לוח המשחקים</h2>
