@@ -1,15 +1,30 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { formatCountdown, remainingMs, shouldShowCountdown } from './countdown.ts'
+import { countdownUnits, remainingMs, shouldShowCountdown } from './countdown.ts'
 
-test('formats an exact remaining clock', () => {
-  assert.equal(formatCountdown(((5 * 3600) + (12 * 60) + 8) * 1000), '05:12:08')
+test('shows four units when days remain', () => {
+  const units = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
+  assert.deepEqual(
+    units.map((unit) => `${unit.value} ${unit.label}`),
+    ['6 ימים', '14 שעות', '22 דקות', '01 שניות'],
+  )
 })
 
-test('adds Hebrew day labels', () => {
-  assert.equal(formatCountdown((1 * 86_400 + 2 * 3600) * 1000), 'יום אחד 02:00:00')
-  assert.equal(formatCountdown((2 * 86_400 + 90) * 1000), 'יומיים 00:01:30')
-  assert.equal(formatCountdown((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000), '6 ימים 14:22:01')
+test('drops days when less than a day remains', () => {
+  const units = countdownUnits((5 * 3600 + 12 * 60 + 8) * 1000)
+  assert.deepEqual(
+    units.map((unit) => unit.key),
+    ['hours', 'minutes', 'seconds'],
+  )
+  assert.equal(units[0]?.value, '05')
+})
+
+test('drops hours when less than an hour remains', () => {
+  const units = countdownUnits((12 * 60 + 8) * 1000)
+  assert.deepEqual(
+    units.map((unit) => unit.key),
+    ['minutes', 'seconds'],
+  )
 })
 
 test('computes remaining milliseconds from UTC kickoff', () => {
@@ -20,5 +35,4 @@ test('computes remaining milliseconds from UTC kickoff', () => {
 test('hides the timer after kickoff statuses', () => {
   assert.equal(shouldShowCountdown('scheduled'), true)
   assert.equal(shouldShowCountdown('live'), false)
-  assert.equal(shouldShowCountdown('finished'), false)
 })

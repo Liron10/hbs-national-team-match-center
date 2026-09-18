@@ -2,7 +2,7 @@ import type { Match } from '../../types'
 import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { formatMatchDate, formatMatchTime } from '../../utils/datetime'
-import { hasVerifiedAppearance, matchLineup } from '../../utils/matchLine'
+import { hasVerifiedAppearance, isIsraelNationalSide, matchLineup, ourNationalSide } from '../../utils/matchLine'
 import { displayStatus } from '../../utils/matchStatus'
 import { MatchTeam } from './MatchTeam'
 import { PlayerAppearanceRow } from './PlayerAppearanceRow'
@@ -19,7 +19,8 @@ export function MatchCard({ match, now }: MatchCardProps) {
     ? `${match.homeScore}–${match.awayScore}`
     : formatMatchTime(match.kickoff)
   const { left, right } = matchLineup(match)
-  const showPlayers = hasVerifiedAppearance(match)
+  const israelMatch = isIsraelNationalSide(ourNationalSide(match).code)
+  const showPlayers = israelMatch || hasVerifiedAppearance(match)
 
   return (
     <article className="match-card">
@@ -40,7 +41,11 @@ export function MatchCard({ match, now }: MatchCardProps) {
         <section className="match-card__players" aria-label="שחקני הפועל באר שבע">
           <h3>שחקני הפועל באר שבע</h3>
           {match.players.map((appearance) => (
-            <PlayerAppearanceRow key={appearance.playerId} appearance={appearance} />
+            <PlayerAppearanceRow
+              key={appearance.playerId}
+              appearance={appearance}
+              compact={appearance.squadStatus === 'unknown'}
+            />
           ))}
         </section>
       ) : null}

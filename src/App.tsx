@@ -24,6 +24,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <div className="page-bg" aria-hidden="true" />
       <Header live={live} />
       <main>
         <Hero />

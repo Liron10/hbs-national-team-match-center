@@ -4,13 +4,13 @@
 :root {
   color-scheme: dark;
   --bg: #0b0c10;
-  --bg-elev: #12141b;
-  --card: #171a22;
-  --line: rgba(255, 255, 255, 0.08);
-  --text: #f5f5f6;
-  --muted: #a4a7b0;
+  --bg-elev: rgba(12, 14, 18, 0.88);
+  --card: rgba(14, 16, 22, 0.92);
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #f7f7f8;
+  --muted: #d4d7de;
   --red: #e10600;
-  --red-soft: rgba(225, 6, 0, 0.16);
+  --red-soft: rgba(225, 6, 0, 0.2);
   --focus: #ffffff;
   font-family: Heebo, 'Segoe UI', Arial, sans-serif;
   background: var(--bg);
@@ -29,9 +29,24 @@ body,
 
 body {
   margin: 0;
+  background: #07080b;
+}
+
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   background:
-    radial-gradient(1200px 500px at 80% -10%, rgba(225, 6, 0, 0.18), transparent 50%),
-    linear-gradient(180deg, #14161d 0%, var(--bg) 28%);
+    linear-gradient(180deg, rgba(8, 9, 12, 0.72) 0%, rgba(8, 9, 12, 0.84) 42%, rgba(7, 8, 11, 0.94) 100%),
+    linear-gradient(90deg, rgba(160, 0, 20, 0.18), transparent 46%),
+    url('./assets/stadium-bg.jpg') center top / cover no-repeat;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .page-bg {
+    background-position: 72% top;
+  }
 }
 
 button,
@@ -68,6 +83,11 @@ a:focus-visible {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--card);
+  backdrop-filter: blur(14px);
 }
 
 .site-header__brand {
@@ -113,7 +133,12 @@ a:focus-visible {
 }
 
 .hero {
-  padding: 1.5rem 0 1.25rem;
+  padding: 1.35rem 1.1rem 1.3rem;
+  margin-bottom: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--card);
+  backdrop-filter: blur(14px);
 }
 
 .hero h1,
@@ -123,6 +148,7 @@ a:focus-visible {
   font-size: clamp(2rem, 6vw, 3.6rem);
   line-height: 1.05;
   font-weight: 800;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
 }
 
 .hero__lede,
@@ -154,6 +180,7 @@ a:focus-visible {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 1.1rem;
+  backdrop-filter: blur(14px);
 }
 
 .spotlight {
@@ -207,6 +234,10 @@ a:focus-visible {
 
 .section-heading {
   margin-bottom: 0.9rem;
+}
+
+.section-heading p {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85);
 }
 
 .section-heading p,
@@ -277,7 +308,7 @@ a:focus-visible {
 
 .filter-tabs__btn {
   border: 1px solid var(--line);
-  background: var(--bg-elev);
+  background: var(--card);
   color: var(--text);
   border-radius: 999px;
   padding: 0.55rem 0.9rem;
@@ -347,24 +378,61 @@ a:focus-visible {
 }
 
 .countdown {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 0.4rem;
-  margin: 0.85rem 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0.95rem 0 0;
 }
 
-.countdown__time {
+.countdown--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.countdown--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.countdown--waiting {
+  display: block;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.55rem 0.2rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: rgba(8, 9, 12, 0.88);
+}
+
+.countdown__value {
   direction: ltr;
   unicode-bidi: isolate;
   font-family: Oswald, Heebo, sans-serif;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  color: var(--text);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.countdown--3 .countdown__value {
+  font-size: 1.45rem;
+}
+
+.countdown--2 .countdown__value {
+  font-size: 1.7rem;
+}
+
+.countdown__label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
 }
 
 .appearance {
@@ -502,6 +570,11 @@ a:focus-visible {
 .site-footer {
   margin-top: 2.5rem;
   font-size: 0.88rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--card);
+  backdrop-filter: blur(14px);
 }
 
 @keyframes pulse {
