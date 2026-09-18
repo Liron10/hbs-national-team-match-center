@@ -1,9 +1,12 @@
-name: Refresh match data
+name: Refresh live scores
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
 
 jobs:
   refresh:
@@ -17,5 +20,14 @@ jobs:
       - run: npm ci
       - run: npm run refresh-data
         env:
+          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
-      - run: echo "Manual JSON is the source of truth until an API mapper writes verified matches."
+      - name: Commit live score updates
+        run: |
+          git add src/data/matches.json
+          if git diff --staged --quiet; then
+            echo "No score changes to commit."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Update live scores"
+          git push

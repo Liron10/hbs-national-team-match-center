@@ -35,12 +35,6 @@ export default function App() {
         const bucket = deriveBucket(match, now)
         return bucket === 'live' || bucket === 'today'
       })
-  const featuredMatchId = spotlight
-    ? null
-    : sortMatches(visible, now).find((match) => {
-        const bucket = deriveBucket(match, now)
-        return bucket === 'upcoming' || bucket === 'today'
-      })?.id
 
   return (
     <div className="page">
@@ -81,12 +75,7 @@ export default function App() {
               </div>
             ) : null}
             {!loading && !error ? (
-              <MatchList
-                matches={visible}
-                filter={filter}
-                now={now}
-                featuredMatchId={featuredMatchId}
-              />
+              <MatchList matches={visible} filter={filter} now={now} />
             ) : null}
             {!loading && !error ? (
               <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>

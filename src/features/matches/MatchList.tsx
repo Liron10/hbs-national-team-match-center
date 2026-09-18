@@ -6,7 +6,6 @@ interface MatchListProps {
   matches: Match[]
   filter: MatchFilter
   now: Date
-  featuredMatchId?: string | null
 }
 
 const emptyCopy: Record<MatchFilter, string> = {
@@ -17,7 +16,7 @@ const emptyCopy: Record<MatchFilter, string> = {
   finished: 'אין משחקים שהסתיימו',
 }
 
-export function MatchList({ matches, filter, now, featuredMatchId }: MatchListProps) {
+export function MatchList({ matches, filter, now }: MatchListProps) {
   if (matches.length === 0) {
     return <EmptyState title={emptyCopy[filter]} />
   }
@@ -25,12 +24,7 @@ export function MatchList({ matches, filter, now, featuredMatchId }: MatchListPr
   return (
     <div className="match-list">
       {matches.map((match) => (
-        <MatchCard
-          key={match.id}
-          match={match}
-          now={now}
-          showCountdown={match.id === featuredMatchId}
-        />
+        <MatchCard key={match.id} match={match} now={now} />
       ))}
     </div>
   )

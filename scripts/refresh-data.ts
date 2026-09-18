@@ -1,37 +1,36 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import type { MatchDataset } from '../src/types/index.ts'
+import { fetchFootballSnapshots } from '../src/services/football/fotmob.ts'
+import { applyLiveSnapshots } from '../src/utils/liveScores.ts'
 
-/**
- * Optional Football-Data.org refresh.
- * API keys must stay on the machine / GitHub Action secret, never in the frontend bundle.
- */
-const API_BASE = 'https://api.football-data.org/v4'
+const target = path.resolve('src/data/matches.json')
 
 async function main() {
-  const target = path.resolve('src/data/matches.json')
-  const current = await readFile(target, 'utf8')
-  const key = process.env.FOOTBALL_DATA_API_KEY
+  const current = JSON.parse(await readFile(target, 'utf8')) as MatchDataset
+  const snapshots = await fetchFootballSnapshots(current.matches)
+  const matches = applyLiveSnapshots(current.matches, snapshots)
+  const changed = JSON.stringify(matches) !== JSON.stringify(current.matches)
 
-  if (!key) {
-    console.log('No FOOTBALL_DATA_API_KEY. Keeping existing src/data/matches.json (manual provider).')
+  if (!changed) {
+    console.log('No live score changes.')
     return
   }
 
-  const response = await fetch(`${API_BASE}/matches`, {
-    headers: { 'X-Auth-Token': key },
-  })
-
-  if (!response.ok) {
-    console.error(`Football-Data.org returned ${response.status}. Existing matches.json was not overwritten.`)
-    process.exitCode = 1
-    return
+  const next: MatchDataset = {
+    ...current,
+    meta: {
+      ...current.meta,
+      source: 'api',
+      sourceLabelHe: 'עדכון חי מ-FotMob',
+      sourceLabelEn: 'Live scores from FotMob',
+      updatedAt: new Date().toISOString(),
+    },
+    matches,
   }
 
-  const payload = (await response.json()) as { matches?: unknown[] }
-  const count = payload.matches?.length ?? 0
-  console.log(`Football-Data.org reachable (${count} raw matches).`)
-  console.log('No automatic overwrite: map API payloads in this script before enabling writes.')
-  await writeFile(target, current, 'utf8')
+  await writeFile(target, `${JSON.stringify(next, null, 2)}\n`, 'utf8')
+  console.log(`Updated ${matches.filter((match) => match.status === 'live' || match.status === 'halftime').length} live matches.`)
 }
 
 await main()

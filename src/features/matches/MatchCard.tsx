@@ -10,10 +10,9 @@ import { PlayerAppearanceRow } from './PlayerAppearanceRow'
 interface MatchCardProps {
   match: Match
   now: Date
-  showCountdown?: boolean
 }
 
-export function MatchCard({ match, now, showCountdown = false }: MatchCardProps) {
+export function MatchCard({ match, now }: MatchCardProps) {
   const status = displayStatus(match, now)
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const center = hasScore
@@ -26,7 +25,7 @@ export function MatchCard({ match, now, showCountdown = false }: MatchCardProps)
     <article className="match-card">
       <header className="match-card__meta">
         <time dateTime={match.kickoff}>{formatMatchDate(match.kickoff)}</time>
-        <StatusBadge status={status} />
+        <StatusBadge status={status} clock={match.clock} />
       </header>
       <p className="match-card__comp">{match.competitionHe}</p>
       <div className="match-card__line">
@@ -39,7 +38,7 @@ export function MatchCard({ match, now, showCountdown = false }: MatchCardProps)
         </div>
         <MatchTeam team={right.team} label={right.label} />
       </div>
-      {showCountdown ? <KickoffCountdown kickoff={match.kickoff} status={match.status} /> : null}
+      <KickoffCountdown kickoff={match.kickoff} status={match.status} />
       {showPlayers ? (
         <section className="match-card__players" aria-label="נציגי הפועל באר שבע">
           <h3>נציגי הפועל באר שבע</h3>

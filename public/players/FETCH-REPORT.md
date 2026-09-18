@@ -1,10 +1,10 @@
-# Player image fetch report
+# Club squad portraits
 
-- Eliel Peretz: saved public/players/eliel-peretz.webp
-- Idan Nachmias: saved public/players/idan-nachmias.webp
-- Guy Mizrahi: saved public/players/guy-mizrahi.webp
-- Niv Yehoshua: saved public/players/niv-yehoshua.webp
-- Muhammad Abu Rumi: saved public/players/mohammed-abu-rumi.webp
-- Adrián Ugarriza: saved public/players/adrian-ugarriza.webp
-- Yoan Stoyanov: saved public/players/yoan-stoyanov.webp
-- Javon East: saved public/players/javon-east.webp
+- Adrián Ugarriza: copied Pictures/אדיראן אוגריסה.png
+- אליאל פרץ: eliel-peretz.webp (116530 bytes)
+- עידן נחמיאס: idan-nachmias.png (420016 bytes)
+- גיא מזרחי: guy-mizrahi.webp (117902 bytes)
+- ניב יהושע: niv-yehoshua.webp (113240 bytes)
+- מוחמד אבו רומי: mohammed-abu-rumi.webp (119154 bytes)
+- יואן סטויאנוב: yoan-stoyanov.webp (123348 bytes)
+- ג'בון איסט: javon-east.webp (116132 bytes)

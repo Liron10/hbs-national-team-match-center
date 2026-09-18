@@ -13,15 +13,17 @@ const labels: Record<MatchStatus | 'today', string> = {
 
 interface StatusBadgeProps {
   status: MatchStatus | 'today'
+  clock?: string
 }
 
-export function StatusBadge({ status }: StatusBadgeProps) {
+export function StatusBadge({ status, clock }: StatusBadgeProps) {
   const live = isLiveStatus(status as MatchStatus) || status === 'live'
 
   return (
     <span className={`status-badge status-badge--${status}`}>
       {live ? <span className="live-dot" aria-hidden="true" /> : null}
       {labels[status]}
+      {live && clock ? <span className="status-badge__clock">{clock}</span> : null}
     </span>
   )
 }

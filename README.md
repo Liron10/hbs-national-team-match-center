@@ -64,27 +64,16 @@ npm run preview
 npm run fetch-player-images
 ```
 
-הסקריפט:
+הסקריפט מושך דיוקנאות רשמיים מאתר המועדון `https://hbsfc.co.il/team-squad/`.
+תמונת אדריאן אוגריסה נלקחת מהקובץ המקומי בתיקיית `Pictures`.
 
-1. נכנס לעמוד Transfermarkt המאומת של כל שחקן
-2. קורא את דיוקן ה־`og:image` רק אם כתובת התמונה כוללת את מזהה השחקן
-3. שומר עותק מקומי ב־`public/players/`
-4. לא עוקף CAPTCHA / Cloudflare; אם העמוד חסום נשאר placeholder
+## תוצאות לייב
 
-אין hotlink קבוע ל־Transfermarkt.
+המקור הפעיל הוא **FotMob**, דרך אותו JSON ציבורי שהפרויקט הפתוח [Ryzellx/football-live-api](https://github.com/Ryzellx/football-live-api) עוטף. ה-demo המאוחסן שלהם (`football-live-api.vercel.app`) מחזיר כרגע 402, לכן הקריאה היא ישירות ל-FotMob.
 
-## חיבור API בעתיד
+כל התקשורת עוברת ב־`src/services/football/` — כתובת ה-API מוגדרת רק ב־`src/services/football/config.ts`.
 
-1. ממשו Provider לפי `src/types` (`MatchDataProvider`)
-2. הרץ נרמול ב־`scripts/refresh-data.ts` ל־`matches.json`
-3. אל תשימו API KEY ב־Frontend
-4. השתמשו ב־`.env.example` ובסוד של GitHub Actions
-
-`FootballDataProvider` מוכן כשלד. GitHub Pages הוא סטטי, לכן המפתח חייב להישאר בצד refresh בלבד.
-
-```bash
-npm run refresh-data
-```
+בפיתוח יש proxy של Vite (`/football-api`). בזמן משחק הדף מתעדכן כל 30 שניות בלי רענון. `npm run refresh-data` מעדכן את `matches.json` מ-FotMob.
 
 ## GitHub Pages
 

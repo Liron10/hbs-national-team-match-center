@@ -1,9 +1,10 @@
 import type { Match } from '../types'
 
-export function assetUrl(path: string): string {
+export function assetUrl(path: string, cacheKey?: string): string {
   const normalized = path.replace(/^\//, '')
   const base = import.meta.env.BASE_URL
-  return `${base}${normalized}`
+  const url = `${base}${normalized}`
+  return cacheKey ? `${url}?v=${encodeURIComponent(cacheKey)}` : url
 }
 
 export function matchInvolvesPlayer(match: Match, playerId: string): boolean {

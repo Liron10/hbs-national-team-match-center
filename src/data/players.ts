@@ -1,7 +1,8 @@
 import type { Player } from '../types'
+import { fotmobPlayerId } from './fotmobIds'
 import { playerImages } from './playerImages'
 
-const basePlayers: Omit<Player, 'image' | 'imageVerified'>[] = [
+const basePlayers: Omit<Player, 'image' | 'imageVerified' | 'fotmobId'>[] = [
   {
     id: 'eliel-peretz',
     nameHe: 'אליאל פרץ',
@@ -95,6 +96,7 @@ const basePlayers: Omit<Player, 'image' | 'imageVerified'>[] = [
 
 export const players: Player[] = basePlayers.map((player) => ({
   ...player,
+  fotmobId: String(fotmobPlayerId[player.id]),
   image: playerImages[player.id]?.file ?? `players/${player.id}.svg`,
   imageVerified: playerImages[player.id]?.verified ?? false,
 }))

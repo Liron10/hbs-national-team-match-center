@@ -70,6 +70,7 @@ export interface Player {
   imageVerified: boolean
   transfermarktUrl: string
   transfermarktId: string
+  fotmobId: string
 }
 
 export interface PlayerAppearance {
@@ -96,6 +97,7 @@ export interface Match {
   status: MatchStatus
   homeScore: number | null
   awayScore: number | null
+  clock?: string
   venue?: string
   players: PlayerAppearance[]
   lastUpdated: string

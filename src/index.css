@@ -570,6 +570,7 @@ main {
   width: 3.1rem;
   height: 3.1rem;
   object-fit: cover;
+  object-position: top center;
   border-radius: 999px;
   background: #ece7e2;
 }
@@ -632,6 +633,11 @@ main {
 .status-badge--today {
   background: var(--red-soft);
   color: var(--red);
+}
+
+.status-badge__clock {
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .live-dot {

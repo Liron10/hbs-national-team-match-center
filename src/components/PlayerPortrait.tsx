@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Player } from '../types'
+import { playerImages } from '../data/playerImages'
 import { assetUrl } from '../utils/paths'
 
 interface PlayerPortraitProps {
@@ -9,7 +10,8 @@ interface PlayerPortraitProps {
 
 export function PlayerPortrait({ player, className = '' }: PlayerPortraitProps) {
   const [failed, setFailed] = useState(false)
-  const src = assetUrl(player.image)
+  const meta = playerImages[player.id]
+  const src = assetUrl(player.image, `${meta?.source ?? 'squad'}-20260918`)
 
   if (failed) {
     return (

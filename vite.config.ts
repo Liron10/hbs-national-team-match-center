@@ -5,4 +5,16 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/hbs-national-team-match-center/',
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      '/football-api': {
+        target: 'https://www.fotmob.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/football-api/, '/api'),
+        headers: {
+          Referer: 'https://www.fotmob.com/',
+        },
+      },
+    },
+  },
 })

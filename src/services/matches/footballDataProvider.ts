@@ -1,6 +1,6 @@
 /**
- * Ready-to-wire Football-Data.org provider.
- * Not used by the GitHub Pages UI because the API key cannot be kept secret in the browser.
+ * Official football-data.org client for the refresh job.
+ * The GitHub Pages bundle cannot hold this key.
  */
 export class FootballDataProvider {
   private apiKey: string
