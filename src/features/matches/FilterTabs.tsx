@@ -4,7 +4,7 @@ const tabs: { id: MatchFilter; label: string }[] = [
   { id: 'all', label: 'הכול' },
   { id: 'live', label: 'LIVE' },
   { id: 'today', label: 'היום' },
-  { id: 'upcoming', label: 'המשחקים הקרובים' },
+  { id: 'upcoming', label: 'קרובים' },
   { id: 'finished', label: 'הסתיימו' },
 ]
 
