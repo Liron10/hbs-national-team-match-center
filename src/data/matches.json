@@ -1,0 +1,313 @@
+{
+  "meta": {
+    "source": "manual",
+    "sourceLabelHe": "עדכון ידני מלוחות רשמיים (UEFA, Concacaf, US Soccer)",
+    "sourceLabelEn": "Manual update from official fixture lists",
+    "updatedAt": "2026-09-18T09:00:00.000Z",
+    "window": "2026-09",
+    "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
+  },
+  "matches": [
+    {
+      "id": "aut-isr-2026-09-24",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "AUT", "nameHe": "אוסטריה", "nameEn": "Austria" },
+      "awayTeam": { "code": "ISR", "nameHe": "ישראל", "nameEn": "Israel" },
+      "kickoff": "2026-09-24T18:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "אוסטריה",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
+      ],
+      "players": [
+        { "playerId": "eliel-peretz", "squadStatus": "unknown" },
+        { "playerId": "idan-nachmias", "squadStatus": "unknown" },
+        { "playerId": "guy-mizrahi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "jam-gtm-2026-09-25",
+      "competition": "Concacaf Nations League 2026/27",
+      "competitionHe": "ליגת האומות של קונקקאף",
+      "homeTeam": { "code": "JAM", "nameHe": "ג׳מייקה", "nameEn": "Jamaica" },
+      "awayTeam": { "code": "GTM", "nameHe": "גואטמלה", "nameEn": "Guatemala" },
+      "kickoff": "2026-09-26T00:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "National Stadium, קינגסטון",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
+      ],
+      "players": [{ "playerId": "javon-east", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "bgr-lux-2026-09-26",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "BGR", "nameHe": "בולגריה", "nameEn": "Bulgaria" },
+      "awayTeam": { "code": "LUX", "nameHe": "לוקסמבורג", "nameEn": "Luxembourg" },
+      "kickoff": "2026-09-26T15:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "פלודיב",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
+      ],
+      "players": [{ "playerId": "yoan-stoyanov", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "usa-per-2026-09-26",
+      "competition": "International Friendly",
+      "competitionHe": "משחק ידידות",
+      "homeTeam": { "code": "USA", "nameHe": "ארצות הברית", "nameEn": "United States" },
+      "awayTeam": { "code": "PER", "nameHe": "פרו", "nameEn": "Peru" },
+      "kickoff": "2026-09-26T20:30:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "Inter&Co Stadium, אורלנדו",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
+      ],
+      "players": [{ "playerId": "adrian-ugarriza", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "isr-irl-2026-09-27",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "ISR", "nameHe": "ישראל", "nameEn": "Israel" },
+      "awayTeam": { "code": "IRL", "nameHe": "אירלנד", "nameEn": "Republic of Ireland" },
+      "kickoff": "2026-09-27T18:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
+      ],
+      "players": [
+        { "playerId": "eliel-peretz", "squadStatus": "unknown" },
+        { "playerId": "idan-nachmias", "squadStatus": "unknown" },
+        { "playerId": "guy-mizrahi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "jam-hon-2026-09-28",
+      "competition": "Concacaf Nations League 2026/27",
+      "competitionHe": "ליגת האומות של קונקקאף",
+      "homeTeam": { "code": "JAM", "nameHe": "ג׳מייקה", "nameEn": "Jamaica" },
+      "awayTeam": { "code": "HON", "nameHe": "הונדורס", "nameEn": "Honduras" },
+      "kickoff": "2026-09-29T00:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "National Stadium, קינגסטון",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
+      ],
+      "players": [{ "playerId": "javon-east", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "mex-per-2026-09-29",
+      "competition": "International Friendly",
+      "competitionHe": "משחק ידידות",
+      "homeTeam": { "code": "MEX", "nameHe": "מקסיקו", "nameEn": "Mexico" },
+      "awayTeam": { "code": "PER", "nameHe": "פרו", "nameEn": "Peru" },
+      "kickoff": "2026-09-30T01:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "Sports Illustrated Stadium, ניו ג׳רזי",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.peruinforma.com/ya-estan-los-convocados-mano-menezes-sorprende-con-su-lista-para-los-amistosos-de-peru/"
+      ],
+      "players": [{ "playerId": "adrian-ugarriza", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "svn-isr-u21-2026-09-29",
+      "competition": "UEFA Euro U21 Qualifying",
+      "competitionHe": "מוקדמות אליפות אירופה עד 21",
+      "homeTeam": { "code": "SVN", "nameHe": "סלובניה עד 21", "nameEn": "Slovenia U21" },
+      "awayTeam": { "code": "ISR-U21", "nameHe": "ישראל עד 21", "nameEn": "Israel U21" },
+      "kickoff": "2026-09-29T18:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [
+        { "playerId": "niv-yehoshua", "squadStatus": "unknown" },
+        { "playerId": "mohammed-abu-rumi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "bgr-est-2026-09-29",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "BGR", "nameHe": "בולגריה", "nameEn": "Bulgaria" },
+      "awayTeam": { "code": "EST", "nameHe": "אסטוניה", "nameEn": "Estonia" },
+      "kickoff": "2026-09-29T17:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "פלודיב",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/4824880"
+      ],
+      "players": [{ "playerId": "yoan-stoyanov", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "isr-xkx-2026-10-01",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "ISR", "nameHe": "ישראל", "nameEn": "Israel" },
+      "awayTeam": { "code": "XKX", "nameHe": "קוסובו", "nameEn": "Kosovo" },
+      "kickoff": "2026-10-01T18:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
+      ],
+      "players": [
+        { "playerId": "eliel-peretz", "squadStatus": "unknown" },
+        { "playerId": "idan-nachmias", "squadStatus": "unknown" },
+        { "playerId": "guy-mizrahi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "slv-jam-2026-10-02",
+      "competition": "Concacaf Nations League 2026/27",
+      "competitionHe": "ליגת האומות של קונקקאף",
+      "homeTeam": { "code": "SLV", "nameHe": "אל סלוודור", "nameEn": "El Salvador" },
+      "awayTeam": { "code": "JAM", "nameHe": "ג׳מייקה", "nameEn": "Jamaica" },
+      "kickoff": "2026-10-03T02:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "Estadio Cuscatlán, סן סלוודור",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
+      ],
+      "players": [{ "playerId": "javon-east", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "per-can-2026-10-03",
+      "competition": "International Friendly",
+      "competitionHe": "משחק ידידות",
+      "homeTeam": { "code": "PER", "nameHe": "פרו", "nameEn": "Peru" },
+      "awayTeam": { "code": "CAN", "nameHe": "קנדה", "nameEn": "Canada" },
+      "kickoff": "2026-10-03T18:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [{ "playerId": "adrian-ugarriza", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "irl-isr-2026-10-04",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "IRL", "nameHe": "אירלנד", "nameEn": "Republic of Ireland" },
+      "awayTeam": { "code": "ISR", "nameHe": "ישראל", "nameEn": "Israel" },
+      "kickoff": "2026-10-04T18:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
+      ],
+      "players": [
+        { "playerId": "eliel-peretz", "squadStatus": "unknown" },
+        { "playerId": "idan-nachmias", "squadStatus": "unknown" },
+        { "playerId": "guy-mizrahi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "hon-jam-2026-10-05",
+      "competition": "Concacaf Nations League 2026/27",
+      "competitionHe": "ליגת האומות של קונקקאף",
+      "homeTeam": { "code": "HON", "nameHe": "הונדורס", "nameEn": "Honduras" },
+      "awayTeam": { "code": "JAM", "nameHe": "ג׳מייקה", "nameEn": "Jamaica" },
+      "kickoff": "2026-10-06T02:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "venue": "Estadio Nacional Chelato Uclés, טגוסיגלפה",
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "sources": [
+        "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
+      ],
+      "players": [{ "playerId": "javon-east", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "isl-bgr-2026-10-03",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "ISL", "nameHe": "איסלנד", "nameEn": "Iceland" },
+      "awayTeam": { "code": "BGR", "nameHe": "בולגריה", "nameEn": "Bulgaria" },
+      "kickoff": "2026-10-03T16:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [{ "playerId": "yoan-stoyanov", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "nor-isr-u21-2026-10-06",
+      "competition": "UEFA Euro U21 Qualifying",
+      "competitionHe": "מוקדמות אליפות אירופה עד 21",
+      "homeTeam": { "code": "NOR", "nameHe": "נורווגיה עד 21", "nameEn": "Norway U21" },
+      "awayTeam": { "code": "ISR-U21", "nameHe": "ישראל עד 21", "nameEn": "Israel U21" },
+      "kickoff": "2026-10-06T16:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [
+        { "playerId": "niv-yehoshua", "squadStatus": "unknown" },
+        { "playerId": "mohammed-abu-rumi", "squadStatus": "unknown" }
+      ]
+    },
+    {
+      "id": "lux-bgr-2026-10-06",
+      "competition": "UEFA Nations League 2026/27",
+      "competitionHe": "ליגת האומות של אופ״א",
+      "homeTeam": { "code": "LUX", "nameHe": "לוקסמבורג", "nameEn": "Luxembourg" },
+      "awayTeam": { "code": "BGR", "nameHe": "בולגריה", "nameEn": "Bulgaria" },
+      "kickoff": "2026-10-06T18:45:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [{ "playerId": "yoan-stoyanov", "squadStatus": "unknown" }]
+    },
+    {
+      "id": "per-col-2026-10-06",
+      "competition": "International Friendly",
+      "competitionHe": "משחק ידידות",
+      "homeTeam": { "code": "PER", "nameHe": "פרו", "nameEn": "Peru" },
+      "awayTeam": { "code": "COL", "nameHe": "קולומביה", "nameEn": "Colombia" },
+      "kickoff": "2026-10-06T23:00:00.000Z",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "players": [{ "playerId": "adrian-ugarriza", "squadStatus": "unknown" }]
+    }
+  ]
+}

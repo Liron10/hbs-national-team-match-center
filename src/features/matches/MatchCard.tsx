@@ -1,0 +1,42 @@
+import type { Match } from '../../types'
+import { StatusBadge } from '../../components/StatusBadge'
+import { formatMatchDate, formatMatchTime } from '../../utils/datetime'
+import { displayStatus } from '../../utils/matchStatus'
+import { MatchTeam } from './MatchTeam'
+import { PlayerAppearanceRow } from './PlayerAppearanceRow'
+
+interface MatchCardProps {
+  match: Match
+  now: Date
+}
+
+export function MatchCard({ match, now }: MatchCardProps) {
+  const status = displayStatus(match, now)
+  const hasScore = match.homeScore !== null && match.awayScore !== null
+  const center = hasScore
+    ? `${match.homeScore}–${match.awayScore}`
+    : formatMatchTime(match.kickoff)
+
+  return (
+    <article className="match-card">
+      <header className="match-card__meta">
+        <time dateTime={match.kickoff}>{formatMatchDate(match.kickoff)}</time>
+        <StatusBadge status={status} />
+      </header>
+      <p className="match-card__comp">{match.competitionHe}</p>
+      <div className="match-card__line">
+        <MatchTeam team={match.homeTeam} />
+        <p className="match-card__score" aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}>
+          {center}
+        </p>
+        <MatchTeam team={match.awayTeam} align="end" />
+      </div>
+      <section className="match-card__players" aria-label="שחקני הפועל באר שבע">
+        <h3>שחקני הפועל באר שבע</h3>
+        {match.players.map((appearance) => (
+          <PlayerAppearanceRow key={appearance.playerId} appearance={appearance} />
+        ))}
+      </section>
+    </article>
+  )
+}
