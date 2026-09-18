@@ -2,7 +2,7 @@ import type { MatchStatus } from '../types'
 import { isLiveStatus } from '../utils/matchStatus'
 
 const labels: Record<MatchStatus | 'today', string> = {
-  scheduled: 'קרוב',
+  scheduled: 'טרם התחיל',
   today: 'היום',
   live: 'LIVE',
   halftime: 'מחצית',
