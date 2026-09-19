@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { annotatedTeamLabel, lastNameHe, matchHeadline } from './matchLine.ts'
+import { annotatedTeamLabel, lastNameHe, matchHeadline, matchLineup } from './matchLine.ts'
 
 function peruMatch(): Match {
   return {
@@ -23,8 +23,8 @@ test('uses last Hebrew name for annotation', () => {
   assert.equal(lastNameHe('אדריאן אוגריסה'), 'אוגריסה')
 })
 
-test('formats non-Israel matches as team (player) vs opponent', () => {
-  assert.equal(matchHeadline(peruMatch()), 'פרו (אוגריסה) – ארה״ב')
+test('formats non-Israel matches as home then away, with player on the HBS side', () => {
+  assert.equal(matchHeadline(peruMatch()), 'ארה״ב – פרו (אוגריסה)')
 })
 
 test('does not annotate Israel sides', () => {
@@ -37,4 +37,10 @@ test('does not annotate Israel sides', () => {
   }
   assert.equal(annotatedTeamLabel(match, match.awayTeam), 'ישראל')
   assert.equal(matchHeadline(match), 'אוסטריה – ישראל')
+})
+
+test('puts home first in the lineup so RTL shows home on the right', () => {
+  const lineup = matchLineup(peruMatch())
+  assert.equal(lineup.left.team.code, 'USA')
+  assert.equal(lineup.right.team.code, 'PER')
 })

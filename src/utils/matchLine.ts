@@ -49,24 +49,12 @@ export function matchLineup(match: Match): {
   left: { team: TeamSide; label: string }
   right: { team: TeamSide; label: string }
 } {
-  const ours = ourNationalSide(match)
-  if (!isIsraelNationalSide(ours.code)) {
-    const opponent = opponentNationalSide(match)
-    return {
-      left: { team: ours, label: annotatedTeamLabel(match, ours) },
-      right: { team: opponent, label: getTeam(opponent.code).nameHe },
-    }
-  }
+  const home = getTeam(match.homeTeam.code)
+  const away = getTeam(match.awayTeam.code)
 
   return {
-    left: {
-      team: getTeam(match.homeTeam.code),
-      label: getTeam(match.homeTeam.code).nameHe,
-    },
-    right: {
-      team: getTeam(match.awayTeam.code),
-      label: getTeam(match.awayTeam.code).nameHe,
-    },
+    left: { team: home, label: annotatedTeamLabel(match, home) },
+    right: { team: away, label: annotatedTeamLabel(match, away) },
   }
 }
 
