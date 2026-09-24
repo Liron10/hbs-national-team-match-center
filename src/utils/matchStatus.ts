@@ -32,6 +32,16 @@ export function matchesFilter(match: Match, filter: MatchFilter, now = new Date(
   return bucket === 'finished'
 }
 
+export function splitMatchBoard(matches: Match[], now = new Date()): { open: Match[]; finished: Match[] } {
+  const open: Match[] = []
+  const finished: Match[] = []
+  for (const match of matches) {
+    if (deriveBucket(match, now) === 'finished') finished.push(match)
+    else open.push(match)
+  }
+  return { open, finished }
+}
+
 export function hasLiveMatches(matches: Match[], now = new Date()): boolean {
   return matches.some((match) => deriveBucket(match, now) === 'live')
 }

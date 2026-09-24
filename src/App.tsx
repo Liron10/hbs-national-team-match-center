@@ -19,7 +19,8 @@ import { sortMatches } from './utils/sortMatches'
 export default function App() {
   const now = useNow()
   const { matches, loading, error, refresh } = useMatches()
-  const { filter, setFilter, visible, selectedPlayerId, selectPlayer } = useMatchBoard(matches, now)
+  const { filter, setFilter, openMatches, finishedMatches, selectedPlayerId, selectPlayer } =
+    useMatchBoard(matches, now)
   const live = hasLiveMatches(matches, now)
   const windowLabel = formatWindowLabel(matchDataset.meta.window)
   const updatedAt = formatUpdatedAt(
@@ -35,6 +36,9 @@ export default function App() {
         const bucket = deriveBucket(match, now)
         return bucket === 'live' || bucket === 'today'
       })
+  const showFinished = finishedMatches.length > 0 && (filter === 'all' || filter === 'finished')
+  const showOpen = filter !== 'finished'
+  const tabs = <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
 
   return (
     <div className="page">
@@ -50,43 +54,51 @@ export default function App() {
           ) : null}
           <PlayersGrid selectedId={selectedPlayerId} onSelect={selectPlayer} />
           {spotlight ? <LiveSpotlight match={spotlight} /> : null}
-          <section className="board" aria-labelledby="board-heading">
-            <div className="section-heading">
-              <h2 id="board-heading">המשחקים</h2>
+          {selectedPlayer ? (
+            <p className="player-filter">
+              <span>משחקים של {selectedPlayer.nameHe}</span>
+              <button type="button" onClick={() => selectPlayer(selectedPlayer.id)}>
+                הצגת כל המשחקים
+              </button>
+            </p>
+          ) : null}
+          {loading ? <MatchListSkeleton /> : null}
+          {error ? (
+            <EmptyState title="לא ניתן להציג את המשחקים כרגע" description="אפשר לנסות שוב." />
+          ) : null}
+          {error ? (
+            <div className="retry-wrap">
+              <button type="button" className="retry-btn" onClick={() => void refresh()}>
+                נסו שוב
+              </button>
             </div>
-            {selectedPlayer ? (
-              <p className="player-filter">
-                <span>משחקים של {selectedPlayer.nameHe}</span>
-                <button type="button" onClick={() => selectPlayer(selectedPlayer.id)}>
-                  הצגת כל המשחקים
-                </button>
-              </p>
-            ) : null}
-            <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
-            {loading ? <MatchListSkeleton /> : null}
-            {error ? (
-              <EmptyState title="לא ניתן להציג את המשחקים כרגע" description="אפשר לנסות שוב." />
-            ) : null}
-            {error ? (
-              <div className="retry-wrap">
-                <button type="button" className="retry-btn" onClick={() => void refresh()}>
-                  נסו שוב
-                </button>
+          ) : null}
+          {!loading && !error && showFinished ? (
+            <section className="board" aria-labelledby="finished-heading">
+              {filter === 'finished' ? tabs : null}
+              <div className="section-heading">
+                <h2 id="finished-heading">משחקים שהסתיימו</h2>
               </div>
-            ) : null}
-            {!loading && !error ? (
+              <MatchList matches={finishedMatches} filter="finished" now={now} empty={false} />
+            </section>
+          ) : null}
+          {!loading && !error && showOpen ? (
+            <section className="board" aria-labelledby="board-heading">
+              <div className="section-heading">
+                <h2 id="board-heading">המשחקים</h2>
+              </div>
+              {tabs}
               <MatchList
-                matches={visible}
-                filter={filter}
+                matches={openMatches}
+                filter={filter === 'all' ? 'upcoming' : filter}
                 now={now}
-                selectedPlayerId={selectedPlayerId}
               />
-            ) : null}
-            <p className="updated-note">הנתונים מוזנים ידנית על ידי מנהל הדף</p>
-            {!loading && !error ? (
-              <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>
-            ) : null}
-          </section>
+            </section>
+          ) : null}
+          <p className="updated-note">הנתונים מוזנים ידנית על ידי מנהל הדף</p>
+          {!loading && !error ? (
+            <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>
+          ) : null}
         </main>
         <Footer />
       </div>

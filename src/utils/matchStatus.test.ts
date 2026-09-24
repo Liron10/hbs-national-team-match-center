@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { deriveBucket, displayStatus, matchesFilter } from './matchStatus.ts'
+import { deriveBucket, displayStatus, matchesFilter, splitMatchBoard } from './matchStatus.ts'
 
 function match(partial: Partial<Match>): Match {
   return {
@@ -32,4 +32,18 @@ test('LIVE only when status is live or halftime', () => {
   assert.equal(deriveBucket(match({ status: 'live' }), now), 'live')
   assert.equal(deriveBucket(match({ status: 'halftime' }), now), 'live')
   assert.equal(matchesFilter(match({ status: 'scheduled' }), 'live', now), false)
+})
+
+test('splits finished matches out of the open board', () => {
+  const now = new Date('2026-09-18T12:00:00.000Z')
+  const { open, finished } = splitMatchBoard(
+    [
+      match({ id: 'done', status: 'finished', kickoff: '2026-09-16T18:00:00.000Z' }),
+      match({ id: 'next', status: 'scheduled', kickoff: '2026-09-24T18:00:00.000Z' }),
+      match({ id: 'live', status: 'live', kickoff: '2026-09-18T11:00:00.000Z' }),
+    ],
+    now,
+  )
+  assert.deepEqual(open.map((item) => item.id), ['next', 'live'])
+  assert.deepEqual(finished.map((item) => item.id), ['done'])
 })

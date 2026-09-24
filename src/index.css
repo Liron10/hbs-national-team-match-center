@@ -299,6 +299,10 @@ a:focus-visible {
   border: 1px solid var(--line);
 }
 
+.board + .board {
+  margin-top: 1.1rem;
+}
+
 .players-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
