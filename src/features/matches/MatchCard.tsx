@@ -10,9 +10,10 @@ import { PlayerAppearanceRow } from './PlayerAppearanceRow'
 interface MatchCardProps {
   match: Match
   now: Date
+  selectedPlayerId?: string | null
 }
 
-export function MatchCard({ match, now }: MatchCardProps) {
+export function MatchCard({ match, now, selectedPlayerId }: MatchCardProps) {
   const status = displayStatus(match, now)
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const center = hasScore
@@ -48,7 +49,7 @@ export function MatchCard({ match, now }: MatchCardProps) {
             <PlayerAppearanceRow
               key={appearance.playerId}
               appearance={appearance}
-              compact={appearance.squadStatus === 'unknown'}
+              expanded={selectedPlayerId === appearance.playerId}
             />
           ))}
         </section>

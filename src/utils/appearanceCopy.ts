@@ -20,6 +20,8 @@ export interface AppearanceStat {
 }
 
 export function appearanceStats(appearance: PlayerAppearance): AppearanceStat[] {
+  if (appearance.stats?.length) return appearance.stats.slice(0, 10)
+
   const stats: AppearanceStat[] = []
 
   if (typeof appearance.minutes === 'number') {

@@ -570,12 +570,36 @@ main {
   margin: 0;
 }
 
-.appearance__stats {
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0.35rem 0 0;
-  list-style: none;
+.appearance--button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  border-radius: 0.7rem;
+}
+
+.appearance--button:hover,
+.appearance--button.is-expanded {
+  background: #faf7f5;
+}
+
+.appearance__stats li {
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: #f3eeea;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.appearance__more {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .portrait {

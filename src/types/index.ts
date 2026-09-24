@@ -85,6 +85,7 @@ export interface PlayerAppearance {
   redCards?: number
   subbedInMinute?: number
   subbedOutMinute?: number
+  stats?: Array<{ label: string; value: string }>
 }
 
 export interface Match {
@@ -102,6 +103,7 @@ export interface Match {
   players: PlayerAppearance[]
   lastUpdated: string
   sources?: string[]
+  fotmobMatchId?: number
 }
 
 export interface MatchDataset {

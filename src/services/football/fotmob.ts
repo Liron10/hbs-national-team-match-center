@@ -78,6 +78,7 @@ export function snapshotsFromFotmobMatches(payload: FotmobMatchesResponse): Live
         awayAbbr: '',
         homeTeamId: homeId,
         awayTeamId: awayId,
+        sourceMatchId: item.id,
         kickoff: item.status?.utcTime ?? new Date().toISOString(),
         status: mapped.status,
         homeScore: parseScore(item.home?.score, mapped.scoresReady),

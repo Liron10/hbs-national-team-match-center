@@ -75,7 +75,12 @@ export default function App() {
               </div>
             ) : null}
             {!loading && !error ? (
-              <MatchList matches={visible} filter={filter} now={now} />
+              <MatchList
+                matches={visible}
+                filter={filter}
+                now={now}
+                selectedPlayerId={selectedPlayerId}
+              />
             ) : null}
             {!loading && !error ? (
               <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>

@@ -29,6 +29,7 @@ export interface LiveScoreSnapshot {
   awayAbbr: string
   homeTeamId?: number
   awayTeamId?: number
+  sourceMatchId?: number
   kickoff: string
   status: MatchStatus
   homeScore: number | null
@@ -164,10 +165,14 @@ export function applyLiveSnapshots(matches: Match[], snapshots: LiveScoreSnapsho
   return matches.map((match) => {
     const snapshot = snapshots.find((item) => snapshotMatchesFixture(match, item))
     if (!snapshot) return match
-    if (snapshot.status === 'scheduled') return match
+
+    const withId =
+      snapshot.sourceMatchId != null ? { ...match, fotmobMatchId: snapshot.sourceMatchId } : match
+
+    if (snapshot.status === 'scheduled') return withId
 
     return {
-      ...match,
+      ...withId,
       status: snapshot.status,
       homeScore: snapshot.homeScore,
       awayScore: snapshot.awayScore,

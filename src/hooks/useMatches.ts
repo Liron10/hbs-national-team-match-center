@@ -3,13 +3,19 @@ import type { Match } from '../types'
 import { fetchFootballSnapshots } from '../services/football'
 import { createMatchDataProvider } from '../services/matches'
 import { applyLiveSnapshots, isInLiveWindow } from '../utils/liveScores'
+import { enrichMatchAppearances } from '../utils/fotmobAppearances'
 
 const provider = createMatchDataProvider()
 const LIVE_POLL_MS = 30_000
 
 function liveSignature(matches: Match[]): string {
   return matches
-    .map((match) => `${match.id}:${match.status}:${match.homeScore}:${match.awayScore}:${match.clock ?? ''}`)
+    .map((match) => {
+      const players = match.players
+        .map((appearance) => `${appearance.playerId}:${appearance.squadStatus}:${appearance.minutes ?? ''}`)
+        .join(',')
+      return `${match.id}:${match.status}:${match.homeScore}:${match.awayScore}:${match.clock ?? ''}:${players}`
+    })
     .join('|')
 }
 
@@ -28,9 +34,8 @@ export function useMatches() {
     try {
       const base = await provider.getMatches()
       const skipLive = import.meta.env.DEV && import.meta.env.VITE_USE_DEMO_DATA === 'true'
-      const next = skipLive
-        ? base
-        : applyLiveSnapshots(base, await fetchFootballSnapshots(base, new Date(), silent))
+      const scored = skipLive ? base : applyLiveSnapshots(base, await fetchFootballSnapshots(base, new Date(), silent))
+      const next = skipLive ? scored : await enrichMatchAppearances(scored)
       setMatches((current) => (liveSignature(current) === liveSignature(next) ? current : next))
     } catch {
       if (!silent) setError('לא ניתן להציג את המשחקים כרגע.')

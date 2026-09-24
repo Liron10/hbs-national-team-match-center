@@ -3,13 +3,15 @@ import path from 'node:path'
 import type { MatchDataset } from '../src/types/index.ts'
 import { fetchFootballSnapshots } from '../src/services/football/fotmob.ts'
 import { applyLiveSnapshots } from '../src/utils/liveScores.ts'
+import { enrichMatchAppearances } from '../src/utils/fotmobAppearances.ts'
 
 const target = path.resolve('src/data/matches.json')
 
 async function main() {
   const current = JSON.parse(await readFile(target, 'utf8')) as MatchDataset
   const snapshots = await fetchFootballSnapshots(current.matches)
-  const matches = applyLiveSnapshots(current.matches, snapshots)
+  const scored = applyLiveSnapshots(current.matches, snapshots)
+  const matches = await enrichMatchAppearances(scored)
   const changed = JSON.stringify(matches) !== JSON.stringify(current.matches)
 
   if (!changed) {
@@ -30,7 +32,9 @@ async function main() {
   }
 
   await writeFile(target, `${JSON.stringify(next, null, 2)}\n`, 'utf8')
-  console.log(`Updated ${matches.filter((match) => match.status === 'live' || match.status === 'halftime').length} live matches.`)
+  console.log(
+    `Updated scores and appearances for ${matches.filter((match) => match.status !== 'scheduled').length} matches.`,
+  )
 }
 
 await main()

@@ -25,7 +25,7 @@ export function PlayersGrid({ selectedId, onSelect }: PlayersGridProps) {
               className={selected ? 'player-card is-selected' : 'player-card'}
               onClick={() => onSelect(player.id)}
               aria-pressed={selected}
-              aria-label={`הצגת משחקים של ${player.nameHe}`}
+              aria-label={`הצגת משחקים ונתונים של ${player.nameHe}`}
             >
               <PlayerPortrait player={player} className="portrait--lg" />
               <span className="player-card__name">{player.nameHe}</span>
