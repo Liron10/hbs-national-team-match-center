@@ -12,7 +12,10 @@ function liveSignature(matches: Match[]): string {
   return matches
     .map((match) => {
       const players = match.players
-        .map((appearance) => `${appearance.playerId}:${appearance.squadStatus}:${appearance.minutes ?? ''}`)
+        .map(
+          (appearance) =>
+            `${appearance.playerId}:${appearance.squadStatus}:${appearance.minutes ?? ''}:${JSON.stringify(appearance.stats ?? [])}`,
+        )
         .join(',')
       return `${match.id}:${match.status}:${match.homeScore}:${match.awayScore}:${match.clock ?? ''}:${players}`
     })

@@ -1,56 +1,20 @@
 import type { Match, PlayerAppearance, SquadStatus } from '../types'
 import { fotmobPlayerId } from '../data/fotmobIds'
+import { isInLiveWindow } from './liveScores'
 import { footballGet } from '../services/football/client'
 
-const MAX_STATS = 10
-
-const STAT_LABELS: Record<string, string> = {
-  minutes_played: 'דקות',
-  rating_title: 'דירוג',
-  goals: 'שערים',
-  assists: 'בישולים',
-  accurate_passes: 'מסירות מדויקות',
-  chances_created: 'הזדמנויות שנוצרו',
-  total_shots: 'בעיטות',
-  ShotsOnTarget: 'בעיטות לשער',
-  ShotsOffTarget: 'בעיטות מחוץ למסגרת',
-  blocked_shots: 'בעיטות שנחסמו',
-  defensive_actions: 'פעולות הגנה',
-  touches: 'נגיעות',
-  expected_goals: 'xG',
-  expected_assists: 'xA',
-  xg_and_xa: 'xG+xA',
-  conceded_penalties: 'פנדל שספג',
-  dribbles_succeeded: 'כדרורים מוצלחים',
-  long_balls_accurate: 'כדורים ארוכים',
-  passes_into_final_third: 'מסירות לשליש האחרון',
-  touches_opp_box: 'נגיעות ברחבה',
-  'FotMob rating': 'דירוג',
-  'Minutes played': 'דקות',
-  Goals: 'שערים',
-  Assists: 'בישולים',
-  'Accurate passes': 'מסירות מדויקות',
-  'Chances created': 'הזדמנויות שנוצרו',
-  'Total shots': 'בעיטות',
-  'Shots on target': 'בעיטות לשער',
-  'Defensive actions': 'פעולות הגנה',
-  Touches: 'נגיעות',
-}
-
-const PREFERRED_KEYS = [
-  'minutes_played',
-  'rating_title',
-  'goals',
-  'assists',
-  'accurate_passes',
-  'total_shots',
-  'ShotsOnTarget',
-  'chances_created',
-  'defensive_actions',
-  'touches',
-  'expected_goals',
-  'expected_assists',
-]
+export const FIXED_STAT_LABELS = [
+  'דקות',
+  'שערים',
+  'בישולים',
+  'חילוף',
+  'צהובים',
+  'אדומים',
+  'דירוג',
+  'מסירות מדויקות',
+  'בעיטות',
+  'פעולות הגנה',
+] as const
 
 interface FotmobLinePlayer {
   id?: number
@@ -63,7 +27,6 @@ interface FotmobLinePlayer {
 
 interface FotmobStatValue {
   key?: string | null
-  hideInPopupCard?: boolean
   stat?: { value?: number; total?: number; type?: string }
 }
 
@@ -81,53 +44,35 @@ interface FotmobMatchDetails {
   }
 }
 
-function formatStat(entry: FotmobStatValue): string | null {
-  const value = entry.stat?.value
-  if (value == null || !Number.isFinite(value)) return null
-  if (entry.stat?.type === 'boolean') return null
-  if (entry.stat?.type === 'fractionWithPercentage' && entry.stat.total != null) {
-    return `${value}/${entry.stat.total}`
-  }
-  if (entry.stat?.type === 'double') return value.toFixed(2)
+function allStatEntries(payload: FotmobPlayerStats | undefined): FotmobStatValue[] {
+  return payload?.stats?.flatMap((group) => Object.values(group.stats ?? {})) ?? []
+}
+
+function statByKey(payload: FotmobPlayerStats | undefined, key: string): FotmobStatValue | undefined {
+  return allStatEntries(payload).find((entry) => entry.key === key)
+}
+
+function statNumber(payload: FotmobPlayerStats | undefined, key: string): number {
+  const value = statByKey(payload, key)?.stat?.value
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function statFraction(payload: FotmobPlayerStats | undefined, key: string): string {
+  const entry = statByKey(payload, key)
+  const value = entry?.stat?.value
+  const total = entry?.stat?.total
+  if (typeof value !== 'number') return '0'
+  if (typeof total === 'number') return `${value}/${total}`
   return String(value)
 }
 
-export function collectPlayerStats(
-  payload: FotmobPlayerStats | undefined,
-  extras: Array<{ label: string; value: string }>,
-): Array<{ label: string; value: string }> {
-  const collected: Array<{ label: string; value: string; key: string }> = extras.map((item) => ({
-    ...item,
-    key: item.label,
-  }))
-
-  const groups = payload?.stats ?? []
-  const top = groups.find((group) => group.key === 'top_stats') ?? groups[0]
-  const rest = groups.filter((group) => group !== top)
-  const bags = [top, ...rest]
-
-  for (const bag of bags) {
-    const stats = bag?.stats ?? {}
-    for (const [title, entry] of Object.entries(stats)) {
-      if (entry.hideInPopupCard) continue
-      const key = entry.key || title
-      if (!key || key === 'null') continue
-      if (collected.some((item) => item.key === key || item.label === (STAT_LABELS[key] ?? STAT_LABELS[title]))) {
-        continue
-      }
-      const value = formatStat(entry)
-      if (value == null) continue
-      const label = STAT_LABELS[key] ?? STAT_LABELS[title]
-      if (!label) continue
-      collected.push({ key, label, value })
-    }
-  }
-
-  const preferred = PREFERRED_KEYS.map((key) => collected.find((item) => item.key === key)).filter(
-    (item): item is { label: string; value: string; key: string } => item != null,
-  )
-  const others = collected.filter((item) => !PREFERRED_KEYS.includes(item.key))
-  return [...preferred, ...others].slice(0, MAX_STATS).map(({ label, value }) => ({ label, value }))
+function substitutionLabel(subIn?: number, subOut?: number, unused?: boolean): string {
+  if (unused && subIn == null) return 'לא שותף'
+  const parts: string[] = []
+  if (subIn != null) parts.push(`נכנס ${subIn}'`)
+  if (subOut != null) parts.push(`הוחלף ${subOut}'`)
+  if (parts.length > 0) return parts.join(' · ')
+  return 'לא'
 }
 
 function eventsOf(player: FotmobLinePlayer | undefined) {
@@ -138,7 +83,39 @@ function eventsOf(player: FotmobLinePlayer | undefined) {
     subOut: sub.find((item) => item.type === 'subOut')?.time,
     yellow: cards.filter((item) => item.type === 'yellowCard').length,
     red: cards.filter((item) => /red/i.test(item.type ?? '')).length,
+    rating: player?.performance?.rating,
   }
+}
+
+export function buildFixedStats(input: {
+  minutes: number
+  goals: number
+  assists: number
+  unused: boolean
+  subIn?: number
+  subOut?: number
+  yellow: number
+  red: number
+  rating?: number
+  passes: string
+  shots: number
+  defensive: number
+}): Array<{ label: string; value: string }> {
+  const rating =
+    typeof input.rating === 'number' && Number.isFinite(input.rating) ? input.rating.toFixed(2) : '—'
+  const values = [
+    String(input.minutes),
+    String(input.goals),
+    String(input.assists),
+    substitutionLabel(input.subIn, input.subOut, input.unused),
+    String(input.yellow),
+    String(input.red),
+    rating,
+    input.passes,
+    String(input.shots),
+    String(input.defensive),
+  ]
+  return FIXED_STAT_LABELS.map((label, index) => ({ label, value: values[index] ?? '0' }))
 }
 
 export function appearanceFromFotmob(
@@ -155,16 +132,10 @@ export function appearanceFromFotmob(
   const linePlayer = starter ?? sub
   const events = eventsOf(linePlayer)
   const statsPayload = details.content?.playerStats?.[String(fotmobId)]
-  const minutesEntry = statsPayload?.stats
-    ?.flatMap((group) => Object.values(group.stats ?? {}))
-    .find((entry) => entry.key === 'minutes_played')
-  const minutes = minutesEntry?.stat?.value
-  const goals = statsPayload?.stats
-    ?.flatMap((group) => Object.values(group.stats ?? {}))
-    .find((entry) => entry.key === 'goals')?.stat?.value
-  const assists = statsPayload?.stats
-    ?.flatMap((group) => Object.values(group.stats ?? {}))
-    .find((entry) => entry.key === 'assists')?.stat?.value
+  const minutes = statNumber(statsPayload, 'minutes_played')
+  const goals = statNumber(statsPayload, 'goals')
+  const assists = statNumber(statsPayload, 'assists')
+  const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
 
   let squadStatus: SquadStatus = matchFinished ? 'not-in-squad' : 'unknown'
   if (unavailable && !linePlayer) squadStatus = 'not-in-squad'
@@ -172,25 +143,35 @@ export function appearanceFromFotmob(
   else if (sub && events.subIn != null) squadStatus = 'subbed-in'
   else if (sub) squadStatus = 'unused'
 
-  const extras: Array<{ label: string; value: string }> = []
-  if (events.yellow) extras.push({ label: events.yellow === 1 ? 'כרטיס צהוב' : 'כרטיסים צהובים', value: String(events.yellow) })
-  if (events.red) extras.push({ label: events.red === 1 ? 'כרטיס אדום' : 'כרטיסים אדומים', value: String(events.red) })
-
-  const played = typeof minutes === 'number' ? minutes > 0 : Boolean(starter || events.subIn != null)
+  const unused = squadStatus === 'unused' || squadStatus === 'not-in-squad'
+  const played = minutes > 0 || Boolean(starter) || events.subIn != null
 
   return {
     playerId,
     squadStatus,
     started: Boolean(starter),
     played,
-    minutes: typeof minutes === 'number' ? minutes : undefined,
-    goals: typeof goals === 'number' ? goals : undefined,
-    assists: typeof assists === 'number' ? assists : undefined,
-    yellowCards: events.yellow || undefined,
-    redCards: events.red || undefined,
+    minutes,
+    goals,
+    assists,
+    yellowCards: events.yellow,
+    redCards: events.red,
     subbedInMinute: events.subIn,
     subbedOutMinute: events.subOut,
-    stats: collectPlayerStats(statsPayload, extras),
+    stats: buildFixedStats({
+      minutes,
+      goals,
+      assists,
+      unused,
+      subIn: events.subIn,
+      subOut: events.subOut,
+      yellow: events.yellow,
+      red: events.red,
+      rating: typeof rating === 'number' ? rating : undefined,
+      passes: statFraction(statsPayload, 'accurate_passes'),
+      shots: statNumber(statsPayload, 'total_shots'),
+      defensive: statNumber(statsPayload, 'defensive_actions'),
+    }),
   }
 }
 
@@ -206,12 +187,11 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
   }
 }
 
-export async function enrichMatchAppearances(matches: Match[]): Promise<Match[]> {
+export async function enrichMatchAppearances(matches: Match[], now = new Date()): Promise<Match[]> {
   return Promise.all(
     matches.map(async (match) => {
-      if (match.status === 'scheduled' || match.status === 'postponed' || match.status === 'cancelled') {
-        return match
-      }
+      if (match.status === 'postponed' || match.status === 'cancelled') return match
+      if (match.status === 'scheduled' && !isInLiveWindow(match, now)) return match
       if (match.fotmobMatchId == null) return match
       try {
         const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.fotmobMatchId}`)

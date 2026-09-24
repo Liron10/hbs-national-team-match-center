@@ -11,11 +11,11 @@ interface PlayerAppearanceRowProps {
 
 export function PlayerAppearanceRow({ appearance, expanded = false }: PlayerAppearanceRowProps) {
   const player = getPlayer(appearance.playerId)
-  const [open, setOpen] = useState(false)
+  const known = appearance.squadStatus !== 'unknown'
+  const [open, setOpen] = useState(known || expanded)
   if (!player) return null
 
   const stats = appearanceStats(appearance)
-  const known = appearance.squadStatus !== 'unknown'
   const showAll = expanded || open
   const visibleStats = showAll ? stats : stats.slice(0, 1)
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { appearanceFromFotmob } from './fotmobAppearances.ts'
+import { appearanceFromFotmob, FIXED_STAT_LABELS } from './fotmobAppearances.ts'
 
 const details = {
   content: {
@@ -48,7 +48,23 @@ test('maps a FotMob starter with minutes, cards and limited stats', () => {
   assert.equal(appearance.minutes, 85)
   assert.equal(appearance.yellowCards, 1)
   assert.equal(appearance.subbedOutMinute, 84)
-  assert.ok((appearance.stats?.length ?? 0) <= 10)
+  assert.deepEqual(
+    appearance.stats?.map((stat) => stat.label),
+    [...FIXED_STAT_LABELS],
+  )
+  assert.equal(appearance.stats?.length, 10)
   assert.equal(appearance.stats?.some((stat) => stat.label === 'דקות' && stat.value === '85'), true)
   assert.equal(appearance.stats?.some((stat) => stat.label === 'מסירות מדויקות' && stat.value === '36/40'), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'חילוף' && stat.value === "הוחלף 84'"), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'צהובים' && stat.value === '1'), true)
+})
+
+test('keeps the same 10 stats for a player who did not play', () => {
+  const appearance = appearanceFromFotmob('eliel-peretz', 763312, { content: { lineup: { awayTeam: { starters: [], subs: [] } } } }, true)
+  assert.equal(appearance.squadStatus, 'not-in-squad')
+  assert.deepEqual(
+    appearance.stats?.map((stat) => stat.label),
+    [...FIXED_STAT_LABELS],
+  )
+  assert.equal(appearance.stats?.find((stat) => stat.label === 'חילוף')?.value, 'לא שותף')
 })

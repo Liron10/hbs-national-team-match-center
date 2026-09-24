@@ -586,6 +586,15 @@ main {
   background: #faf7f5;
 }
 
+.appearance__stats {
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+  align-items: stretch;
+}
+
 .appearance__stats li {
   padding: 0.2rem 0.45rem;
   border-radius: 999px;

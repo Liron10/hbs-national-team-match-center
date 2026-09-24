@@ -1,4 +1,5 @@
 import type { PlayerAppearance, SquadStatus } from '../types'
+import { buildFixedStats } from './fotmobAppearances'
 
 const squadLabels: Record<SquadStatus, string> = {
   starter: 'פתח בהרכב',
@@ -20,43 +21,19 @@ export interface AppearanceStat {
 }
 
 export function appearanceStats(appearance: PlayerAppearance): AppearanceStat[] {
-  if (appearance.stats?.length) return appearance.stats.slice(0, 10)
+  if (appearance.stats?.length === 10) return appearance.stats
 
-  const stats: AppearanceStat[] = []
-
-  if (typeof appearance.minutes === 'number') {
-    stats.push({ label: 'דקות', value: String(appearance.minutes) })
-  }
-  if (typeof appearance.goals === 'number') {
-    stats.push({
-      label: appearance.goals === 1 ? 'שער אחד' : 'שערים',
-      value: appearance.goals === 1 ? '' : String(appearance.goals),
-    })
-  }
-  if (typeof appearance.assists === 'number') {
-    stats.push({
-      label: appearance.assists === 1 ? 'בישול אחד' : 'בישולים',
-      value: appearance.assists === 1 ? '' : String(appearance.assists),
-    })
-  }
-  if (typeof appearance.yellowCards === 'number' && appearance.yellowCards > 0) {
-    stats.push({
-      label: appearance.yellowCards === 1 ? 'כרטיס צהוב' : 'כרטיסים צהובים',
-      value: appearance.yellowCards === 1 ? '' : String(appearance.yellowCards),
-    })
-  }
-  if (typeof appearance.redCards === 'number' && appearance.redCards > 0) {
-    stats.push({
-      label: appearance.redCards === 1 ? 'כרטיס אדום' : 'כרטיסים אדומים',
-      value: appearance.redCards === 1 ? '' : String(appearance.redCards),
-    })
-  }
-  if (typeof appearance.subbedInMinute === 'number') {
-    stats.push({ label: 'נכנס', value: `${appearance.subbedInMinute}'` })
-  }
-  if (typeof appearance.subbedOutMinute === 'number') {
-    stats.push({ label: 'הוחלף', value: `${appearance.subbedOutMinute}'` })
-  }
-
-  return stats
+  return buildFixedStats({
+    minutes: appearance.minutes ?? 0,
+    goals: appearance.goals ?? 0,
+    assists: appearance.assists ?? 0,
+    unused: appearance.squadStatus === 'unused' || appearance.squadStatus === 'not-in-squad',
+    subIn: appearance.subbedInMinute,
+    subOut: appearance.subbedOutMinute,
+    yellow: appearance.yellowCards ?? 0,
+    red: appearance.redCards ?? 0,
+    passes: '0',
+    shots: 0,
+    defensive: 0,
+  })
 }

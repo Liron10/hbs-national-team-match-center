@@ -127,4 +127,8 @@ test('opens the live window around kickoff only', () => {
   assert.equal(isInLiveWindow(fixture, new Date('2026-09-24T18:30:00.000Z')), true)
   assert.equal(isInLiveWindow(fixture, new Date('2026-09-24T17:20:00.000Z')), true)
   assert.equal(isInLiveWindow(fixture, new Date('2026-09-18T12:00:00.000Z')), false)
+  assert.equal(
+    isInLiveWindow(match({ status: 'finished' }), new Date('2026-09-24T19:30:00.000Z')),
+    true,
+  )
 })

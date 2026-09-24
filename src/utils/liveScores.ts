@@ -113,10 +113,8 @@ export function isoDateKeys(iso: string): string[] {
 }
 
 export function isInLiveWindow(match: Match, now = new Date()): boolean {
+  if (match.status === 'postponed' || match.status === 'cancelled') return false
   if (match.status === 'live' || match.status === 'halftime') return true
-  if (match.status === 'finished' || match.status === 'postponed' || match.status === 'cancelled') {
-    return false
-  }
   const kickoff = new Date(match.kickoff).getTime()
   const t = now.getTime()
   return t >= kickoff - LIVE_WINDOW_BEFORE_MS && t <= kickoff + LIVE_WINDOW_AFTER_MS
