@@ -12,7 +12,7 @@ import matchDataset from './data/matches.json'
 import { useMatchBoard } from './hooks/useMatchBoard'
 import { useMatches } from './hooks/useMatches'
 import { useNow } from './hooks/useNow'
-import { formatUpdatedAt, formatWindowLabel, latestUpdateIso } from './utils/datetime'
+import { formatWindowLabel } from './utils/datetime'
 import { deriveBucket, hasLiveMatches } from './utils/matchStatus'
 import { sortMatches } from './utils/sortMatches'
 
@@ -23,12 +23,6 @@ export default function App() {
     useMatchBoard(matches, now)
   const live = hasLiveMatches(matches, now)
   const windowLabel = formatWindowLabel(matchDataset.meta.window)
-  const updatedAt = formatUpdatedAt(
-    latestUpdateIso(
-      matches.map((match) => match.lastUpdated),
-      matchDataset.meta.updatedAt,
-    ),
-  )
   const selectedPlayer = selectedPlayerId ? getPlayer(selectedPlayerId) : undefined
   const spotlight = selectedPlayerId
     ? undefined
@@ -96,9 +90,6 @@ export default function App() {
             </section>
           ) : null}
           <p className="updated-note">הנתונים מוזנים ידנית על ידי מנהל הדף</p>
-          {!loading && !error ? (
-            <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>
-          ) : null}
         </main>
         <Footer />
       </div>
