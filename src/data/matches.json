@@ -44,16 +44,16 @@
           "redCards": 0,
           "subbedOutMinute": 84,
           "stats": [
-            { "label": "דקות", "value": "85" },
+            { "label": "דקות משחק", "value": "85" },
             { "label": "שערים", "value": "0" },
             { "label": "בישולים", "value": "0" },
-            { "label": "חילוף", "value": "הוחלף 84'" },
-            { "label": "צהובים", "value": "1" },
-            { "label": "אדומים", "value": "0" },
-            { "label": "דירוג", "value": "6.41" },
+            { "label": "כרטיסים צהובים", "value": "1" },
+            { "label": "כרטיסים אדומים", "value": "0" },
+            { "label": "ציון", "value": "6.41" },
             { "label": "מסירות מדויקות", "value": "36/40" },
-            { "label": "בעיטות", "value": "0" },
-            { "label": "פעולות הגנה", "value": "1" }
+            { "label": "בעיטות", "value": "1" },
+            { "label": "בעיטות למסגרת", "value": "0" },
+            { "label": "תיקולים", "value": "0" }
           ]
         },
         {
@@ -67,16 +67,16 @@
           "yellowCards": 0,
           "redCards": 0,
           "stats": [
-            { "label": "דקות", "value": "90" },
+            { "label": "דקות משחק", "value": "90" },
             { "label": "שערים", "value": "0" },
             { "label": "בישולים", "value": "0" },
-            { "label": "חילוף", "value": "לא" },
-            { "label": "צהובים", "value": "0" },
-            { "label": "אדומים", "value": "0" },
-            { "label": "דירוג", "value": "5.61" },
+            { "label": "כרטיסים צהובים", "value": "0" },
+            { "label": "כרטיסים אדומים", "value": "0" },
+            { "label": "ציון", "value": "5.61" },
             { "label": "מסירות מדויקות", "value": "63/66" },
             { "label": "בעיטות", "value": "0" },
-            { "label": "פעולות הגנה", "value": "8" }
+            { "label": "בעיטות למסגרת", "value": "0" },
+            { "label": "תיקולים", "value": "0" }
           ]
         },
         {
@@ -91,16 +91,16 @@
           "redCards": 0,
           "subbedOutMinute": 64,
           "stats": [
-            { "label": "דקות", "value": "64" },
+            { "label": "דקות משחק", "value": "64" },
             { "label": "שערים", "value": "0" },
             { "label": "בישולים", "value": "0" },
-            { "label": "חילוף", "value": "הוחלף 64'" },
-            { "label": "צהובים", "value": "0" },
-            { "label": "אדומים", "value": "0" },
-            { "label": "דירוג", "value": "6.63" },
+            { "label": "כרטיסים צהובים", "value": "0" },
+            { "label": "כרטיסים אדומים", "value": "0" },
+            { "label": "ציון", "value": "6.63" },
             { "label": "מסירות מדויקות", "value": "25/33" },
             { "label": "בעיטות", "value": "0" },
-            { "label": "פעולות הגנה", "value": "4" }
+            { "label": "בעיטות למסגרת", "value": "0" },
+            { "label": "תיקולים", "value": "0" }
           ]
         }
       ],

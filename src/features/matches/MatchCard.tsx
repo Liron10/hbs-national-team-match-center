@@ -49,6 +49,7 @@ export function MatchCard({ match, now, selectedPlayerId }: MatchCardProps) {
             <PlayerAppearanceRow
               key={appearance.playerId}
               appearance={appearance}
+              matchStatus={match.status}
               expanded={selectedPlayerId === appearance.playerId}
             />
           ))}

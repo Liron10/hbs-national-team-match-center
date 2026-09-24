@@ -31,6 +31,9 @@ const details = {
                 key: 'accurate_passes',
                 stat: { value: 36, total: 40, type: 'fractionWithPercentage' },
               },
+              'Total shots': { key: 'total_shots', stat: { value: 1, type: 'integer' } },
+              'Shots on target': { key: 'ShotsOnTarget', stat: { value: 0, type: 'integer' } },
+              Tackles: { key: 'tackles_succeeded', stat: { value: 2, type: 'integer' } },
               Shotmap: { key: null, stat: { value: 0, type: 'boolean' } },
             },
           },
@@ -40,7 +43,7 @@ const details = {
   },
 }
 
-test('maps a FotMob starter with minutes, cards and limited stats', () => {
+test('maps a FotMob starter with minutes, cards and a fixed stat sheet', () => {
   const appearance = appearanceFromFotmob('eliel-peretz', 763312, details, true)
   assert.equal(appearance.squadStatus, 'subbed-out')
   assert.equal(appearance.started, true)
@@ -53,18 +56,20 @@ test('maps a FotMob starter with minutes, cards and limited stats', () => {
     [...FIXED_STAT_LABELS],
   )
   assert.equal(appearance.stats?.length, 10)
-  assert.equal(appearance.stats?.some((stat) => stat.label === 'דקות' && stat.value === '85'), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'דקות משחק' && stat.value === '85'), true)
   assert.equal(appearance.stats?.some((stat) => stat.label === 'מסירות מדויקות' && stat.value === '36/40'), true)
-  assert.equal(appearance.stats?.some((stat) => stat.label === 'חילוף' && stat.value === "הוחלף 84'"), true)
-  assert.equal(appearance.stats?.some((stat) => stat.label === 'צהובים' && stat.value === '1'), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'כרטיסים צהובים' && stat.value === '1'), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'בעיטות למסגרת' && stat.value === '0'), true)
+  assert.equal(appearance.stats?.some((stat) => stat.label === 'תיקולים' && stat.value === '2'), true)
 })
 
-test('keeps the same 10 stats for a player who did not play', () => {
-  const appearance = appearanceFromFotmob('eliel-peretz', 763312, { content: { lineup: { awayTeam: { starters: [], subs: [] } } } }, true)
-  assert.equal(appearance.squadStatus, 'not-in-squad')
-  assert.deepEqual(
-    appearance.stats?.map((stat) => stat.label),
-    [...FIXED_STAT_LABELS],
+test('does not invent a stat sheet for a player who did not play', () => {
+  const appearance = appearanceFromFotmob(
+    'eliel-peretz',
+    763312,
+    { content: { lineup: { awayTeam: { starters: [], subs: [] } } } },
+    true,
   )
-  assert.equal(appearance.stats?.find((stat) => stat.label === 'חילוף')?.value, 'לא שותף')
+  assert.equal(appearance.squadStatus, 'not-in-squad')
+  assert.deepEqual(appearance.stats, [])
 })

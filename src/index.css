@@ -587,20 +587,32 @@ main {
 }
 
 .appearance__stats {
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin: 0.45rem 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.22rem 0.85rem;
+  width: min(100%, 16.5rem);
+  margin: 0.5rem 0 0;
   padding: 0;
   list-style: none;
-  align-items: stretch;
+  align-items: center;
 }
 
 .appearance__stats li {
-  padding: 0.2rem 0.45rem;
-  border-radius: 999px;
-  background: #f3eeea;
-  font-size: 0.78rem;
+  display: contents;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.82rem;
   font-weight: 500;
+}
+
+.appearance__stats span {
+  color: var(--muted);
+}
+
+.appearance__stats strong {
+  font-weight: 800;
+  color: var(--text);
 }
 
 .appearance__more {

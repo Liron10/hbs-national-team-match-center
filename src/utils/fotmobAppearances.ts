@@ -1,19 +1,18 @@
 import type { Match, PlayerAppearance, SquadStatus } from '../types'
 import { fotmobPlayerId } from '../data/fotmobIds'
-import { isInLiveWindow } from './liveScores'
 import { footballGet } from '../services/football/client'
 
 export const FIXED_STAT_LABELS = [
-  'דקות',
+  'דקות משחק',
   'שערים',
   'בישולים',
-  'חילוף',
-  'צהובים',
-  'אדומים',
-  'דירוג',
+  'כרטיסים צהובים',
+  'כרטיסים אדומים',
+  'ציון',
   'מסירות מדויקות',
   'בעיטות',
-  'פעולות הגנה',
+  'בעיטות למסגרת',
+  'תיקולים',
 ] as const
 
 interface FotmobLinePlayer {
@@ -52,9 +51,12 @@ function statByKey(payload: FotmobPlayerStats | undefined, key: string): FotmobS
   return allStatEntries(payload).find((entry) => entry.key === key)
 }
 
-function statNumber(payload: FotmobPlayerStats | undefined, key: string): number {
-  const value = statByKey(payload, key)?.stat?.value
-  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+function statNumber(payload: FotmobPlayerStats | undefined, keys: string | string[]): number {
+  for (const key of Array.isArray(keys) ? keys : [keys]) {
+    const value = statByKey(payload, key)?.stat?.value
+    if (typeof value === 'number' && Number.isFinite(value)) return value
+  }
+  return 0
 }
 
 function statFraction(payload: FotmobPlayerStats | undefined, key: string): string {
@@ -64,15 +66,6 @@ function statFraction(payload: FotmobPlayerStats | undefined, key: string): stri
   if (typeof value !== 'number') return '0'
   if (typeof total === 'number') return `${value}/${total}`
   return String(value)
-}
-
-function substitutionLabel(subIn?: number, subOut?: number, unused?: boolean): string {
-  if (unused && subIn == null) return 'לא שותף'
-  const parts: string[] = []
-  if (subIn != null) parts.push(`נכנס ${subIn}'`)
-  if (subOut != null) parts.push(`הוחלף ${subOut}'`)
-  if (parts.length > 0) return parts.join(' · ')
-  return 'לא'
 }
 
 function eventsOf(player: FotmobLinePlayer | undefined) {
@@ -91,15 +84,13 @@ export function buildFixedStats(input: {
   minutes: number
   goals: number
   assists: number
-  unused: boolean
-  subIn?: number
-  subOut?: number
   yellow: number
   red: number
   rating?: number
   passes: string
   shots: number
-  defensive: number
+  shotsOnTarget: number
+  tackles: number
 }): Array<{ label: string; value: string }> {
   const rating =
     typeof input.rating === 'number' && Number.isFinite(input.rating) ? input.rating.toFixed(2) : '—'
@@ -107,13 +98,13 @@ export function buildFixedStats(input: {
     String(input.minutes),
     String(input.goals),
     String(input.assists),
-    substitutionLabel(input.subIn, input.subOut, input.unused),
     String(input.yellow),
     String(input.red),
     rating,
     input.passes,
     String(input.shots),
-    String(input.defensive),
+    String(input.shotsOnTarget),
+    String(input.tackles),
   ]
   return FIXED_STAT_LABELS.map((label, index) => ({ label, value: values[index] ?? '0' }))
 }
@@ -143,7 +134,6 @@ export function appearanceFromFotmob(
   else if (sub && events.subIn != null) squadStatus = 'subbed-in'
   else if (sub) squadStatus = 'unused'
 
-  const unused = squadStatus === 'unused' || squadStatus === 'not-in-squad'
   const played = minutes > 0 || Boolean(starter) || events.subIn != null
 
   return {
@@ -158,20 +148,20 @@ export function appearanceFromFotmob(
     redCards: events.red,
     subbedInMinute: events.subIn,
     subbedOutMinute: events.subOut,
-    stats: buildFixedStats({
-      minutes,
-      goals,
-      assists,
-      unused,
-      subIn: events.subIn,
-      subOut: events.subOut,
-      yellow: events.yellow,
-      red: events.red,
-      rating: typeof rating === 'number' ? rating : undefined,
-      passes: statFraction(statsPayload, 'accurate_passes'),
-      shots: statNumber(statsPayload, 'total_shots'),
-      defensive: statNumber(statsPayload, 'defensive_actions'),
-    }),
+    stats: played
+      ? buildFixedStats({
+          minutes,
+          goals,
+          assists,
+          yellow: events.yellow,
+          red: events.red,
+          rating: typeof rating === 'number' ? rating : undefined,
+          passes: statFraction(statsPayload, 'accurate_passes'),
+          shots: statNumber(statsPayload, ['total_shots', 'shots']),
+          shotsOnTarget: statNumber(statsPayload, ['ShotsOnTarget', 'shots_on_target', 'on_target']),
+          tackles: statNumber(statsPayload, ['tackles_succeeded', 'WonTackle', 'tackles', 'won_tackle']),
+        })
+      : [],
   }
 }
 
@@ -187,11 +177,12 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
   }
 }
 
-export async function enrichMatchAppearances(matches: Match[], now = new Date()): Promise<Match[]> {
+export async function enrichMatchAppearances(matches: Match[]): Promise<Match[]> {
   return Promise.all(
     matches.map(async (match) => {
-      if (match.status === 'postponed' || match.status === 'cancelled') return match
-      if (match.status === 'scheduled' && !isInLiveWindow(match, now)) return match
+      if (match.status === 'scheduled' || match.status === 'postponed' || match.status === 'cancelled') {
+        return match
+      }
       if (match.fotmobMatchId == null) return match
       try {
         const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.fotmobMatchId}`)
