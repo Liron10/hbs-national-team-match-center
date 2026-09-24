@@ -82,6 +82,7 @@ export default function App() {
                 selectedPlayerId={selectedPlayerId}
               />
             ) : null}
+            <p className="updated-note">הנתונים נכתבים ידנית על ידי מנהל הדף</p>
             {!loading && !error ? (
               <p className="updated-note">הנתונים עודכנו לאחרונה: {updatedAt}</p>
             ) : null}

@@ -4,7 +4,10 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <ClubLogo className="club-logo--footer" />
-      <p>© {new Date().getFullYear()} הפועל באר שבע | כל הזכויות שמורות</p>
+      <div>
+        <p>הנתונים נכתבים ידנית על ידי מנהל הדף</p>
+        <p>© {new Date().getFullYear()} הפועל באר שבע | כל הזכויות שמורות</p>
+      </div>
     </footer>
   )
 }
