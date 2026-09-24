@@ -3,7 +3,7 @@
     "source": "api",
     "sourceLabelHe": "עדכון חי מ-FotMob",
     "sourceLabelEn": "Live scores from FotMob",
-    "updatedAt": "2026-09-24T21:03:25.975Z",
+    "updatedAt": "2026-09-24T21:42:41.474Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-24T21:03:25.899Z",
+      "lastUpdated": "2026-09-24T21:42:41.040Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -44,16 +44,46 @@
           "redCards": 0,
           "subbedOutMinute": 84,
           "stats": [
-            { "label": "דקות משחק", "value": "85" },
-            { "label": "שערים", "value": "0" },
-            { "label": "בישולים", "value": "0" },
-            { "label": "כרטיסים צהובים", "value": "1" },
-            { "label": "כרטיסים אדומים", "value": "0" },
-            { "label": "ציון", "value": "6.41" },
-            { "label": "מסירות מדויקות", "value": "36/40" },
-            { "label": "בעיטות", "value": "1" },
-            { "label": "בעיטות למסגרת", "value": "0" },
-            { "label": "תיקולים", "value": "0" }
+            {
+              "label": "דקות משחק",
+              "value": "85"
+            },
+            {
+              "label": "שערים",
+              "value": "0"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "1"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "6.41"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "36/40"
+            },
+            {
+              "label": "בעיטות",
+              "value": "1"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "0"
+            }
           ]
         },
         {
@@ -67,16 +97,46 @@
           "yellowCards": 0,
           "redCards": 0,
           "stats": [
-            { "label": "דקות משחק", "value": "90" },
-            { "label": "שערים", "value": "0" },
-            { "label": "בישולים", "value": "0" },
-            { "label": "כרטיסים צהובים", "value": "0" },
-            { "label": "כרטיסים אדומים", "value": "0" },
-            { "label": "ציון", "value": "5.61" },
-            { "label": "מסירות מדויקות", "value": "63/66" },
-            { "label": "בעיטות", "value": "0" },
-            { "label": "בעיטות למסגרת", "value": "0" },
-            { "label": "תיקולים", "value": "1" }
+            {
+              "label": "דקות משחק",
+              "value": "90"
+            },
+            {
+              "label": "שערים",
+              "value": "0"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "5.61"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "63/66"
+            },
+            {
+              "label": "בעיטות",
+              "value": "0"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "1"
+            }
           ]
         },
         {
@@ -91,16 +151,46 @@
           "redCards": 0,
           "subbedOutMinute": 64,
           "stats": [
-            { "label": "דקות משחק", "value": "64" },
-            { "label": "שערים", "value": "0" },
-            { "label": "בישולים", "value": "0" },
-            { "label": "כרטיסים צהובים", "value": "0" },
-            { "label": "כרטיסים אדומים", "value": "0" },
-            { "label": "ציון", "value": "6.63" },
-            { "label": "מסירות מדויקות", "value": "25/33" },
-            { "label": "בעיטות", "value": "0" },
-            { "label": "בעיטות למסגרת", "value": "0" },
-            { "label": "תיקולים", "value": "0" }
+            {
+              "label": "דקות משחק",
+              "value": "64"
+            },
+            {
+              "label": "שערים",
+              "value": "0"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "6.63"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "25/33"
+            },
+            {
+              "label": "בעיטות",
+              "value": "0"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "0"
+            }
           ]
         }
       ],
