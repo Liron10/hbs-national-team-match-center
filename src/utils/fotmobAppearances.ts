@@ -43,12 +43,21 @@ interface FotmobMatchDetails {
   }
 }
 
-function allStatEntries(payload: FotmobPlayerStats | undefined): FotmobStatValue[] {
-  return payload?.stats?.flatMap((group) => Object.values(group.stats ?? {})) ?? []
+function allStatEntries(
+  payload: FotmobPlayerStats | undefined,
+): Array<FotmobStatValue & { title: string }> {
+  return (
+    payload?.stats?.flatMap((group) =>
+      Object.entries(group.stats ?? {}).map(([title, entry]) => ({ ...entry, title })),
+    ) ?? []
+  )
 }
 
 function statByKey(payload: FotmobPlayerStats | undefined, key: string): FotmobStatValue | undefined {
-  return allStatEntries(payload).find((entry) => entry.key === key)
+  const needle = key.toLowerCase()
+  return allStatEntries(payload).find(
+    (entry) => entry.key === key || entry.title.toLowerCase() === needle,
+  )
 }
 
 function statNumber(payload: FotmobPlayerStats | undefined, keys: string | string[]): number {
@@ -159,7 +168,14 @@ export function appearanceFromFotmob(
           passes: statFraction(statsPayload, 'accurate_passes'),
           shots: statNumber(statsPayload, ['total_shots', 'shots']),
           shotsOnTarget: statNumber(statsPayload, ['ShotsOnTarget', 'shots_on_target', 'on_target']),
-          tackles: statNumber(statsPayload, ['tackles_succeeded', 'WonTackle', 'tackles', 'won_tackle']),
+          tackles: statNumber(statsPayload, [
+            'matchstats.headers.tackles',
+            'tackles_succeeded',
+            'WonTackle',
+            'tackles',
+            'won_tackle',
+            'Tackles',
+          ]),
         })
       : [],
   }
