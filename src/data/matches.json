@@ -3,7 +3,7 @@
     "source": "api",
     "sourceLabelHe": "עדכון חי מ-FotMob",
     "sourceLabelEn": "Live scores from FotMob",
-    "updatedAt": "2026-09-24T21:42:41.474Z",
+    "updatedAt": "2026-09-25T00:01:18.743Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-24T21:42:41.040Z",
+      "lastUpdated": "2026-09-25T00:01:18.722Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -70,7 +70,7 @@
             },
             {
               "label": "מסירות מדויקות",
-              "value": "36/40"
+              "value": "37/41"
             },
             {
               "label": "בעיטות",
@@ -119,11 +119,11 @@
             },
             {
               "label": "ציון",
-              "value": "5.61"
+              "value": "5.56"
             },
             {
               "label": "מסירות מדויקות",
-              "value": "63/66"
+              "value": "64/67"
             },
             {
               "label": "בעיטות",
@@ -177,7 +177,7 @@
             },
             {
               "label": "מסירות מדויקות",
-              "value": "25/33"
+              "value": "24/32"
             },
             {
               "label": "בעיטות",
