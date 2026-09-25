@@ -23,9 +23,9 @@ async function main() {
     ...current,
     meta: {
       ...current.meta,
-      source: 'api',
-      sourceLabelHe: 'עדכון חי מ-FotMob',
-      sourceLabelEn: 'Live scores from FotMob',
+      source: 'manual',
+      sourceLabelHe: 'הנתונים מוזנים ידנית על ידי מנהל הדף',
+      sourceLabelEn: 'Entered by the page administrator',
       updatedAt: new Date().toISOString(),
     },
     matches,

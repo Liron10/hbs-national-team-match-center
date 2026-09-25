@@ -1,8 +1,8 @@
 {
   "meta": {
-    "source": "api",
-    "sourceLabelHe": "עדכון חי מ-FotMob",
-    "sourceLabelEn": "Live scores from FotMob",
+    "source": "manual",
+    "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
+    "sourceLabelEn": "Entered by the page administrator",
     "updatedAt": "2026-09-25T09:49:46.023Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."

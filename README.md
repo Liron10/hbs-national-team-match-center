@@ -69,11 +69,9 @@ npm run fetch-player-images
 
 ## תוצאות לייב
 
-המקור הפעיל הוא **FotMob**, דרך אותו JSON ציבורי שהפרויקט הפתוח [Ryzellx/football-live-api](https://github.com/Ryzellx/football-live-api) עוטף. ה-demo המאוחסן שלהם (`football-live-api.vercel.app`) מחזיר כרגע 402, לכן הקריאה היא ישירות ל-FotMob.
+הלוח מתעדכן מתוך `src/data/matches.json`. בזמן משחק הדף מרענן את הכרטיסים בלי רענון ידני. `npm run refresh-data` מעדכן את הקובץ.
 
-כל התקשורת עוברת ב־`src/services/football/` — כתובת ה-API מוגדרת רק ב־`src/services/football/config.ts`.
-
-בפיתוח יש proxy של Vite (`/football-api`). בזמן משחק הדף מתעדכן כל 30 שניות בלי רענון. `npm run refresh-data` מעדכן את `matches.json` מ-FotMob.
+כל התקשורת החיצונית לתוצאות, אם יש, מוגדרת רק ב־`src/services/football/config.ts`.
 
 ## GitHub Pages
 
