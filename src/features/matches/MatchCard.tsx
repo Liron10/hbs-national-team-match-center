@@ -2,7 +2,7 @@ import type { Match } from '../../types'
 import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Flag } from '../../components/Flag'
-import { formatFanKickoff } from '../../utils/datetime'
+import { formatFanKickoff, formatMatchTime } from '../../utils/datetime'
 import { matchLineup } from '../../utils/matchLine'
 import { displayStatus, isLiveStatus } from '../../utils/matchStatus'
 import { competitionBadge } from '../../utils/boardPulse'
@@ -13,7 +13,7 @@ interface MatchCardProps {
   match: Match
   now: Date
   featured?: boolean
-  onOpenPlayer: (playerId: string) => void
+  onOpenPlayer: (playerId: string, matchId: string) => void
 }
 
 export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchCardProps) {
@@ -24,7 +24,8 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
   const cancelled = match.status === 'cancelled'
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const kickoff = formatFanKickoff(match.kickoff, now, match.status)
-  const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoff.primary
+  const kickoffTime = formatMatchTime(match.kickoff)
+  const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoffTime
   const { left, right } = matchLineup(match)
   const showPlayers = match.players.length > 0
   const classes = [
@@ -66,7 +67,9 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
           {center ? (
             <p
               key={center}
-              className={hasScore ? 'match-card__score match-card__score--result' : 'match-card__score'}
+              className={
+                hasScore ? 'match-card__score match-card__score--result' : 'match-card__score match-card__score--kick'
+              }
               aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}
             >
               {center}
@@ -89,7 +92,7 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
               appearance={appearance}
               matchStatus={match.status}
               prominent={live}
-              onOpenPlayer={onOpenPlayer}
+              onOpenPlayer={(playerId) => onOpenPlayer(playerId, match.id)}
             />
           ))}
         </section>

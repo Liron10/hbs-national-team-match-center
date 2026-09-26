@@ -35,6 +35,7 @@ export default function App() {
     clearPlayer,
   } = useMatchBoard(matches, now)
   const [sheetPlayerId, setSheetPlayerId] = useState<string | null>(null)
+  const [sheetMatchId, setSheetMatchId] = useState<string | null>(null)
   const scrollYRef = useRef(0)
   const live = hasLiveMatches(matches, now)
   const windowLabel = formatWindowLabel(matchDataset.meta.window)
@@ -52,13 +53,15 @@ export default function App() {
   const showOpen = filter !== 'finished'
   const tabs = <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
 
-  const openPlayer = useCallback((id: string) => {
+  const openPlayer = useCallback((id: string, matchId: string) => {
     scrollYRef.current = window.scrollY
     setSheetPlayerId(id)
+    setSheetMatchId(matchId)
   }, [])
 
   const closePlayer = useCallback(() => {
     setSheetPlayerId(null)
+    setSheetMatchId(null)
     const y = scrollYRef.current
     requestAnimationFrame(() => window.scrollTo(0, y))
   }, [])
@@ -68,6 +71,7 @@ export default function App() {
       setFilter('all')
       clearPlayer()
       setSheetPlayerId(null)
+      setSheetMatchId(null)
       window.setTimeout(() => {
         document.getElementById(`match-${matchId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }, 50)
@@ -162,6 +166,7 @@ export default function App() {
         <PlayerSheet
           player={sheetPlayer}
           matches={matches}
+          matchId={sheetMatchId}
           now={now}
           onClose={closePlayer}
           onShowMatch={showMatch}

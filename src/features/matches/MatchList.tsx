@@ -8,7 +8,7 @@ interface MatchListProps {
   now: Date
   empty?: boolean
   nextMatchId?: string
-  onOpenPlayer: (playerId: string) => void
+  onOpenPlayer: (playerId: string, matchId: string) => void
 }
 
 const emptyCopy: Record<MatchFilter, string> = {

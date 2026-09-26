@@ -85,15 +85,12 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
   pushStat(headlineStats, minutes, 'דקות')
   pushStat(headlineStats, goals, 'שערים')
   pushStat(headlineStats, assists, 'בישולים')
-  pushStat(headlineStats, starts, 'פתיחות בהרכב')
-  pushStat(headlineStats, subs, 'כניסות כמחליף')
-  pushStat(headlineStats, yellow, 'כרטיסים צהובים')
-  pushStat(headlineStats, red, 'כרטיסים אדומים')
 
   const windowStats: NamedStat[] = []
   pushStat(windowStats, rows.length, 'משחקים')
   pushStat(windowStats, minutes, 'דקות')
-  pushStat(windowStats, starts, 'פתיחות')
+  pushStat(windowStats, starts, 'משחקים שפתח בהרכב')
+  pushStat(windowStats, subs, 'כניסות כמחליף')
   pushStat(windowStats, goals, 'שערים')
   pushStat(windowStats, assists, 'בישולים')
 
@@ -154,7 +151,7 @@ export function windowBoardStats(matches: Match[]): NamedStat[] {
     0,
   )
   pushStat(stats, minutes, 'דקות')
-  pushStat(stats, starts, 'הופעות בהרכב')
+  pushStat(stats, starts, 'משחקים שפתח בהרכב')
   pushStat(stats, goals, 'שערים')
   pushStat(stats, assists, 'בישולים')
   return stats

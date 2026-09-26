@@ -6,18 +6,26 @@ import { nationalTeams } from '../data/teams'
 import { displayTeamName } from '../utils/matchLine'
 import { formatStartPhrase } from '../utils/countdown'
 import { playerWindowProfile } from '../utils/playerWindow'
+import { appearanceStats, matchShowsPlayerStats } from '../utils/appearanceCopy'
 
 interface PlayerSheetProps {
   player: Player
   matches: Match[]
+  matchId?: string | null
   now: Date
   onClose: () => void
   onShowMatch: (matchId: string) => void
 }
 
-export function PlayerSheet({ player, matches, now, onClose, onShowMatch }: PlayerSheetProps) {
+export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatch }: PlayerSheetProps) {
   const team = nationalTeams[player.nationalTeamCode]
   const profile = playerWindowProfile(player.id, matches, now)
+  const sourceMatch = matchId ? matches.find((match) => match.id === matchId) : undefined
+  const sourceAppearance = sourceMatch?.players.find((appearance) => appearance.playerId === player.id)
+  const matchStats =
+    sourceMatch && sourceAppearance && matchShowsPlayerStats(sourceMatch.status)
+      ? appearanceStats(sourceAppearance)
+      : []
   const nextKickoff = matches.find((match) => match.id === profile.nextMatch?.matchId)?.kickoff
   const nextEta = nextKickoff ? formatStartPhrase(nextKickoff, now) : null
 
@@ -39,9 +47,11 @@ export function PlayerSheet({ player, matches, now, onClose, onShowMatch }: Play
         onClick={(event) => event.stopPropagation()}
       >
         <div className="player-sheet__handle" aria-hidden="true" />
-        <button type="button" className="player-sheet__close" onClick={onClose} aria-label="סגירת כרטיס שחקן">
-          סגירה
-        </button>
+        <div className="player-sheet__bar">
+          <button type="button" className="player-sheet__close" onClick={onClose}>
+            סגירה
+          </button>
+        </div>
         <header className="player-sheet__hero">
           <PlayerPortrait player={player} className="portrait--xl" />
           <div>
@@ -61,6 +71,19 @@ export function PlayerSheet({ player, matches, now, onClose, onShowMatch }: Play
               </li>
             ))}
           </ul>
+        ) : null}
+        {matchStats.length > 0 ? (
+          <section className="player-sheet__block">
+            <h3>במשחק</h3>
+            <ul className="appearance__stats player-sheet__match-stats">
+              {matchStats.map((stat) => (
+                <li key={stat.label}>
+                  <span>{stat.label}</span>
+                  <strong>{stat.value}</strong>
+                </li>
+              ))}
+            </ul>
+          </section>
         ) : null}
         {profile.windowStats.length > 0 ? (
           <section className="player-sheet__block">

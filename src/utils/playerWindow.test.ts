@@ -50,11 +50,11 @@ test('builds window totals without empty zeros', () => {
   assert.equal(profile.starts, 1)
   assert.deepEqual(
     profile.headlineStats.map((stat) => stat.label),
-    ['הופעות', 'דקות', 'שערים', 'פתיחות בהרכב'],
+    ['הופעות', 'דקות', 'שערים'],
   )
   assert.equal(profile.lastMatch?.line, 'ישראל 2:1 אירלנד')
   assert.equal(profile.nextMatch?.matchId, 'next')
-  assert.equal(profile.recent.length, 1)
+  assert.equal(profile.windowStats.some((stat) => stat.label === 'משחקים שפתח בהרכב'), true)
 })
 
 test('hides empty window numbers from the board strip', () => {

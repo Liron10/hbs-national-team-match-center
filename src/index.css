@@ -287,6 +287,10 @@ a:focus-visible {
   animation: score-pop 0.4s ease;
 }
 
+.match-card__score--kick {
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+}
+
 .spotlight__vs,
 .match-card__vs {
   font-size: 0.72rem;
@@ -493,11 +497,11 @@ main {
 
 .match-card__watermark {
   position: absolute;
-  inset-inline-end: -1.2rem;
-  top: 1.4rem;
-  width: 9rem;
-  height: 6.4rem;
-  opacity: 0.06;
+  inset-inline-end: -1.5rem;
+  top: 3.6rem;
+  width: 8rem;
+  height: 5.6rem;
+  opacity: 0.045;
   pointer-events: none;
   z-index: 0;
 }
@@ -523,6 +527,12 @@ main {
   flex-direction: column;
   gap: 0.15rem;
   min-width: 0;
+}
+
+.match-card__when time {
+  white-space: normal;
+  line-height: 1.3;
+  overflow-wrap: break-word;
 }
 
 .match-card__date {
@@ -594,7 +604,7 @@ main {
 
 .match-card__line {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(5.5rem, 1fr) auto minmax(5.5rem, 1fr);
   gap: 0.45rem 0.55rem;
   align-items: center;
   justify-items: center;
@@ -607,6 +617,7 @@ main {
   flex-direction: column;
   align-items: center;
   min-width: 4.5rem;
+  max-width: 7.5rem;
 }
 
 .overnight-note {
@@ -622,7 +633,8 @@ main {
 .match-team span {
   line-height: 1.25;
   text-align: center;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .match-team {
@@ -1111,28 +1123,34 @@ main {
 .player-sheet__handle {
   width: 2.6rem;
   height: 0.28rem;
-  margin: 0.15rem auto 0.7rem;
+  margin: 0.15rem auto 0.35rem;
   border-radius: 999px;
   background: #ddd7d1;
 }
 
+.player-sheet__bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0 0 0.55rem;
+  min-height: 2.5rem;
+}
+
 .player-sheet__close {
-  position: absolute;
-  top: 0.75rem;
-  inset-inline-start: 0.85rem;
   border: 0;
   background: transparent;
   color: var(--red);
   font-weight: 800;
   cursor: pointer;
-  padding: 0.35rem;
+  padding: 0.35rem 0.15rem;
+  min-height: 2.5rem;
 }
 
 .player-sheet__hero {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  margin: 0.4rem 0 1rem;
+  margin: 0 0 1rem;
 }
 
 .player-sheet__hero h2 {
@@ -1220,6 +1238,11 @@ main {
   color: var(--muted);
   font-weight: 700;
   white-space: nowrap;
+}
+
+.player-sheet__match-stats {
+  width: 100%;
+  margin-top: 0.15rem;
 }
 
 .player-sheet__link {
@@ -1330,7 +1353,7 @@ main {
 
   .spotlight__scoreline,
   .match-card__line {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: minmax(5.5rem, 1fr) auto minmax(5.5rem, 1fr);
   }
 
   .match-team {
