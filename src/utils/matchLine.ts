@@ -1,4 +1,4 @@
-import type { Match, TeamSide } from '../types'
+import type { CountryCode, Match, TeamSide } from '../types'
 import { getPlayer } from '../data/players'
 import { getTeam } from '../data/teams'
 
@@ -67,6 +67,21 @@ export function matchHeadline(match: Match): string {
   return `${left.label} – ${right.label}`
 }
 
-export function hasVerifiedAppearance(match: Match): boolean {
-  return match.players.some((appearance) => appearance.squadStatus !== 'unknown')
+export function hbsWatermarkCodes(match: Match): CountryCode[] {
+  const codes: CountryCode[] = []
+  const seen = new Set<string>()
+  for (const appearance of match.players) {
+    const player = getPlayer(appearance.playerId)
+    if (!player) continue
+    const code =
+      match.homeTeam.code === player.nationalTeamCode
+        ? match.homeTeam.code
+        : match.awayTeam.code === player.nationalTeamCode
+          ? match.awayTeam.code
+          : player.nationalTeamCode
+    if (seen.has(code)) continue
+    seen.add(code)
+    codes.push(code)
+  }
+  return codes
 }

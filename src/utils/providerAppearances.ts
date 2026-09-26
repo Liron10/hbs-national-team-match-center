@@ -119,7 +119,7 @@ export function buildFixedStats(input: {
   return FIXED_STAT_LABELS.map((label, index) => ({ label, value: values[index] ?? '0' }))
 }
 
-export function appearanceFromFotmob(
+export function appearanceFromProvider(
   playerId: string,
   fotmobId: number,
   details: FotmobMatchDetails,
@@ -190,13 +190,13 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
     players: match.players.map((appearance) => {
       const fotmobId = fotmobPlayerId[appearance.playerId]
       if (!fotmobId) return appearance
-      return appearanceFromFotmob(appearance.playerId, fotmobId, details, match.status)
+      return appearanceFromProvider(appearance.playerId, fotmobId, details, match.status)
     }),
   }
 }
 
 export function shouldEnrichAppearances(match: Match, now = new Date()): boolean {
-  if (match.fotmobMatchId == null) return false
+  if (match.providerMatchId == null) return false
   if (match.status === 'postponed' || match.status === 'cancelled') return false
   if (match.status === 'live' || match.status === 'halftime' || match.status === 'finished') return true
   return match.status === 'scheduled' && isInLiveWindow(match, now)
@@ -207,7 +207,7 @@ export async function enrichMatchAppearances(matches: Match[], now = new Date())
     matches.map(async (match) => {
       if (!shouldEnrichAppearances(match, now)) return match
       try {
-        const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.fotmobMatchId}`)
+        const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.providerMatchId}`)
         return mergeMatchAppearances(match, details)
       } catch {
         return match

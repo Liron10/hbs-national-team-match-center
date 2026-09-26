@@ -1,5 +1,5 @@
 import type { MatchStatus, PlayerAppearance, SquadStatus } from '../types'
-import { buildFixedStats } from './fotmobAppearances'
+import { buildFixedStats } from './providerAppearances'
 
 const squadLabels: Record<SquadStatus, string> = {
   starter: 'פותח בהרכב',
@@ -9,6 +9,15 @@ const squadLabels: Record<SquadStatus, string> = {
   unused: 'לא שותף',
   'not-in-squad': 'לא בסגל',
   unknown: 'בסגל הנבחרת',
+}
+
+export function isOnThePitch(appearance: PlayerAppearance, matchStatus?: MatchStatus): boolean {
+  if (matchStatus !== 'live' && matchStatus !== 'halftime') return false
+  if (appearance.squadStatus === 'subbed-out') return false
+  if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') return false
+  if (appearance.squadStatus === 'not-in-squad' || appearance.squadStatus === 'unknown') return false
+  if (appearance.subbedOutMinute != null) return false
+  return appearance.squadStatus === 'starter' || appearance.squadStatus === 'subbed-in'
 }
 
 export function matchShowsPlayerStats(status: MatchStatus): boolean {

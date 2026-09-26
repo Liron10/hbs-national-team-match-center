@@ -17,7 +17,7 @@ import { useMatches } from './hooks/useMatches'
 import { useNow } from './hooks/useNow'
 import { boardPulse, liveTabTitle, nextScheduledMatch } from './utils/boardPulse'
 import { formatWindowLabel } from './utils/datetime'
-import { deriveBucket, hasLiveMatches } from './utils/matchStatus'
+import { deriveBucket, hasLiveMatches, isLiveStatus } from './utils/matchStatus'
 import { sortMatches } from './utils/sortMatches'
 
 const DEFAULT_TITLE = 'האדומים בנבחרות | הפועל באר שבע'
@@ -43,13 +43,20 @@ export default function App() {
   const sheetPlayer = sheetPlayerId ? getPlayer(sheetPlayerId) : undefined
   const pulse = boardPulse(matches, now)
   const nextMatch = nextScheduledMatch(openMatches, now)
-  const restOpen = nextMatch ? openMatches.filter((match) => match.id !== nextMatch.id) : openMatches
+  const liveOpen = openMatches.filter((match) => isLiveStatus(match.status))
+  const restOpen = openMatches.filter(
+    (match) => !isLiveStatus(match.status) && match.id !== nextMatch?.id,
+  )
   const spotlight = selectedPlayerId
     ? undefined
     : sortMatches(matches, now).find((match) => deriveBucket(match, now) === 'live')
   const showFinished = finishedMatches.length > 0 && (filter === 'all' || filter === 'finished')
   const showOpen = filter !== 'finished'
+  const showLiveList = showOpen && liveOpen.length > 0
   const showNext = Boolean(showOpen && nextMatch)
+  const showRest = showOpen && restOpen.length > 0
+  const showEmptyOpen =
+    showOpen && !showLiveList && !showNext && !showRest && (filter !== 'all' || !showFinished)
   const tabs = <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
 
   const openPlayer = useCallback((id: string, matchId: string) => {
@@ -106,9 +113,9 @@ export default function App() {
               מוצגים נתוני פיתוח לדוגמה, כולל משחק LIVE. בבילד לפרודקשן הם לא נכללים.
             </p>
           ) : null}
+          {spotlight ? <LiveSpotlight match={spotlight} /> : null}
           {!loading && !error ? <WindowStrip matches={matches} /> : null}
           <PlayersGrid selectedId={selectedPlayerId} onSelect={selectPlayer} />
-          {spotlight ? <LiveSpotlight match={spotlight} /> : null}
           {selectedPlayer ? (
             <p className="player-filter">
               <span>משחקים של {selectedPlayer.nameHe}</span>
@@ -128,22 +135,21 @@ export default function App() {
               </button>
             </div>
           ) : null}
-          {!loading && !error && showFinished ? (
-            <section className="board" aria-labelledby="finished-heading">
-              {filter === 'finished' ? tabs : null}
+          {!loading && !error && (showOpen || showFinished) ? tabs : null}
+          {!loading && !error && showLiveList ? (
+            <section className="board board--live" aria-labelledby="live-heading">
               <div className="section-heading">
-                <h2 id="finished-heading">משחקים שהסתיימו</h2>
+                <h2 id="live-heading">LIVE</h2>
               </div>
               <MatchList
-                matches={finishedMatches}
-                filter="finished"
+                matches={liveOpen}
+                filter="live"
                 now={now}
                 empty={false}
                 onOpenPlayer={openPlayer}
               />
             </section>
           ) : null}
-          {!loading && !error && showOpen ? tabs : null}
           {!loading && !error && showNext && nextMatch ? (
             <section className="board board--next" aria-labelledby="next-heading">
               <div className="section-heading">
@@ -159,16 +165,40 @@ export default function App() {
               />
             </section>
           ) : null}
-          {!loading && !error && showOpen ? (
+          {!loading && !error && showEmptyOpen ? (
+            <section className="board">
+              <MatchList
+                matches={[]}
+                filter={filter === 'all' ? 'upcoming' : filter}
+                now={now}
+                onOpenPlayer={openPlayer}
+              />
+            </section>
+          ) : null}
+          {!loading && !error && showRest ? (
             <section className="board" aria-labelledby="board-heading">
               <div className="section-heading">
-                <h2 id="board-heading">{showNext ? 'עוד משחקים' : 'המשחקים'}</h2>
+                <h2 id="board-heading">{showNext || showLiveList ? 'עוד משחקים' : 'המשחקים'}</h2>
               </div>
               <MatchList
                 matches={restOpen}
                 filter={filter === 'all' ? 'upcoming' : filter}
                 now={now}
-                empty={!showNext}
+                empty={false}
+                onOpenPlayer={openPlayer}
+              />
+            </section>
+          ) : null}
+          {!loading && !error && showFinished ? (
+            <section className="board" aria-labelledby="finished-heading">
+              <div className="section-heading">
+                <h2 id="finished-heading">משחקים שהסתיימו</h2>
+              </div>
+              <MatchList
+                matches={finishedMatches}
+                filter="finished"
+                now={now}
+                empty={false}
                 onOpenPlayer={openPlayer}
               />
             </section>

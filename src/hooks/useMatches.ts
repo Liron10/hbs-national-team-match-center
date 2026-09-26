@@ -3,7 +3,7 @@ import type { Match } from '../types'
 import { fetchFootballSnapshots } from '../services/football'
 import { createMatchDataProvider } from '../services/matches'
 import { applyLiveSnapshots, isInLiveWindow } from '../utils/liveScores'
-import { enrichMatchAppearances } from '../utils/fotmobAppearances'
+import { enrichMatchAppearances } from '../utils/providerAppearances'
 
 const provider = createMatchDataProvider()
 const LIVE_POLL_MS = 30_000

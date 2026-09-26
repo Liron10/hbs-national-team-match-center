@@ -3,7 +3,7 @@ import path from 'node:path'
 import type { MatchDataset } from '../src/types/index.ts'
 import { fetchFootballSnapshots } from '../src/services/football/fotmob.ts'
 import { applyLiveSnapshots } from '../src/utils/liveScores.ts'
-import { enrichMatchAppearances } from '../src/utils/fotmobAppearances.ts'
+import { enrichMatchAppearances } from '../src/utils/providerAppearances.ts'
 
 const target = path.resolve('src/data/matches.json')
 

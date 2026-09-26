@@ -165,7 +165,7 @@ export function applyLiveSnapshots(matches: Match[], snapshots: LiveScoreSnapsho
     if (!snapshot) return match
 
     const withId =
-      snapshot.sourceMatchId != null ? { ...match, fotmobMatchId: snapshot.sourceMatchId } : match
+      snapshot.sourceMatchId != null ? { ...match, providerMatchId: snapshot.sourceMatchId } : match
 
     if (snapshot.status === 'scheduled') return withId
 

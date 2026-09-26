@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { appearanceFromFotmob, FIXED_STAT_LABELS, shouldEnrichAppearances } from './fotmobAppearances.ts'
+import { appearanceFromProvider, FIXED_STAT_LABELS, shouldEnrichAppearances } from './providerAppearances.ts'
 
 const details = {
   content: {
@@ -44,7 +44,7 @@ const details = {
 }
 
 test('maps a FotMob starter with minutes, cards and a fixed stat sheet', () => {
-  const appearance = appearanceFromFotmob('eliel-peretz', 763312, details, 'finished')
+  const appearance = appearanceFromProvider('eliel-peretz', 763312, details, 'finished')
   assert.equal(appearance.squadStatus, 'subbed-out')
   assert.equal(appearance.started, true)
   assert.equal(appearance.played, true)
@@ -64,7 +64,7 @@ test('maps a FotMob starter with minutes, cards and a fixed stat sheet', () => {
 })
 
 test('reads FotMob tackles from the matchstats header key', () => {
-  const appearance = appearanceFromFotmob(
+  const appearance = appearanceFromProvider(
     'idan-nachmias',
     899188,
     {
@@ -90,7 +90,7 @@ test('reads FotMob tackles from the matchstats header key', () => {
 })
 
 test('does not invent a stat sheet for a player who did not play', () => {
-  const appearance = appearanceFromFotmob(
+  const appearance = appearanceFromProvider(
     'eliel-peretz',
     763312,
     { content: { lineup: { awayTeam: { starters: [], subs: [] } } } },
@@ -101,13 +101,13 @@ test('does not invent a stat sheet for a player who did not play', () => {
 })
 
 test('maps a published pre-match lineup without inventing minutes or ratings', () => {
-  const starter = appearanceFromFotmob(
+  const starter = appearanceFromProvider(
     'eliel-peretz',
     763312,
     { content: { lineup: { awayTeam: { starters: [{ id: 763312 }], subs: [] } } } },
     'scheduled',
   )
-  const bench = appearanceFromFotmob(
+  const bench = appearanceFromProvider(
     'eliel-peretz',
     763312,
     { content: { lineup: { awayTeam: { starters: [], subs: [{ id: 763312 }] } } } },
@@ -122,7 +122,7 @@ test('maps a published pre-match lineup without inventing minutes or ratings', (
 })
 
 test('keeps a live unused substitute on the bench until they come on', () => {
-  const appearance = appearanceFromFotmob(
+  const appearance = appearanceFromProvider(
     'eliel-peretz',
     763312,
     { content: { lineup: { awayTeam: { starters: [], subs: [{ id: 763312 }] } } } },
@@ -146,11 +146,11 @@ test('enriches scheduled matches only inside the 90-minute live window', () => {
     awayScore: null,
     lastUpdated: kickoff,
     players: [],
-    fotmobMatchId: 123,
+    providerMatchId: 123,
   }
   assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T17:20:00.000Z')), true)
   assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T16:00:00.000Z')), false)
-  assert.equal(shouldEnrichAppearances({ ...scheduled, fotmobMatchId: undefined }, new Date('2026-09-24T17:20:00.000Z')), false)
+  assert.equal(shouldEnrichAppearances({ ...scheduled, providerMatchId: undefined }, new Date('2026-09-24T17:20:00.000Z')), false)
   assert.equal(
     shouldEnrichAppearances({ ...scheduled, status: 'finished' }, new Date('2026-09-26T12:00:00.000Z')),
     true,

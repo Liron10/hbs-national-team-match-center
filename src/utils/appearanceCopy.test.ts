@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PlayerAppearance } from '../types'
-import { appearanceStats, matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
+import { appearanceStats, isOnThePitch, matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
 
 function appearance(partial: Partial<PlayerAppearance>): PlayerAppearance {
   return {
@@ -109,6 +109,18 @@ test('states clearly when a player is not on the pitch during a live match', () 
       'live',
     ),
     'פותח בהרכב • 38 דקות',
+  )
+  assert.equal(
+    isOnThePitch(appearance({ squadStatus: 'starter', played: true, minutes: 38 }), 'live'),
+    true,
+  )
+  assert.equal(isOnThePitch(appearance({ squadStatus: 'bench', played: false }), 'live'), false)
+  assert.equal(
+    isOnThePitch(
+      appearance({ squadStatus: 'subbed-out', played: true, minutes: 64, subbedOutMinute: 64 }),
+      'live',
+    ),
+    false,
   )
 })
 

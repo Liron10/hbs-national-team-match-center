@@ -1,3 +1,4 @@
+import { ChevronLeft } from 'lucide-react'
 import type { MatchStatus, PlayerAppearance } from '../../types'
 import { getPlayer } from '../../data/players'
 import { PlayerPortrait } from '../../components/PlayerPortrait'
@@ -39,8 +40,8 @@ export function PlayerAppearanceRow({
             ))}
           </ul>
         ) : null}
-        <span className="appearance__more">נתוני שחקן</span>
       </div>
+      <ChevronLeft className="appearance__more" aria-hidden="true" strokeWidth={2.25} />
     </button>
   )
 }

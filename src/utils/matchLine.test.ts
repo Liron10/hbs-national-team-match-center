@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { annotatedTeamLabel, lastNameHe, matchHeadline, matchLineup } from './matchLine.ts'
+import { hbsWatermarkCodes, annotatedTeamLabel, lastNameHe, matchHeadline, matchLineup } from './matchLine.ts'
 
 function peruMatch(): Match {
   return {
@@ -43,4 +43,21 @@ test('puts home first in the lineup so RTL shows home on the right', () => {
   const lineup = matchLineup(peruMatch())
   assert.equal(lineup.left.team.code, 'USA')
   assert.equal(lineup.right.team.code, 'PER')
+})
+
+test('uses the HBS player national side for the card watermark', () => {
+  assert.deepEqual(hbsWatermarkCodes(peruMatch()), ['PER'])
+})
+
+test('uses both national flags when HBS players appear on both sides', () => {
+  const match: Match = {
+    ...peruMatch(),
+    players: [
+      { playerId: 'adrian-ugarriza', squadStatus: 'unknown' },
+      { playerId: 'eliel-peretz', squadStatus: 'unknown' },
+    ],
+    homeTeam: { code: 'ISR', nameHe: 'ישראל', nameEn: 'Israel' },
+    awayTeam: { code: 'PER', nameHe: 'פרו', nameEn: 'Peru' },
+  }
+  assert.deepEqual(hbsWatermarkCodes(match), ['PER', 'ISR'])
 })

@@ -3,7 +3,7 @@ import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Flag } from '../../components/Flag'
 import { formatFanKickoff, formatMatchTime } from '../../utils/datetime'
-import { matchLineup } from '../../utils/matchLine'
+import { hbsWatermarkCodes, matchLineup } from '../../utils/matchLine'
 import { displayStatus, isLiveStatus } from '../../utils/matchStatus'
 import { competitionBadge } from '../../utils/boardPulse'
 import { MatchTeam } from './MatchTeam'
@@ -26,6 +26,7 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
   const kickoff = formatFanKickoff(match.kickoff, now, match.status)
   const kickoffTime = formatMatchTime(match.kickoff)
   const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoffTime
+  const watermarks = hbsWatermarkCodes(match)
   const { left, right } = matchLineup(match)
   const showPlayers = match.players.length > 0
   const classes = [
@@ -40,9 +41,17 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
 
   return (
     <article className={classes} id={`match-${match.id}`}>
-      <div className="match-card__watermark" aria-hidden="true">
-        <Flag code={match.homeTeam.code} title="" className="flag--watermark" />
-      </div>
+      {watermarks.length > 0 && watermarks.length <= 2
+        ? watermarks.map((code, index) => (
+            <div
+              key={code}
+              className={index > 0 ? 'match-card__watermark match-card__watermark--alt' : 'match-card__watermark'}
+              aria-hidden="true"
+            >
+              <Flag code={code} title="" className="flag--watermark" />
+            </div>
+          ))
+        : null}
       <header className="match-card__meta">
         <div className="match-card__when">
           {featured ? <span className="next-badge">המשחק הקרוב</span> : null}

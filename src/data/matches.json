@@ -194,7 +194,7 @@
           ]
         }
       ],
-      "fotmobMatchId": 5181812
+      "providerMatchId": 5181812
     },
     {
       "id": "jam-gtm-2026-09-25",
@@ -274,7 +274,7 @@
           ]
         }
       ],
-      "fotmobMatchId": 5991890
+      "providerMatchId": 5991890
     },
     {
       "id": "bgr-lux-2026-09-26",
@@ -313,7 +313,7 @@
           "stats": []
         }
       ],
-      "fotmobMatchId": 5181949,
+      "providerMatchId": 5181949,
       "clock": "85‎’‎"
     },
     {
@@ -345,7 +345,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5991873
+      "providerMatchId": 5991873
     },
     {
       "id": "isr-irl-2026-09-27",
@@ -383,7 +383,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181815
+      "providerMatchId": 5181815
     },
     {
       "id": "jam-hon-2026-09-28",
@@ -414,7 +414,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5991892
+      "providerMatchId": 5991892
     },
     {
       "id": "mex-per-2026-09-29",
@@ -445,7 +445,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 6280444
+      "providerMatchId": 6280444
     },
     {
       "id": "svn-isr-u21-2026-09-29",
@@ -476,7 +476,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 4785797
+      "providerMatchId": 4785797
     },
     {
       "id": "bgr-est-2026-09-29",
@@ -507,7 +507,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181951
+      "providerMatchId": 5181951
     },
     {
       "id": "isr-xkx-2026-10-01",
@@ -545,7 +545,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181816
+      "providerMatchId": 5181816
     },
     {
       "id": "slv-jam-2026-10-02",
@@ -576,7 +576,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5991897
+      "providerMatchId": 5991897
     },
     {
       "id": "per-can-2026-10-03",
@@ -604,7 +604,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 6006644
+      "providerMatchId": 6006644
     },
     {
       "id": "irl-isr-2026-10-04",
@@ -642,7 +642,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181819
+      "providerMatchId": 5181819
     },
     {
       "id": "hon-jam-2026-10-05",
@@ -673,7 +673,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5991898
+      "providerMatchId": 5991898
     },
     {
       "id": "isl-bgr-2026-10-03",
@@ -700,7 +700,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181954
+      "providerMatchId": 5181954
     },
     {
       "id": "nor-isr-u21-2026-10-06",
@@ -731,7 +731,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 4785820
+      "providerMatchId": 4785820
     },
     {
       "id": "lux-bgr-2026-10-06",
@@ -758,7 +758,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 5181956
+      "providerMatchId": 5181956
     },
     {
       "id": "per-col-2026-10-06",
@@ -785,7 +785,7 @@
           "squadStatus": "unknown"
         }
       ],
-      "fotmobMatchId": 6299694
+      "providerMatchId": 6299694
     }
   ]
 }

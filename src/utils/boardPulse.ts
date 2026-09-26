@@ -1,5 +1,6 @@
 import type { Match } from '../types'
 import { players } from '../data/players'
+import { isOnThePitch } from './appearanceCopy'
 import { remainingMs } from './countdown'
 import { isSameJerusalemDay } from './datetime'
 import { isLiveStatus } from './matchStatus'
@@ -12,11 +13,17 @@ export function nextScheduledMatch(matches: Match[], now = new Date()): Match | 
 
 export function boardPulse(matches: Match[], now = new Date()): { text: string; live: boolean } {
   const liveMatches = matches.filter((match) => isLiveStatus(match.status))
-  const livePlayers = liveMatches.reduce((count, match) => count + match.players.length, 0)
   if (liveMatches.length > 0) {
-    if (livePlayers >= 2) {
-      return { text: `${livePlayers} נציגים משחקים עכשיו`, live: true }
-    }
+    const onPitch = liveMatches.reduce(
+      (count, match) =>
+        count + match.players.filter((appearance) => isOnThePitch(appearance, match.status)).length,
+      0,
+    )
+    const inSquad = liveMatches.reduce((count, match) => count + match.players.length, 0)
+    if (onPitch === 1) return { text: 'נציג אחד משחק עכשיו', live: true }
+    if (onPitch > 1) return { text: `${onPitch} נציגים משחקים עכשיו`, live: true }
+    if (inSquad === 1) return { text: 'נציג בסגל במשחק שמתקיים עכשיו', live: true }
+    if (inSquad > 1) return { text: `${inSquad} נציגים בסגל במשחק שמתקיים עכשיו`, live: true }
     return {
       text: liveMatches.length === 1 ? 'משחק אחד מתקיים עכשיו' : `${liveMatches.length} משחקים מתקיימים עכשיו`,
       live: true,

@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { X } from 'lucide-react'
 import type { Match, Player } from '../types'
 import { Flag } from './Flag'
 import { PlayerPortrait } from './PlayerPortrait'
@@ -16,6 +17,8 @@ interface PlayerSheetProps {
   onClose: () => void
   onShowMatch: (matchId: string) => void
 }
+
+const SWIPE_CLOSE_PX = 96
 
 export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatch }: PlayerSheetProps) {
   const team = nationalTeams[player.nationalTeamCode]
@@ -37,6 +40,9 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
     sourceStats.length > 0 ? 'במשחק' : lastFinished ? 'המשחק האחרון — נתונים' : 'במשחק'
   const nextKickoff = matches.find((match) => match.id === profile.nextMatch?.matchId)?.kickoff
   const nextEta = nextKickoff ? formatStartPhrase(nextKickoff, now) : null
+  const startY = useRef<number | null>(null)
+  const dragRef = useRef(0)
+  const [drag, setDrag] = useState(0)
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -46,6 +52,28 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
+  function onPointerDown(event: ReactPointerEvent<HTMLElement>) {
+    if (window.matchMedia('(min-width: 768px)').matches) return
+    startY.current = event.clientY
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  function onPointerMove(event: ReactPointerEvent<HTMLElement>) {
+    if (startY.current == null) return
+    const next = Math.max(0, event.clientY - startY.current)
+    dragRef.current = next
+    setDrag(next)
+  }
+
+  function onPointerUp() {
+    if (startY.current == null) return
+    const distance = dragRef.current
+    startY.current = null
+    dragRef.current = 0
+    if (distance >= SWIPE_CLOSE_PX) onClose()
+    else setDrag(0)
+  }
+
   return (
     <div className="sheet-backdrop" onClick={onClose} role="presentation">
       <aside
@@ -53,15 +81,33 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
         role="dialog"
         aria-modal="true"
         aria-labelledby="player-sheet-title"
+        style={{ transform: drag > 0 ? `translateY(${drag}px)` : undefined }}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="player-sheet__handle" aria-hidden="true" />
-        <div className="player-sheet__bar">
-          <button type="button" className="player-sheet__close" onClick={onClose}>
-            סגירה
-          </button>
+        <div
+          className="player-sheet__grab"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+        >
+          <div className="player-sheet__handle" aria-hidden="true" />
+          <div className="player-sheet__bar">
+            <button
+              type="button"
+              className="player-sheet__close"
+              onClick={onClose}
+              onPointerDown={(event) => event.stopPropagation()}
+              aria-label="סגירה"
+            >
+              <X aria-hidden="true" strokeWidth={2.4} />
+            </button>
+          </div>
         </div>
         <header className="player-sheet__hero">
+          <div className="player-sheet__hero-mark" aria-hidden="true">
+            <Flag code={team.code} title="" className="flag--watermark" />
+          </div>
           <PlayerPortrait player={player} className="portrait--xl" />
           <div>
             <h2 id="player-sheet-title">{player.nameHe}</h2>

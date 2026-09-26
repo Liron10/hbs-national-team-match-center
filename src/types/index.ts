@@ -103,7 +103,7 @@ export interface Match {
   players: PlayerAppearance[]
   lastUpdated: string
   sources?: string[]
-  fotmobMatchId?: number
+  providerMatchId?: number
 }
 
 export interface MatchDataset {
