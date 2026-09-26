@@ -4,7 +4,6 @@ import { displayTeamName } from './matchLine'
 import { remainingMs } from './countdown'
 import { formatFanKickoff } from './datetime'
 import { players } from '../data/players'
-import { nationalTeams } from '../data/teams'
 import { windowStillOpen } from './fanDay'
 
 export interface NamedStat {
@@ -216,19 +215,12 @@ export function windowBoardStats(matches: Match[]): NamedStat[] {
 
 export interface WindowBoardView {
   stats: NamedStat[]
-  teamLine: string
   closed: boolean
   notes: string[]
 }
 
 export function windowBoardView(matches: Match[], now = new Date()): WindowBoardView {
   const stats = windowBoardStats(matches)
-  const counts = new Map<string, number>()
-  for (const player of players) {
-    const name = displayTeamName(nationalTeams[player.nationalTeamCode])
-    counts.set(name, (counts.get(name) ?? 0) + 1)
-  }
-  const teamLine = [...counts.entries()].map(([name, count]) => `${name} ×${count}`).join(' · ')
   const closed = !windowStillOpen(matches, now)
   const notes: string[] = []
   const minutesByPlayer = new Map<string, { name: string; minutes: number; starts: number; goals: number; assists: number }>()
@@ -271,5 +263,5 @@ export function windowBoardView(matches: Match[], now = new Date()): WindowBoard
       notes.push(`הכי הרבה הופעות בהרכב · ${mostStarts.name} · ${mostStarts.starts}`)
     }
   }
-  return { stats, teamLine, closed, notes }
+  return { stats, closed, notes }
 }

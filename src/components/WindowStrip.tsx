@@ -20,7 +20,6 @@ export function WindowStrip({ matches }: WindowStripProps) {
           </li>
         ))}
       </ul>
-      {view.teamLine ? <p className="window-strip__teams">{view.teamLine}</p> : null}
       {view.notes.map((note) => (
         <p key={note} className="window-strip__note">
           {note}
