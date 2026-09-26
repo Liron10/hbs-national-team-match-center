@@ -7,8 +7,24 @@ const squadLabels: Record<SquadStatus, string> = {
   'subbed-in': 'נכנס כמחליף',
   'subbed-out': 'הוחלף',
   unused: 'לא שותף',
-  'not-in-squad': 'לא בסגל',
+  'not-in-squad': 'מחוץ לסגל',
   unknown: 'בסגל הנבחרת',
+}
+
+export function parseClockMinute(clock?: string): number | null {
+  if (!clock) return null
+  const plus = clock.match(/(\d+)\s*\+\s*(\d+)/)
+  if (plus) return Number(plus[1]) + Number(plus[2])
+  const simple = clock.match(/(\d+)/)
+  return simple ? Number(simple[1]) : null
+}
+
+function isRecentEvent(eventMinute: number | undefined, clock?: string): boolean {
+  if (eventMinute == null) return false
+  const current = parseClockMinute(clock)
+  if (current == null) return false
+  const delta = current - eventMinute
+  return delta >= 0 && delta <= 4
 }
 
 export function isOnThePitch(appearance: PlayerAppearance, matchStatus?: MatchStatus): boolean {
@@ -24,42 +40,59 @@ export function matchShowsPlayerStats(status: MatchStatus): boolean {
   return status === 'live' || status === 'halftime' || status === 'finished'
 }
 
-export function participationLine(appearance: PlayerAppearance, matchStatus?: MatchStatus): string {
+export function participationLine(
+  appearance: PlayerAppearance,
+  matchStatus?: MatchStatus,
+  clock?: string,
+): string {
   const minutes = appearance.minutes ?? 0
   const subIn = appearance.subbedInMinute
   const subOut = appearance.subbedOutMinute
   const live = matchStatus === 'live' || matchStatus === 'halftime'
+  const finished = matchStatus === 'finished'
 
   if (live) {
-    if (appearance.squadStatus === 'not-in-squad') return 'כרגע לא במשחק • לא בסגל'
+    if (appearance.squadStatus === 'not-in-squad') return 'כרגע לא במשחק • מחוץ לסגל'
     if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') {
       return 'כרגע לא במשחק • על הספסל'
     }
-    if (appearance.squadStatus === 'subbed-out' || (subOut != null && subIn == null)) {
+    if (appearance.squadStatus === 'subbed-out' || (subOut != null && appearance.squadStatus !== 'subbed-in')) {
+      if (isRecentEvent(subOut, clock)) return 'הוחלף עכשיו'
+      if (subOut != null && (appearance.started || appearance.squadStatus === 'subbed-out')) {
+        return `פתח בהרכב והוחלף בדקה ${subOut}`
+      }
       return 'כרגע לא במשחק • הוחלף וירד מהדשא'
     }
     if (subOut != null && appearance.squadStatus === 'subbed-in') {
-      return 'כרגע לא במשחק • הוחלף וירד מהדשא'
+      return isRecentEvent(subOut, clock) ? 'הוחלף עכשיו' : 'כרגע לא במשחק • הוחלף וירד מהדשא'
     }
+    if (appearance.squadStatus === 'subbed-in') {
+      if (isRecentEvent(subIn, clock)) return 'נכנס עכשיו'
+      if (subIn != null && minutes > 0) return `נכנס כמחליף בדקה ${subIn} • ${minutes} דקות`
+      if (subIn != null) return `נכנס כמחליף בדקה ${subIn}`
+    }
+    if (minutes > 0) return `${minutes} דקות על הדשא`
+    if (appearance.squadStatus === 'starter') return 'פותח בהרכב'
   }
 
   if (appearance.squadStatus === 'unknown') {
     return matchStatus === 'scheduled' || matchStatus == null ? 'בסגל הנבחרת' : ''
   }
-  if (appearance.squadStatus === 'not-in-squad') return 'לא בסגל'
+  if (appearance.squadStatus === 'not-in-squad') return 'מחוץ לסגל'
   if (appearance.squadStatus === 'unused') return 'לא שותף'
-  if (appearance.squadStatus === 'bench') return 'על הספסל'
+  if (appearance.squadStatus === 'bench' && !finished) return 'על הספסל'
   if (!appearance.played && appearance.squadStatus !== 'starter') return 'לא שותף'
 
-  if (subIn != null) return `נכנס בדקה ${subIn}'`
-  if (subOut != null) return `הוחלף בדקה ${subOut}'`
-  if (live) {
-    if (appearance.squadStatus === 'starter' && minutes > 0) {
-      return `פותח בהרכב • ${minutes} דקות`
-    }
-    if (minutes > 0) return `${minutes} דקות`
+  if (subIn != null) {
+    if (finished && minutes > 0) return `עלה מהספסל ושיחק ${minutes} דקות`
+    if (minutes > 0) return `נכנס כמחליף בדקה ${subIn} • ${minutes} דקות`
+    return `נכנס כמחליף בדקה ${subIn}`
   }
-  if (minutes >= 90) return `שיחק ${minutes} דקות`
+  if (minutes >= 90) return 'השלים 90 דקות'
+  if (subOut != null) return `פתח בהרכב והוחלף בדקה ${subOut}`
+  if (minutes > 0 && (appearance.started || appearance.squadStatus === 'starter')) {
+    return `פתח ושיחק ${minutes} דקות`
+  }
   if (minutes > 0) return `שיחק ${minutes} דקות`
   if (appearance.squadStatus === 'starter') return 'פותח בהרכב'
   return squadLabels[appearance.squadStatus]
@@ -75,26 +108,40 @@ export interface AppearanceStat {
 }
 
 export interface PlayerChip {
-  kind: 'status' | 'out' | 'goal' | 'assist' | 'yellow' | 'red' | 'stat'
+  kind: 'status' | 'out' | 'goal' | 'assist' | 'yellow' | 'red' | 'stat' | 'fresh'
   label: string
 }
 
-export function playerChips(appearance: PlayerAppearance, matchStatus: MatchStatus): PlayerChip[] {
+export function playerChips(
+  appearance: PlayerAppearance,
+  matchStatus: MatchStatus,
+  clock?: string,
+): PlayerChip[] {
   const chips: PlayerChip[] = []
-  const line = participationLine(appearance, matchStatus)
+  const line = participationLine(appearance, matchStatus, clock)
   if (line) {
+    const fresh = line === 'נכנס עכשיו' || line === 'הוחלף עכשיו'
     const offPitch = line.startsWith('כרגע לא במשחק')
-    chips.push({ kind: offPitch ? 'out' : 'status', label: line })
+    chips.push({ kind: fresh ? 'fresh' : offPitch ? 'out' : 'status', label: line })
   }
 
   const goals = appearance.goals ?? 0
   const assists = appearance.assists ?? 0
   const yellow = appearance.yellowCards ?? 0
   const red = appearance.redCards ?? 0
-  if (goals > 0) chips.push({ kind: 'goal', label: goals === 1 ? 'שער' : `${goals} שערים` })
-  if (assists > 0) chips.push({ kind: 'assist', label: assists === 1 ? 'בישול' : `${assists} בישולים` })
-  if (yellow > 0) chips.push({ kind: 'yellow', label: yellow === 1 ? 'צהוב' : `${yellow} צהובים` })
-  if (red > 0) chips.push({ kind: 'red', label: red === 1 ? 'אדום' : `${red} אדומים` })
+  const live = matchStatus === 'live' || matchStatus === 'halftime'
+  if (goals > 0 && assists > 0) {
+    chips.push({ kind: 'goal', label: 'שער ובישול' })
+  } else if (goals > 0) {
+    chips.push({
+      kind: 'goal',
+      label: live ? (goals === 1 ? 'כבש' : `${goals} שערים`) : goals === 1 ? 'שער אחד' : `${goals} שערים`,
+    })
+  } else if (assists > 0) {
+    chips.push({ kind: 'assist', label: assists === 1 ? 'בישול אחד' : `${assists} בישולים` })
+  }
+  if (yellow > 0) chips.push({ kind: 'yellow', label: yellow === 1 ? 'כרטיס צהוב' : `${yellow} צהובים` })
+  if (red > 0) chips.push({ kind: 'red', label: red === 1 ? 'כרטיס אדום' : `${red} אדומים` })
   return chips
 }
 

@@ -40,7 +40,7 @@ export function formatStartPhrase(kickoffIso: string, now = new Date()): string 
   const hours = Math.ceil(remaining / 3_600_000)
   const days = Math.ceil(remaining / 86_400_000)
 
-  if (minutes <= 15) return `מתחיל בעוד ${minutes} דקות`
+  if (minutes <= 5) return `עוד ${minutes} דקות`
   if (minutes <= 60) return 'מתחיל בקרוב'
   if (hours < 24) return hours === 1 ? 'בעוד שעה' : `בעוד ${hours} שעות`
   if (days === 1) return 'בעוד יום'

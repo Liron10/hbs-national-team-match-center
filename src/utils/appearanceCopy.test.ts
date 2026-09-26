@@ -26,7 +26,7 @@ test('uses natural Hebrew for participation', () => {
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'not-in-squad', played: false })),
-    'לא בסגל',
+    'מחוץ לסגל',
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'bench', played: false })),
@@ -41,8 +41,9 @@ test('uses natural Hebrew for participation', () => {
         minutes: 85,
         subbedOutMinute: 84,
       }),
+      'finished',
     ),
-    "הוחלף בדקה 84'",
+    'פתח בהרכב והוחלף בדקה 84',
   )
   assert.equal(
     participationLine(
@@ -52,8 +53,9 @@ test('uses natural Hebrew for participation', () => {
         minutes: 26,
         subbedInMinute: 64,
       }),
+      'finished',
     ),
-    "נכנס בדקה 64'",
+    'עלה מהספסל ושיחק 26 דקות',
   )
   assert.equal(
     participationLine(
@@ -63,8 +65,9 @@ test('uses natural Hebrew for participation', () => {
         started: true,
         minutes: 90,
       }),
+      'finished',
     ),
-    'שיחק 90 דקות',
+    'השלים 90 דקות',
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'starter', started: true, played: false }), 'scheduled'),
@@ -83,7 +86,7 @@ test('states clearly when a player is not on the pitch during a live match', () 
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'not-in-squad', played: false }), 'live'),
-    'כרגע לא במשחק • לא בסגל',
+    'כרגע לא במשחק • מחוץ לסגל',
   )
   assert.equal(
     participationLine(
@@ -96,7 +99,7 @@ test('states clearly when a player is not on the pitch during a live match', () 
       }),
       'live',
     ),
-    'כרגע לא במשחק • הוחלף וירד מהדשא',
+    'פתח בהרכב והוחלף בדקה 64',
   )
   assert.equal(
     participationLine(
@@ -108,7 +111,20 @@ test('states clearly when a player is not on the pitch during a live match', () 
       }),
       'live',
     ),
-    'פותח בהרכב • 38 דקות',
+    '38 דקות על הדשא',
+  )
+  assert.equal(
+    participationLine(
+      appearance({
+        squadStatus: 'subbed-in',
+        played: true,
+        minutes: 2,
+        subbedInMinute: 64,
+      }),
+      'live',
+      "64'",
+    ),
+    'נכנס עכשיו',
   )
   assert.equal(
     isOnThePitch(appearance({ squadStatus: 'starter', played: true, minutes: 38 }), 'live'),

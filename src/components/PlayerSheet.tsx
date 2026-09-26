@@ -4,7 +4,7 @@ import type { Match, Player } from '../types'
 import { Flag } from './Flag'
 import { PlayerPortrait } from './PlayerPortrait'
 import { nationalTeams } from '../data/teams'
-import { displayTeamName } from '../utils/matchLine'
+import { displayTeamName, nationalTeamLabel } from '../utils/matchLine'
 import { formatStartPhrase } from '../utils/countdown'
 import { playerWindowProfile } from '../utils/playerWindow'
 import { appearanceStats } from '../utils/appearanceCopy'
@@ -104,7 +104,7 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
             </button>
           </div>
         </div>
-        <header className="player-sheet__hero">
+        <header className={`player-sheet__hero player-sheet__hero--${team.code.toLowerCase()}`}>
           <div className="player-sheet__hero-mark" aria-hidden="true">
             <Flag code={team.code} title="" className="flag--watermark" />
           </div>
@@ -113,7 +113,7 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
             <h2 id="player-sheet-title">{player.nameHe}</h2>
             <p className="player-sheet__team">
               <Flag code={team.code} title={displayTeamName(team)} className="flag--sm" />
-              {displayTeamName(team)}
+              {nationalTeamLabel(team.code)}
             </p>
           </div>
         </header>
@@ -142,7 +142,7 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
         ) : null}
         {profile.windowStats.length > 0 ? (
           <section className="player-sheet__block">
-            <h3>החלון הנוכחי</h3>
+            <h3>הפגרה הנוכחית</h3>
             <ul className="player-sheet__inline">
               {profile.windowStats.map((stat) => (
                 <li key={stat.label}>
@@ -150,11 +150,22 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
                 </li>
               ))}
             </ul>
+            {profile.facts.map((fact) => (
+              <p key={fact} className="player-sheet__muted">
+                {fact}
+              </p>
+            ))}
+          </section>
+        ) : profile.facts.length > 0 ? (
+          <section className="player-sheet__block">
+            {profile.facts.map((fact) => (
+              <p key={fact}>{fact}</p>
+            ))}
           </section>
         ) : null}
         {profile.lastMatch ? (
           <section className="player-sheet__block">
-            <h3>המשחק האחרון</h3>
+            <h3>המשחק האחרון בנבחרת</h3>
             <p>{profile.lastMatch.line}</p>
             {profile.lastMatch.detail ? <p className="player-sheet__muted">{profile.lastMatch.detail}</p> : null}
           </section>

@@ -28,7 +28,7 @@ test('counts only players on the pitch as currently playing', () => {
       { playerId: 'idan-nachmias', squadStatus: 'subbed-out', played: true, minutes: 64, subbedOutMinute: 64 },
     ],
   })
-  assert.equal(boardPulse([live]).text, 'נציג אחד משחק עכשיו')
+  assert.equal(boardPulse([live]).text, 'נציג של הפועל באר שבע משחק כעת')
 })
 
 test('uses squad copy when nobody is on the pitch yet', () => {

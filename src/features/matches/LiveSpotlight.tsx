@@ -3,8 +3,9 @@ import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { PlayerPortrait } from '../../components/PlayerPortrait'
 import { getPlayer } from '../../data/players'
 import { formatMatchTime } from '../../utils/datetime'
+import { livePhaseLabel } from '../../utils/fanDay'
+import { matchLineup, ourNationalSide } from '../../utils/matchLine'
 import { isLiveStatus } from '../../utils/matchStatus'
-import { matchLineup } from '../../utils/matchLine'
 import { MatchTeam } from './MatchTeam'
 
 interface LiveSpotlightProps {
@@ -15,6 +16,7 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
   const live = isLiveStatus(match.status)
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const { left, right } = matchLineup(match)
+  const ours = ourNationalSide(match)
   const center = hasScore
     ? `${match.homeScore}–${match.awayScore}`
     : formatMatchTime(match.kickoff)
@@ -28,7 +30,7 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
         {live ? (
           <>
             <span className="live-dot" aria-hidden="true" />
-            {`משחק עכשיו${match.clock ? ` · ${match.clock}` : ''}`}
+            {livePhaseLabel(match)}
           </>
         ) : (
           'הבא בתור'
@@ -36,14 +38,16 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
       </p>
       <p className="spotlight__comp">{match.competitionHe}</p>
       <div className="spotlight__scoreline">
-        <MatchTeam team={left.team} label={left.label} size="lg" />
+        <MatchTeam team={left.team} label={left.label} size="lg" ours={left.team.code === ours.code} />
         <div className="spotlight__center">
           {hasScore ? null : <span className="spotlight__vs">VS</span>}
           <strong aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}>{center}</strong>
         </div>
-        <MatchTeam team={right.team} label={right.label} size="lg" />
+        <MatchTeam team={right.team} label={right.label} size="lg" ours={right.team.code === ours.code} />
       </div>
-      <KickoffCountdown kickoff={match.kickoff} status={match.status} />
+      {match.status === 'scheduled' ? (
+        <KickoffCountdown kickoff={match.kickoff} status={match.status} featured />
+      ) : null}
       {representatives.length > 0 ? (
         <ul className="spotlight__players">
           {representatives.map((player) => (

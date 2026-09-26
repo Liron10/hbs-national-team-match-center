@@ -1,9 +1,10 @@
 import { ClubLogo } from './ClubLogo'
+import type { BoardPulse } from '../utils/boardPulse'
 
 interface HeaderProps {
   live: boolean
   windowLabel: string
-  pulse: { text: string; live: boolean }
+  pulse: BoardPulse
 }
 
 export function Header({ live, windowLabel, pulse }: HeaderProps) {
@@ -26,10 +27,19 @@ export function Header({ live, windowLabel, pulse }: HeaderProps) {
           <p className="site-header__meta">{windowLabel}</p>
         )}
       </div>
-      <p className={pulse.live ? 'site-header__pulse is-live' : 'site-header__pulse'}>
-        {pulse.live ? <span className="live-dot" aria-hidden="true" /> : null}
-        <span>{pulse.text}</span>
-      </p>
+      <div className={pulse.live ? 'site-header__pulse is-live' : 'site-header__pulse'}>
+        <p>
+          {pulse.live ? <span className="live-dot" aria-hidden="true" /> : null}
+          <span>{pulse.text}</span>
+        </p>
+        {pulse.lines && pulse.lines.length > 0 ? (
+          <ul className="site-header__pulse-lines">
+            {pulse.lines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
     </header>
   )
 }

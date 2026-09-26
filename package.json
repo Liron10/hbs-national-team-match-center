@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "preview": "vite preview",
-    "test": "tsx --test src/utils/matchStatus.test.ts src/utils/sortMatches.test.ts src/utils/datetime.test.ts src/utils/matchLine.test.ts src/utils/countdown.test.ts src/utils/liveScores.test.ts src/utils/fotmob.test.ts src/utils/providerAppearances.test.ts src/utils/appearanceCopy.test.ts src/utils/playerWindow.test.ts src/utils/boardPulse.test.ts",
+    "test": "tsx --test src/utils/matchStatus.test.ts src/utils/sortMatches.test.ts src/utils/datetime.test.ts src/utils/matchLine.test.ts src/utils/countdown.test.ts src/utils/liveScores.test.ts src/utils/fotmob.test.ts src/utils/providerAppearances.test.ts src/utils/appearanceCopy.test.ts src/utils/playerWindow.test.ts src/utils/boardPulse.test.ts src/utils/fanDay.test.ts src/utils/matchFacts.test.ts",
     "fetch-player-images": "node scripts/fetch-club-portraits.mjs",
     "refresh-data": "tsx scripts/refresh-data.ts"
   },

@@ -49,6 +49,12 @@ export function mapFotmobStatus(
 
   const inPlay = Boolean(status.ongoing) || Boolean(status.started)
 
+  if (inPlay && (reason === 'ET' || reason === 'AET')) {
+    return { status: 'live', clock: clock ?? 'הארכה', scoresReady: true }
+  }
+  if (inPlay && reason === 'PEN') {
+    return { status: 'live', clock: 'פנדלים', scoresReady: true }
+  }
   if (inPlay && (reason === 'HT' || liveShort === 'HT')) {
     return { status: 'halftime', clock: 'HT', scoresReady: true }
   }

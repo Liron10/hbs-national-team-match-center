@@ -75,7 +75,7 @@ export function formatOvernightContext(iso: string): string | null {
   const clock = jerusalemWeekdayAndHour(iso)
   if (!clock || clock.hour >= 6) return null
   const previous = (clock.weekday + 6) % 7
-  return `בלילה שבין ${WEEKDAY_NAMES[previous]} ל${WEEKDAY_NAMES[clock.weekday]}`
+  return `בלילה בין ${WEEKDAY_NAMES[previous]} ל${WEEKDAY_NAMES[clock.weekday]}`
 }
 
 export function jerusalemDayKey(iso: string | Date): string {

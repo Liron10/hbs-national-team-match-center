@@ -16,6 +16,7 @@ import { useMatchBoard } from './hooks/useMatchBoard'
 import { useMatches } from './hooks/useMatches'
 import { useNow } from './hooks/useNow'
 import { boardPulse, liveTabTitle, nextScheduledMatch } from './utils/boardPulse'
+import { dayBrief, nextMatchLine } from './utils/fanDay'
 import { formatWindowLabel } from './utils/datetime'
 import { deriveBucket, hasLiveMatches, isLiveStatus } from './utils/matchStatus'
 import { sortMatches } from './utils/sortMatches'
@@ -43,6 +44,8 @@ export default function App() {
   const sheetPlayer = sheetPlayerId ? getPlayer(sheetPlayerId) : undefined
   const pulse = boardPulse(matches, now)
   const nextMatch = nextScheduledMatch(openMatches, now)
+  const nextOverall = nextScheduledMatch(matches, now)
+  const brief = selectedPlayerId ? null : dayBrief(matches, now)
   const liveOpen = openMatches.filter((match) => isLiveStatus(match.status))
   const restOpen = openMatches.filter(
     (match) => !isLiveStatus(match.status) && match.id !== nextMatch?.id,
@@ -114,6 +117,12 @@ export default function App() {
             </p>
           ) : null}
           {spotlight ? <LiveSpotlight match={spotlight} /> : null}
+          {!spotlight && brief ? (
+            <section className="day-brief" aria-label={brief.title}>
+              <h2>{brief.title}</h2>
+              <p>{brief.line}</p>
+            </section>
+          ) : null}
           {!loading && !error ? <WindowStrip matches={matches} /> : null}
           <PlayersGrid selectedId={selectedPlayerId} onSelect={selectPlayer} />
           {selectedPlayer ? (
@@ -143,6 +152,7 @@ export default function App() {
               </div>
               <MatchList
                 matches={liveOpen}
+                allMatches={matches}
                 filter="live"
                 now={now}
                 empty={false}
@@ -157,6 +167,7 @@ export default function App() {
               </div>
               <MatchList
                 matches={[nextMatch]}
+                allMatches={matches}
                 filter="upcoming"
                 now={now}
                 empty={false}
@@ -167,12 +178,20 @@ export default function App() {
           ) : null}
           {!loading && !error && showEmptyOpen ? (
             <section className="board">
-              <MatchList
-                matches={[]}
-                filter={filter === 'all' ? 'upcoming' : filter}
-                now={now}
-                onOpenPlayer={openPlayer}
-              />
+              {filter === 'all' || filter === 'today' ? (
+                <EmptyState
+                  title="אין משחקים היום"
+                  description={nextOverall ? nextMatchLine(nextOverall, now) : undefined}
+                />
+              ) : (
+                <MatchList
+                  matches={[]}
+                  allMatches={matches}
+                  filter={filter}
+                  now={now}
+                  onOpenPlayer={openPlayer}
+                />
+              )}
             </section>
           ) : null}
           {!loading && !error && showRest ? (
@@ -182,6 +201,7 @@ export default function App() {
               </div>
               <MatchList
                 matches={restOpen}
+                allMatches={matches}
                 filter={filter === 'all' ? 'upcoming' : filter}
                 now={now}
                 empty={false}
@@ -196,6 +216,7 @@ export default function App() {
               </div>
               <MatchList
                 matches={finishedMatches}
+                allMatches={matches}
                 filter="finished"
                 now={now}
                 empty={false}

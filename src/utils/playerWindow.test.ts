@@ -60,6 +60,7 @@ test('builds window totals without empty zeros', () => {
   assert.equal(profile.lastMatch?.line, 'ישראל 2:1 אירלנד')
   assert.equal(profile.nextMatch?.matchId, 'next')
   assert.equal(profile.nextMatch?.detail, 'בסגל הנבחרת')
+  assert.equal(profile.facts.includes('שיחק 73 מתוך 90 דקות אפשריות'), true)
 })
 
 test('hides empty window numbers from the board strip', () => {

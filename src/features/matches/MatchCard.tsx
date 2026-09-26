@@ -2,21 +2,24 @@ import type { Match } from '../../types'
 import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Flag } from '../../components/Flag'
-import { formatFanKickoff, formatMatchTime } from '../../utils/datetime'
-import { hbsWatermarkCodes, matchLineup } from '../../utils/matchLine'
+import { formatFanKickoff, formatMatchTime, formatOvernightContext } from '../../utils/datetime'
+import { hbsWatermarkCodes, matchLineup, ourNationalSide } from '../../utils/matchLine'
 import { displayStatus, isLiveStatus } from '../../utils/matchStatus'
 import { competitionBadge } from '../../utils/boardPulse'
+import { eveningBadge, lineupPublished } from '../../utils/fanDay'
+import { matchFactLine } from '../../utils/matchFacts'
 import { MatchTeam } from './MatchTeam'
 import { PlayerAppearanceRow } from './PlayerAppearanceRow'
 
 interface MatchCardProps {
   match: Match
+  matches: Match[]
   now: Date
   featured?: boolean
   onOpenPlayer: (playerId: string, matchId: string) => void
 }
 
-export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchCardProps) {
+export function MatchCard({ match, matches, now, featured = false, onOpenPlayer }: MatchCardProps) {
   const status = displayStatus(match, now)
   const live = isLiveStatus(match.status)
   const finished = match.status === 'finished'
@@ -28,7 +31,12 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
   const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoffTime
   const watermarks = hbsWatermarkCodes(match)
   const { left, right } = matchLineup(match)
+  const ours = ourNationalSide(match)
   const showPlayers = match.players.length > 0
+  const badge = eveningBadge(match, matches, now)
+  const overnight = formatOvernightContext(match.kickoff)
+  const published = match.status === 'scheduled' && lineupPublished(match)
+  const fact = matchFactLine(match)
   const classes = [
     'match-card',
     live ? 'match-card--live' : '',
@@ -55,6 +63,8 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
       <header className="match-card__meta">
         <div className="match-card__when">
           {featured ? <span className="next-badge">המשחק הקרוב</span> : null}
+          {badge === 'first' ? <span className="next-badge">הראשון הערב</span> : null}
+          {badge === 'night' ? <span className="next-badge">סוגר את הלילה</span> : null}
           {postponed || cancelled ? (
             <span className="match-card__date">{kickoff.date}</span>
           ) : (
@@ -70,7 +80,7 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
         <span className="comp-badge">{competitionBadge(match.competitionHe)}</span>
       </p>
       <div className="match-card__line">
-        <MatchTeam team={left.team} label={left.label} />
+        <MatchTeam team={left.team} label={left.label} ours={left.team.code === ours.code} />
         <div className="match-card__center">
           {hasScore || postponed || cancelled ? null : <span className="match-card__vs">VS</span>}
           {center ? (
@@ -85,14 +95,16 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
             </p>
           ) : null}
         </div>
-        <MatchTeam team={right.team} label={right.label} />
+        <MatchTeam team={right.team} label={right.label} ours={right.team.code === ours.code} />
       </div>
-      <KickoffCountdown kickoff={match.kickoff} status={match.status} featured={featured} />
+      {overnight && match.status === 'scheduled' ? <p className="overnight-note">{overnight}</p> : null}
+      {featured ? <KickoffCountdown kickoff={match.kickoff} status={match.status} featured /> : null}
+      {published ? <p className="match-card__note">ההרכב פורסם</p> : null}
       {showPlayers ? (
         <section className="match-card__players" aria-label="נציגי הפועל באר שבע">
           <h3>
             {match.players.length > 1
-              ? `${match.players.length} נציגי הפועל באר שבע`
+              ? `${match.players.length} נציגים של הפועל באר שבע`
               : 'נציג הפועל באר שבע'}
           </h3>
           {match.players.map((appearance) => (
@@ -100,9 +112,11 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
               key={appearance.playerId}
               appearance={appearance}
               matchStatus={match.status}
+              clock={match.clock}
               onOpenPlayer={(playerId) => onOpenPlayer(playerId, match.id)}
             />
           ))}
+          {fact ? <p className="match-card__fact">{fact}</p> : null}
         </section>
       ) : null}
     </article>

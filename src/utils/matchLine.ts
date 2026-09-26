@@ -1,4 +1,4 @@
-import type { CountryCode, Match, TeamSide } from '../types'
+import type { CountryCode, Match, NationalTeam, TeamSide } from '../types'
 import { getPlayer } from '../data/players'
 import { getTeam } from '../data/teams'
 
@@ -11,6 +11,11 @@ export function lastNameHe(nameHe: string): string {
 
 export function displayTeamName(team: TeamSide): string {
   return team.nameHe.replace(' עד 21', ' U21')
+}
+
+export function nationalTeamLabel(code: TeamSide['code'] | NationalTeam['code']): string {
+  if (code === 'ISR-U21') return 'נבחרת ישראל הצעירה'
+  return displayTeamName(getTeam(code))
 }
 
 export function isIsraelNationalSide(code: TeamSide['code']): boolean {

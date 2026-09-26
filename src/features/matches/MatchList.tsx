@@ -4,6 +4,7 @@ import { MatchCard } from './MatchCard'
 
 interface MatchListProps {
   matches: Match[]
+  allMatches: Match[]
   filter: MatchFilter
   now: Date
   empty?: boolean
@@ -14,12 +15,20 @@ interface MatchListProps {
 const emptyCopy: Record<MatchFilter, string> = {
   all: 'אין לנציגי הפועל באר שבע משחקים כרגע',
   live: 'אין כרגע משחקים בשידור חי',
-  today: 'אין לנציגי הפועל באר שבע משחקים היום',
+  today: 'אין משחקים היום',
   upcoming: 'אין משחקים שטרם התחילו',
   finished: 'אין משחקים שהסתיימו',
 }
 
-export function MatchList({ matches, filter, now, empty = true, nextMatchId, onOpenPlayer }: MatchListProps) {
+export function MatchList({
+  matches,
+  allMatches,
+  filter,
+  now,
+  empty = true,
+  nextMatchId,
+  onOpenPlayer,
+}: MatchListProps) {
   if (matches.length === 0) {
     return empty ? <EmptyState title={emptyCopy[filter]} /> : null
   }
@@ -30,6 +39,7 @@ export function MatchList({ matches, filter, now, empty = true, nextMatchId, onO
         <MatchCard
           key={match.id}
           match={match}
+          matches={allMatches}
           now={now}
           featured={match.id === nextMatchId}
           onOpenPlayer={onOpenPlayer}

@@ -38,9 +38,9 @@ test('formats the international window without a season code', () => {
 })
 
 test('explains late-night kickoffs after converting to Asia/Jerusalem', () => {
-  assert.equal(formatOvernightContext('2026-09-26T00:00:00.000Z'), 'בלילה שבין שישי לשבת')
-  assert.equal(formatOvernightContext('2026-09-26T23:00:00.000Z'), 'בלילה שבין שבת לראשון')
-  assert.equal(formatOvernightContext('2026-09-28T02:59:00.000Z'), 'בלילה שבין ראשון לשני')
+  assert.equal(formatOvernightContext('2026-09-26T00:00:00.000Z'), 'בלילה בין שישי לשבת')
+  assert.equal(formatOvernightContext('2026-09-26T23:00:00.000Z'), 'בלילה בין שבת לראשון')
+  assert.equal(formatOvernightContext('2026-09-28T02:59:00.000Z'), 'בלילה בין ראשון לשני')
   assert.equal(formatOvernightContext('2026-09-28T03:00:00.000Z'), null)
   assert.equal(formatOvernightContext('2026-09-26T18:00:00.000Z'), null)
 })

@@ -7,18 +7,20 @@ import { playerChips } from '../../utils/appearanceCopy'
 interface PlayerAppearanceRowProps {
   appearance: PlayerAppearance
   matchStatus: MatchStatus
+  clock?: string
   onOpenPlayer: (playerId: string) => void
 }
 
 export function PlayerAppearanceRow({
   appearance,
   matchStatus,
+  clock,
   onOpenPlayer,
 }: PlayerAppearanceRowProps) {
   const player = getPlayer(appearance.playerId)
   if (!player) return null
 
-  const chips = playerChips(appearance, matchStatus)
+  const chips = playerChips(appearance, matchStatus, clock)
   const scored = (appearance.goals ?? 0) > 0 && (matchStatus === 'live' || matchStatus === 'halftime')
 
   return (

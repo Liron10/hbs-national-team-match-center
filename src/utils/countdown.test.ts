@@ -33,7 +33,8 @@ test('hides the timer after kickoff statuses', () => {
 
 test('uses compact start phrases for fans', () => {
   const now = new Date('2026-09-18T18:00:00.000Z')
-  assert.equal(formatStartPhrase('2026-09-18T18:10:00.000Z', now), 'מתחיל בעוד 10 דקות')
+  assert.equal(formatStartPhrase('2026-09-18T18:10:00.000Z', now), 'מתחיל בקרוב')
+  assert.equal(formatStartPhrase('2026-09-18T18:04:00.000Z', now), 'עוד 4 דקות')
   assert.equal(formatStartPhrase('2026-09-18T18:45:00.000Z', now), 'מתחיל בקרוב')
   assert.equal(formatStartPhrase('2026-09-21T18:00:00.000Z', now), 'בעוד 3 ימים')
 })

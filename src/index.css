@@ -124,15 +124,36 @@ a:focus-visible {
 }
 
 .site-header__pulse {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
   margin: 0;
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.35;
+}
+
+.site-header__pulse > p {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.55rem;
+  margin: 0;
+}
+
+.site-header__pulse-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.site-header__pulse-lines li + li {
+  margin-top: 0.12rem;
 }
 
 .site-header__pulse.is-live {
@@ -284,8 +305,9 @@ a:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-.match-card__score--result {
-  animation: score-pop 0.4s ease;
+.match-card--live .match-card__score--result,
+.spotlight .spotlight__center strong {
+  font-size: clamp(2rem, 5vw, 2.8rem);
 }
 
 .match-card__score--kick {
@@ -649,6 +671,27 @@ main {
   min-width: 0;
 }
 
+.match-card--live .match-card__score--result {
+  animation: score-pop 0.4s ease;
+}
+
+.match-team--ours span {
+  color: var(--red);
+}
+
+.match-card__note,
+.match-card__fact {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: start;
+}
+
+.match-card__fact {
+  color: var(--text);
+}
+
 .match-card__players {
   margin-top: 0.85rem;
   padding-top: 0.15rem;
@@ -982,10 +1025,52 @@ main {
   color: var(--red);
 }
 
-.chip--out {
-  background: #ece7e2;
-  color: var(--text);
+.chip--fresh {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.window-strip__teams,
+.window-strip__note {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.day-brief {
+  margin: 0 0 1.35rem;
+  padding: 0.2rem 0 0.4rem;
+}
+
+.day-brief h2 {
+  margin: 0 0 0.3rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.day-brief p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.player-sheet__hero--isr,
+.player-sheet__hero--isr-u21 {
+  background: linear-gradient(90deg, rgba(0, 56, 184, 0.06), transparent 70%);
+}
+
+.player-sheet__hero--bgr {
+  background: linear-gradient(90deg, rgba(0, 150, 110, 0.08), transparent 70%);
+}
+
+.player-sheet__hero--per {
+  background: linear-gradient(90deg, rgba(200, 16, 46, 0.07), transparent 70%);
+}
+
+.player-sheet__hero--jam {
+  background: linear-gradient(90deg, rgba(0, 150, 57, 0.08), transparent 70%);
 }
 
 .appearance__highlights li {
