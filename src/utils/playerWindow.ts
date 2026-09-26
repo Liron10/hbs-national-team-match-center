@@ -70,16 +70,21 @@ function pushStat(stats: NamedStat[], value: number, label: string) {
   if (value > 0) stats.push({ label, value: String(value) })
 }
 
+function isCompletedMatch(match: Match): boolean {
+  return match.status === 'finished'
+}
+
 export function playerWindowProfile(playerId: string, matches: Match[], now = new Date()): PlayerWindowProfile {
   const rows = playerMatches(matches, playerId)
-  const played = rows.filter((row) => row.appearance.played)
+  const completed = rows.filter((row) => isCompletedMatch(row.match))
+  const played = completed.filter((row) => row.appearance.played)
   const minutes = played.reduce((sum, row) => sum + (row.appearance.minutes ?? 0), 0)
-  const goals = rows.reduce((sum, row) => sum + (row.appearance.goals ?? 0), 0)
-  const assists = rows.reduce((sum, row) => sum + (row.appearance.assists ?? 0), 0)
-  const starts = rows.filter((row) => row.appearance.started || row.appearance.squadStatus === 'starter').length
-  const subs = rows.filter((row) => row.appearance.squadStatus === 'subbed-in').length
-  const yellow = rows.reduce((sum, row) => sum + (row.appearance.yellowCards ?? 0), 0)
-  const red = rows.reduce((sum, row) => sum + (row.appearance.redCards ?? 0), 0)
+  const goals = completed.reduce((sum, row) => sum + (row.appearance.goals ?? 0), 0)
+  const assists = completed.reduce((sum, row) => sum + (row.appearance.assists ?? 0), 0)
+  const starts = played.filter((row) => row.appearance.started || row.appearance.squadStatus === 'starter').length
+  const subs = played.filter((row) => row.appearance.squadStatus === 'subbed-in').length
+  const yellow = completed.reduce((sum, row) => sum + (row.appearance.yellowCards ?? 0), 0)
+  const red = completed.reduce((sum, row) => sum + (row.appearance.redCards ?? 0), 0)
 
   const headlineStats: NamedStat[] = []
   pushStat(headlineStats, played.length, 'הופעות')
@@ -88,7 +93,7 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
   pushStat(headlineStats, assists, 'בישולים')
 
   const windowStats: NamedStat[] = []
-  pushStat(windowStats, rows.length, 'משחקים')
+  pushStat(windowStats, completed.length, 'משחקים ששוחקו')
   pushStat(windowStats, minutes, 'דקות')
   pushStat(windowStats, starts, 'משחקים שפתח בהרכב')
   pushStat(windowStats, subs, 'כניסות כמחליף')
@@ -113,7 +118,7 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
     subs,
     yellow,
     red,
-    matches: rows.length,
+    matches: completed.length,
     headlineStats,
     windowStats,
     lastMatch: last
@@ -133,27 +138,22 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
 
 export function windowBoardStats(matches: Match[]): NamedStat[] {
   const stats: NamedStat[] = [{ label: 'שחקנים', value: String(players.length) }]
-  const minutes = matches.reduce(
+  const completed = matches.filter((match) => isCompletedMatch(match))
+  const minutes = completed.reduce(
     (sum, match) =>
       sum + match.players.reduce((inner, appearance) => inner + (appearance.played ? appearance.minutes ?? 0 : 0), 0),
     0,
   )
-  const starts = matches.reduce(
-    (sum, match) =>
-      sum +
-      match.players.filter((appearance) => appearance.started || appearance.squadStatus === 'starter').length,
-    0,
-  )
-  const goals = matches.reduce(
+  const goals = completed.reduce(
     (sum, match) => sum + match.players.reduce((inner, appearance) => inner + (appearance.goals ?? 0), 0),
     0,
   )
-  const assists = matches.reduce(
+  const assists = completed.reduce(
     (sum, match) => sum + match.players.reduce((inner, appearance) => inner + (appearance.assists ?? 0), 0),
     0,
   )
   pushStat(stats, minutes, 'דקות')
-  pushStat(stats, starts, 'משחקים שפתח בהרכב')
+  pushStat(stats, completed.length, 'משחקים ששוחקו')
   pushStat(stats, goals, 'שערים')
   pushStat(stats, assists, 'בישולים')
   return stats

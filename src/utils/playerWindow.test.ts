@@ -52,10 +52,14 @@ test('builds window totals without empty zeros', () => {
     profile.headlineStats.map((stat) => stat.label),
     ['הופעות', 'דקות', 'שערים'],
   )
+  assert.equal(profile.matches, 1)
+  assert.deepEqual(
+    profile.windowStats.map((stat) => `${stat.value} ${stat.label}`),
+    ['1 משחקים ששוחקו', '73 דקות', '1 משחקים שפתח בהרכב', '1 שערים'],
+  )
   assert.equal(profile.lastMatch?.line, 'ישראל 2:1 אירלנד')
   assert.equal(profile.nextMatch?.matchId, 'next')
   assert.equal(profile.nextMatch?.detail, 'בסגל הנבחרת')
-  assert.equal(profile.windowStats.some((stat) => stat.label === 'משחקים שפתח בהרכב'), true)
 })
 
 test('hides empty window numbers from the board strip', () => {
@@ -69,6 +73,41 @@ test('hides empty window numbers from the board strip', () => {
   ])
   assert.equal(stats[0]?.label, 'שחקנים')
   assert.equal(stats.some((stat) => stat.label === 'שערים'), false)
+  assert.equal(stats.some((stat) => stat.label === 'משחקים ששוחקו'), false)
+  assert.equal(stats.some((stat) => stat.label === 'משחקים שפתח בהרכב'), false)
+})
+
+test('counts a finished match once even with three HBS starters', () => {
+  const stats = windowBoardStats([
+    match({
+      id: 'aut-isr',
+      kickoff: '2026-09-24T18:45:00.000Z',
+      status: 'finished',
+      homeScore: 3,
+      awayScore: 1,
+      players: [
+        { playerId: 'eliel-peretz', squadStatus: 'starter', started: true, played: true, minutes: 85 },
+        { playerId: 'idan-nachmias', squadStatus: 'starter', started: true, played: true, minutes: 90 },
+        { playerId: 'guy-mizrahi', squadStatus: 'starter', started: true, played: true, minutes: 79 },
+      ],
+    }),
+    match({
+      id: 'jam-gtm',
+      kickoff: '2026-09-24T02:00:00.000Z',
+      status: 'finished',
+      homeScore: 2,
+      awayScore: 1,
+      players: [{ playerId: 'javon-east', squadStatus: 'starter', started: true, played: true, minutes: 90 }],
+    }),
+    match({
+      id: 'next',
+      kickoff: '2026-09-27T18:45:00.000Z',
+      status: 'scheduled',
+      players: [{ playerId: 'eliel-peretz', squadStatus: 'unknown' }],
+    }),
+  ])
+  assert.equal(stats.find((stat) => stat.label === 'משחקים ששוחקו')?.value, '2')
+  assert.equal(stats.some((stat) => stat.label === 'משחקים שפתח בהרכב'), false)
 })
 
 test('adds published lineup status to the next-match clip', () => {
@@ -85,4 +124,7 @@ test('adds published lineup status to the next-match clip', () => {
     new Date('2026-09-24T17:20:00.000Z'),
   )
   assert.equal(profile.nextMatch?.detail, 'פותח בהרכב')
+  assert.equal(profile.matches, 0)
+  assert.equal(profile.windowStats.some((stat) => stat.label === 'משחקים ששוחקו'), false)
+  assert.equal(profile.starts, 0)
 })
