@@ -2,28 +2,22 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { countdownUnits, formatStartPhrase, remainingMs, shouldShowCountdown } from './countdown.ts'
 
-test('shows days hours and minutes when days remain', () => {
-  const units = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
+test('always shows hours, minutes and seconds', () => {
+  const long = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
   assert.deepEqual(
-    units.map((unit) => `${unit.value} ${unit.label}`),
-    ['6 ימים', '14 שעות', '22 דקות'],
+    long.map((unit) => `${unit.value} ${unit.label}`),
+    ['158 שעות', '22 דקות', '01 שניות'],
   )
-})
-
-test('drops days when less than a day remains', () => {
-  const units = countdownUnits((5 * 3600 + 12 * 60 + 8) * 1000)
+  const mid = countdownUnits((5 * 3600 + 12 * 60 + 8) * 1000)
   assert.deepEqual(
-    units.map((unit) => unit.key),
-    ['hours', 'minutes'],
+    mid.map((unit) => unit.key),
+    ['hours', 'minutes', 'seconds'],
   )
-  assert.equal(units[0]?.value, '05')
-})
-
-test('drops hours when less than an hour remains', () => {
-  const units = countdownUnits((12 * 60 + 8) * 1000)
+  assert.equal(mid[0]?.value, '05')
+  const short = countdownUnits((12 * 60 + 8) * 1000)
   assert.deepEqual(
-    units.map((unit) => unit.key),
-    ['minutes'],
+    short.map((unit) => `${unit.value} ${unit.label}`),
+    ['00 שעות', '12 דקות', '08 שניות'],
   )
 })
 

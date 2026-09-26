@@ -522,7 +522,7 @@ main {
 .match-card__players,
 .match-card__comp,
 .match-card__updated,
-.countdown-block {
+.countdown {
   position: relative;
   z-index: 1;
 }
@@ -574,18 +574,6 @@ main {
   color: var(--muted);
   font-size: 0.72rem;
   text-align: start;
-}
-
-.countdown-block {
-  margin-top: 0.7rem;
-}
-
-.countdown-phrase {
-  margin: 0.15rem 0 0;
-  text-align: center;
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: var(--text);
 }
 
 .match-card__comp {
@@ -667,23 +655,12 @@ main {
 }
 
 .countdown {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.45rem;
-  margin: 0.95rem 0 0;
-}
-
-.countdown--3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.countdown--1 {
-  grid-template-columns: minmax(0, 8rem);
+  direction: ltr;
+  display: flex;
+  align-items: stretch;
   justify-content: center;
-}
-
-.countdown--2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0.65rem 0 0;
 }
 
 .countdown--waiting {
@@ -694,40 +671,45 @@ main {
 }
 
 .countdown__unit {
+  position: relative;
   display: flex;
+  flex: 1 1 0;
+  max-width: 5.2rem;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.5rem 0.2rem 0.4rem;
-  border: 1px solid var(--line);
-  border-radius: 0.7rem;
-  background: #faf8f6;
+  gap: 0.08rem;
+  padding: 0.35rem 0.35rem 0.28rem;
+}
+
+.countdown__sep {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  transform: translate(-50%, -55%);
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .countdown__value {
   direction: ltr;
   unicode-bidi: isolate;
   font-variant-numeric: tabular-nums;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
-.countdown--3 .countdown__value,
-.countdown--2 .countdown__value,
-.countdown--1 .countdown__value {
-  font-size: 1.4rem;
-}
-
 .countdown__label {
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
 }
 
 .appearance {
-  gap: 0.65rem;
-  padding: 0.55rem 0;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
   border-top: 1px solid var(--line);
   min-width: 0;
 }

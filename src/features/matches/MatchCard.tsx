@@ -91,7 +91,6 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
               key={appearance.playerId}
               appearance={appearance}
               matchStatus={match.status}
-              prominent={live}
               onOpenPlayer={(playerId) => onOpenPlayer(playerId, match.id)}
             />
           ))}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { MatchStatus } from '../types'
-import { countdownUnits, formatStartPhrase, remainingMs, shouldShowCountdown } from '../utils/countdown'
+import { countdownUnits, remainingMs, shouldShowCountdown } from '../utils/countdown'
 
 interface KickoffCountdownProps {
   kickoff: string
@@ -29,7 +29,6 @@ export function KickoffCountdown({ kickoff, status, featured = false }: KickoffC
   if (!shouldShowCountdown(status)) return null
 
   const remaining = remainingMs(kickoff, now)
-  const phrase = formatStartPhrase(kickoff, now)
   if (remaining <= 0) {
     return (
       <p className="countdown countdown--waiting" role="timer">
@@ -41,21 +40,23 @@ export function KickoffCountdown({ kickoff, status, featured = false }: KickoffC
   const units = countdownUnits(remaining)
 
   return (
-    <div className={['countdown-block', featured ? 'countdown-block--next' : ''].filter(Boolean).join(' ')}>
-      {phrase ? <p className="countdown-phrase">{phrase}</p> : null}
-      <div
-        className={`countdown countdown--${units.length}`}
-        role="timer"
-        aria-live="off"
-        aria-label={units.map((unit) => `${unit.value} ${unit.label}`).join(', ')}
-      >
-        {units.map((unit) => (
-          <div key={unit.key} className="countdown__unit">
-            <span className="countdown__value">{unit.value}</span>
-            <span className="countdown__label">{unit.label}</span>
-          </div>
-        ))}
-      </div>
+    <div
+      className={['countdown', featured ? 'countdown--next' : ''].filter(Boolean).join(' ')}
+      role="timer"
+      aria-live="off"
+      aria-label={units.map((unit) => `${unit.value} ${unit.label}`).join(' | ')}
+    >
+      {units.map((unit, index) => (
+        <div key={unit.key} className="countdown__unit">
+          {index > 0 ? (
+            <span className="countdown__sep" aria-hidden="true">
+              |
+            </span>
+          ) : null}
+          <span className="countdown__value">{unit.value}</span>
+          <span className="countdown__label">{unit.label}</span>
+        </div>
+      ))}
     </div>
   )
 }
