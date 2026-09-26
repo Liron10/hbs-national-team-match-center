@@ -19,6 +19,20 @@ export function participationLine(appearance: PlayerAppearance, matchStatus?: Ma
   const minutes = appearance.minutes ?? 0
   const subIn = appearance.subbedInMinute
   const subOut = appearance.subbedOutMinute
+  const live = matchStatus === 'live' || matchStatus === 'halftime'
+
+  if (live) {
+    if (appearance.squadStatus === 'not-in-squad') return 'כרגע לא במשחק • לא בסגל'
+    if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') {
+      return 'כרגע לא במשחק • על הספסל'
+    }
+    if (appearance.squadStatus === 'subbed-out' || (subOut != null && subIn == null)) {
+      return 'כרגע לא במשחק • הוחלף וירד מהדשא'
+    }
+    if (subOut != null && appearance.squadStatus === 'subbed-in') {
+      return 'כרגע לא במשחק • הוחלף וירד מהדשא'
+    }
+  }
 
   if (appearance.squadStatus === 'unknown') {
     return matchStatus === 'scheduled' || matchStatus == null ? 'בסגל הנבחרת' : ''
@@ -30,7 +44,7 @@ export function participationLine(appearance: PlayerAppearance, matchStatus?: Ma
 
   if (subIn != null) return `נכנס בדקה ${subIn}'`
   if (subOut != null) return `הוחלף בדקה ${subOut}'`
-  if (matchStatus === 'live' || matchStatus === 'halftime') {
+  if (live) {
     if (appearance.squadStatus === 'starter' && minutes > 0) {
       return `פותח בהרכב • ${minutes} דקות`
     }
@@ -52,14 +66,17 @@ export interface AppearanceStat {
 }
 
 export interface PlayerChip {
-  kind: 'status' | 'goal' | 'assist' | 'yellow' | 'red' | 'stat'
+  kind: 'status' | 'out' | 'goal' | 'assist' | 'yellow' | 'red' | 'stat'
   label: string
 }
 
 export function playerChips(appearance: PlayerAppearance, matchStatus: MatchStatus): PlayerChip[] {
   const chips: PlayerChip[] = []
   const line = participationLine(appearance, matchStatus)
-  if (line) chips.push({ kind: 'status', label: line })
+  if (line) {
+    const offPitch = line.startsWith('כרגע לא במשחק')
+    chips.push({ kind: offPitch ? 'out' : 'status', label: line })
+  }
 
   const goals = appearance.goals ?? 0
   const assists = appearance.assists ?? 0

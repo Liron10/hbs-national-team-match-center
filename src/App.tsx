@@ -43,14 +43,13 @@ export default function App() {
   const sheetPlayer = sheetPlayerId ? getPlayer(sheetPlayerId) : undefined
   const pulse = boardPulse(matches, now)
   const nextMatch = nextScheduledMatch(openMatches, now)
+  const restOpen = nextMatch ? openMatches.filter((match) => match.id !== nextMatch.id) : openMatches
   const spotlight = selectedPlayerId
     ? undefined
-    : sortMatches(matches, now).find((match) => {
-        const bucket = deriveBucket(match, now)
-        return bucket === 'live' || bucket === 'today'
-      })
+    : sortMatches(matches, now).find((match) => deriveBucket(match, now) === 'live')
   const showFinished = finishedMatches.length > 0 && (filter === 'all' || filter === 'finished')
   const showOpen = filter !== 'finished'
+  const showNext = Boolean(showOpen && nextMatch)
   const tabs = <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
 
   const openPlayer = useCallback((id: string, matchId: string) => {
@@ -144,17 +143,32 @@ export default function App() {
               />
             </section>
           ) : null}
+          {!loading && !error && showOpen ? tabs : null}
+          {!loading && !error && showNext && nextMatch ? (
+            <section className="board board--next" aria-labelledby="next-heading">
+              <div className="section-heading">
+                <h2 id="next-heading">המשחק הקרוב</h2>
+              </div>
+              <MatchList
+                matches={[nextMatch]}
+                filter="upcoming"
+                now={now}
+                empty={false}
+                nextMatchId={nextMatch.id}
+                onOpenPlayer={openPlayer}
+              />
+            </section>
+          ) : null}
           {!loading && !error && showOpen ? (
             <section className="board" aria-labelledby="board-heading">
               <div className="section-heading">
-                <h2 id="board-heading">המשחקים</h2>
+                <h2 id="board-heading">{showNext ? 'עוד משחקים' : 'המשחקים'}</h2>
               </div>
-              {tabs}
               <MatchList
-                matches={openMatches}
+                matches={restOpen}
                 filter={filter === 'all' ? 'upcoming' : filter}
                 now={now}
-                nextMatchId={nextMatch?.id}
+                empty={!showNext}
                 onOpenPlayer={openPlayer}
               />
             </section>

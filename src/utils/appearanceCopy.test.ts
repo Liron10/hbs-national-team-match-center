@@ -76,6 +76,42 @@ test('uses natural Hebrew for participation', () => {
   )
 })
 
+test('states clearly when a player is not on the pitch during a live match', () => {
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'bench', played: false }), 'live'),
+    'כרגע לא במשחק • על הספסל',
+  )
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'not-in-squad', played: false }), 'live'),
+    'כרגע לא במשחק • לא בסגל',
+  )
+  assert.equal(
+    participationLine(
+      appearance({
+        squadStatus: 'subbed-out',
+        played: true,
+        started: true,
+        minutes: 64,
+        subbedOutMinute: 64,
+      }),
+      'live',
+    ),
+    'כרגע לא במשחק • הוחלף וירד מהדשא',
+  )
+  assert.equal(
+    participationLine(
+      appearance({
+        squadStatus: 'starter',
+        played: true,
+        started: true,
+        minutes: 38,
+      }),
+      'live',
+    ),
+    'פותח בהרכב • 38 דקות',
+  )
+})
+
 test('returns the stored 10-stat sheet after the match is underway', () => {
   const stats = [
     { label: 'דקות משחק', value: '85' },

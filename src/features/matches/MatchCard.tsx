@@ -45,7 +45,7 @@ export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchC
       </div>
       <header className="match-card__meta">
         <div className="match-card__when">
-          {featured ? <span className="next-badge">הבא בתור</span> : null}
+          {featured ? <span className="next-badge">המשחק הקרוב</span> : null}
           {postponed || cancelled ? (
             <span className="match-card__date">{kickoff.date}</span>
           ) : (

@@ -2,11 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { countdownUnits, formatStartPhrase, remainingMs, shouldShowCountdown } from './countdown.ts'
 
-test('shows four units when days remain', () => {
+test('shows days hours and minutes when days remain', () => {
   const units = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
   assert.deepEqual(
     units.map((unit) => `${unit.value} ${unit.label}`),
-    ['6 ימים', '14 שעות', '22 דקות', '01 שניות'],
+    ['6 ימים', '14 שעות', '22 דקות'],
   )
 })
 
@@ -14,7 +14,7 @@ test('drops days when less than a day remains', () => {
   const units = countdownUnits((5 * 3600 + 12 * 60 + 8) * 1000)
   assert.deepEqual(
     units.map((unit) => unit.key),
-    ['hours', 'minutes', 'seconds'],
+    ['hours', 'minutes'],
   )
   assert.equal(units[0]?.value, '05')
 })
@@ -23,7 +23,7 @@ test('drops hours when less than an hour remains', () => {
   const units = countdownUnits((12 * 60 + 8) * 1000)
   assert.deepEqual(
     units.map((unit) => unit.key),
-    ['minutes', 'seconds'],
+    ['minutes'],
   )
 })
 

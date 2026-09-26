@@ -340,8 +340,13 @@ a:focus-visible {
   border: 1px solid var(--line);
 }
 
-.board + .board {
-  margin-top: 1.1rem;
+.board--next .match-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.board--next .match-card {
+  border-color: rgba(225, 6, 0, 0.28);
+  box-shadow: 0 12px 28px rgba(22, 24, 29, 0.08);
 }
 
 .players-grid {
@@ -672,6 +677,11 @@ main {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.countdown--1 {
+  grid-template-columns: minmax(0, 8rem);
+  justify-content: center;
+}
+
 .countdown--2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -704,7 +714,8 @@ main {
 }
 
 .countdown--3 .countdown__value,
-.countdown--2 .countdown__value {
+.countdown--2 .countdown__value,
+.countdown--1 .countdown__value {
   font-size: 1.4rem;
 }
 
@@ -974,6 +985,12 @@ main {
 .chip--red {
   background: var(--red-soft);
   color: var(--red);
+}
+
+.chip--out {
+  background: #ece7e2;
+  color: var(--text);
+  font-weight: 800;
 }
 
 .appearance__highlights li {
@@ -1400,5 +1417,9 @@ main {
 @media (min-width: 1024px) {
   .match-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board--next .match-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

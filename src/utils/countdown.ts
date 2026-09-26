@@ -9,7 +9,7 @@ function pad(value: number): string {
 }
 
 export interface CountdownUnit {
-  key: 'days' | 'hours' | 'minutes' | 'seconds'
+  key: 'days' | 'hours' | 'minutes'
   value: string
   label: string
 }
@@ -19,7 +19,6 @@ export function countdownUnits(ms: number): CountdownUnit[] {
   const days = Math.floor(totalSeconds / 86_400)
   const hours = Math.floor((totalSeconds % 86_400) / 3_600)
   const minutes = Math.floor((totalSeconds % 3_600) / 60)
-  const seconds = totalSeconds % 60
   const units: CountdownUnit[] = []
 
   if (days > 0) {
@@ -36,11 +35,6 @@ export function countdownUnits(ms: number): CountdownUnit[] {
     key: 'minutes',
     value: pad(minutes),
     label: 'דקות',
-  })
-  units.push({
-    key: 'seconds',
-    value: pad(seconds),
-    label: 'שניות',
   })
 
   return units
