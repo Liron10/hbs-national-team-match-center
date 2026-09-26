@@ -106,9 +106,10 @@ export function playerTimeline(appearance: PlayerAppearance): TimelineEvent[] {
   return events.sort((a, b) => a.minute - b.minute)
 }
 
-export function appearanceStats(appearance: PlayerAppearance): AppearanceStat[] {
+export function appearanceStats(appearance: PlayerAppearance, matchStatus?: MatchStatus): AppearanceStat[] {
+  if (matchStatus && !matchShowsPlayerStats(matchStatus)) return []
   if (!appearance.played) return []
-  if (appearance.stats?.length === 10) return appearance.stats
+  if (appearance.stats && appearance.stats.length > 0) return appearance.stats
 
   return buildFixedStats({
     minutes: appearance.minutes ?? 0,

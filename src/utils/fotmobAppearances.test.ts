@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { appearanceFromFotmob, FIXED_STAT_LABELS } from './fotmobAppearances.ts'
+import { appearanceFromFotmob, FIXED_STAT_LABELS, shouldEnrichAppearances } from './fotmobAppearances.ts'
 
 const details = {
   content: {
@@ -44,7 +44,7 @@ const details = {
 }
 
 test('maps a FotMob starter with minutes, cards and a fixed stat sheet', () => {
-  const appearance = appearanceFromFotmob('eliel-peretz', 763312, details, true)
+  const appearance = appearanceFromFotmob('eliel-peretz', 763312, details, 'finished')
   assert.equal(appearance.squadStatus, 'subbed-out')
   assert.equal(appearance.started, true)
   assert.equal(appearance.played, true)
@@ -84,7 +84,7 @@ test('reads FotMob tackles from the matchstats header key', () => {
         },
       },
     },
-    true,
+    'finished',
   )
   assert.equal(appearance.stats?.find((stat) => stat.label === 'תיקולים')?.value, '1')
 })
@@ -94,8 +94,65 @@ test('does not invent a stat sheet for a player who did not play', () => {
     'eliel-peretz',
     763312,
     { content: { lineup: { awayTeam: { starters: [], subs: [] } } } },
-    true,
+    'finished',
   )
   assert.equal(appearance.squadStatus, 'not-in-squad')
   assert.deepEqual(appearance.stats, [])
+})
+
+test('maps a published pre-match lineup without inventing minutes or ratings', () => {
+  const starter = appearanceFromFotmob(
+    'eliel-peretz',
+    763312,
+    { content: { lineup: { awayTeam: { starters: [{ id: 763312 }], subs: [] } } } },
+    'scheduled',
+  )
+  const bench = appearanceFromFotmob(
+    'eliel-peretz',
+    763312,
+    { content: { lineup: { awayTeam: { starters: [], subs: [{ id: 763312 }] } } } },
+    'scheduled',
+  )
+  assert.equal(starter.squadStatus, 'starter')
+  assert.equal(starter.started, true)
+  assert.equal(starter.played, false)
+  assert.deepEqual(starter.stats, [])
+  assert.equal(bench.squadStatus, 'bench')
+  assert.equal(bench.played, false)
+})
+
+test('keeps a live unused substitute on the bench until they come on', () => {
+  const appearance = appearanceFromFotmob(
+    'eliel-peretz',
+    763312,
+    { content: { lineup: { awayTeam: { starters: [], subs: [{ id: 763312 }] } } } },
+    'live',
+  )
+  assert.equal(appearance.squadStatus, 'bench')
+  assert.equal(appearance.played, false)
+})
+
+test('enriches scheduled matches only inside the 90-minute live window', () => {
+  const kickoff = '2026-09-24T18:45:00.000Z'
+  const scheduled = {
+    id: 'aut-isr',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'AUT' as const, nameHe: 'אוסטריה', nameEn: 'Austria' },
+    awayTeam: { code: 'ISR' as const, nameHe: 'ישראל', nameEn: 'Israel' },
+    kickoff,
+    status: 'scheduled' as const,
+    homeScore: null,
+    awayScore: null,
+    lastUpdated: kickoff,
+    players: [],
+    fotmobMatchId: 123,
+  }
+  assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T17:20:00.000Z')), true)
+  assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T16:00:00.000Z')), false)
+  assert.equal(shouldEnrichAppearances({ ...scheduled, fotmobMatchId: undefined }, new Date('2026-09-24T17:20:00.000Z')), false)
+  assert.equal(
+    shouldEnrichAppearances({ ...scheduled, status: 'finished' }, new Date('2026-09-26T12:00:00.000Z')),
+    true,
+  )
 })

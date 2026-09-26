@@ -6,7 +6,7 @@ import { nationalTeams } from '../data/teams'
 import { displayTeamName } from '../utils/matchLine'
 import { formatStartPhrase } from '../utils/countdown'
 import { playerWindowProfile } from '../utils/playerWindow'
-import { appearanceStats, matchShowsPlayerStats } from '../utils/appearanceCopy'
+import { appearanceStats } from '../utils/appearanceCopy'
 
 interface PlayerSheetProps {
   player: Player
@@ -22,10 +22,19 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
   const profile = playerWindowProfile(player.id, matches, now)
   const sourceMatch = matchId ? matches.find((match) => match.id === matchId) : undefined
   const sourceAppearance = sourceMatch?.players.find((appearance) => appearance.playerId === player.id)
-  const matchStats =
-    sourceMatch && sourceAppearance && matchShowsPlayerStats(sourceMatch.status)
-      ? appearanceStats(sourceAppearance)
-      : []
+  const sourceStats =
+    sourceMatch && sourceAppearance ? appearanceStats(sourceAppearance, sourceMatch.status) : []
+  const lastFinished = [...matches]
+    .filter((match) => match.status === 'finished')
+    .sort((a, b) => Date.parse(b.kickoff) - Date.parse(a.kickoff))
+    .map((match) => {
+      const appearance = match.players.find((item) => item.playerId === player.id)
+      return appearance ? { match, stats: appearanceStats(appearance, match.status) } : null
+    })
+    .find((item) => item && item.stats.length > 0)
+  const matchStats = sourceStats.length > 0 ? sourceStats : (lastFinished?.stats ?? [])
+  const matchStatsTitle =
+    sourceStats.length > 0 ? 'במשחק' : lastFinished ? 'המשחק האחרון — נתונים' : 'במשחק'
   const nextKickoff = matches.find((match) => match.id === profile.nextMatch?.matchId)?.kickoff
   const nextEta = nextKickoff ? formatStartPhrase(nextKickoff, now) : null
 
@@ -74,7 +83,7 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
         ) : null}
         {matchStats.length > 0 ? (
           <section className="player-sheet__block">
-            <h3>במשחק</h3>
+            <h3>{matchStatsTitle}</h3>
             <ul className="appearance__stats player-sheet__match-stats">
               {matchStats.map((stat) => (
                 <li key={stat.label}>
@@ -112,6 +121,7 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
               {profile.nextMatch.when}
               {nextEta ? ` • ${nextEta}` : ''}
             </p>
+            {profile.nextMatch.detail ? <p className="player-sheet__muted">{profile.nextMatch.detail}</p> : null}
             <button type="button" className="player-sheet__link" onClick={() => onShowMatch(profile.nextMatch!.matchId)}>
               הצג במשחקים
             </button>

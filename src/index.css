@@ -589,8 +589,7 @@ main {
 
 .match-card__meta,
 .match-card__line,
-.appearance,
-.appearance__stats {
+.appearance {
   display: flex;
   align-items: center;
 }

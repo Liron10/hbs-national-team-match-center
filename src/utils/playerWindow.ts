@@ -1,4 +1,5 @@
 import type { Match, PlayerAppearance } from '../types'
+import { participationLine } from './appearanceCopy'
 import { displayTeamName } from './matchLine'
 import { remainingMs } from './countdown'
 import { formatFanKickoff } from './datetime'
@@ -123,6 +124,7 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
           matchId: next.match.id,
           line: `${displayTeamName(next.match.homeTeam)} – ${displayTeamName(next.match.awayTeam)}`,
           when: formatFanKickoff(next.match.kickoff, now, next.match.status).primary,
+          detail: participationLine(next.appearance, next.match.status) || undefined,
         }
       : undefined,
     recent,

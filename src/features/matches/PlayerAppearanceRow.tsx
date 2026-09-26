@@ -1,7 +1,7 @@
 import type { MatchStatus, PlayerAppearance } from '../../types'
 import { getPlayer } from '../../data/players'
 import { PlayerPortrait } from '../../components/PlayerPortrait'
-import { compactHighlights, playerChips, playerTimeline } from '../../utils/appearanceCopy'
+import { appearanceStats, compactHighlights, playerChips, playerTimeline } from '../../utils/appearanceCopy'
 
 interface PlayerAppearanceRowProps {
   appearance: PlayerAppearance
@@ -20,7 +20,8 @@ export function PlayerAppearanceRow({
   if (!player) return null
 
   const chips = playerChips(appearance, matchStatus)
-  const highlights = matchStatus === 'finished' ? compactHighlights(appearance) : []
+  const stats = appearanceStats(appearance, matchStatus)
+  const highlights = matchStatus === 'finished' && stats.length === 0 ? compactHighlights(appearance) : []
   const timeline =
     matchStatus === 'live' || matchStatus === 'halftime' || matchStatus === 'finished'
       ? playerTimeline(appearance)
@@ -62,6 +63,16 @@ export function PlayerAppearanceRow({
               <li key={stat.label}>
                 <strong>{stat.value}</strong>
                 <span>{stat.label}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {stats.length > 0 ? (
+          <ul className="appearance__stats">
+            {stats.map((stat) => (
+              <li key={stat.label}>
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
               </li>
             ))}
           </ul>

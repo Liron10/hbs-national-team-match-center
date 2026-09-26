@@ -54,6 +54,7 @@ test('builds window totals without empty zeros', () => {
   )
   assert.equal(profile.lastMatch?.line, 'ישראל 2:1 אירלנד')
   assert.equal(profile.nextMatch?.matchId, 'next')
+  assert.equal(profile.nextMatch?.detail, 'בסגל הנבחרת')
   assert.equal(profile.windowStats.some((stat) => stat.label === 'משחקים שפתח בהרכב'), true)
 })
 
@@ -68,4 +69,20 @@ test('hides empty window numbers from the board strip', () => {
   ])
   assert.equal(stats[0]?.label, 'שחקנים')
   assert.equal(stats.some((stat) => stat.label === 'שערים'), false)
+})
+
+test('adds published lineup status to the next-match clip', () => {
+  const profile = playerWindowProfile(
+    'eliel-peretz',
+    [
+      match({
+        id: 'next',
+        kickoff: '2026-09-24T18:45:00.000Z',
+        status: 'scheduled',
+        players: [{ playerId: 'eliel-peretz', squadStatus: 'starter', started: true, played: false }],
+      }),
+    ],
+    new Date('2026-09-24T17:20:00.000Z'),
+  )
+  assert.equal(profile.nextMatch?.detail, 'פותח בהרכב')
 })

@@ -1,6 +1,7 @@
-import type { Match, PlayerAppearance, SquadStatus } from '../types'
+import type { Match, MatchStatus, PlayerAppearance, SquadStatus } from '../types'
 import { fotmobPlayerId } from '../data/fotmobIds'
 import { footballGet } from '../services/football/client'
+import { isInLiveWindow } from './liveScores'
 
 export const FIXED_STAT_LABELS = [
   'דקות משחק',
@@ -122,7 +123,7 @@ export function appearanceFromFotmob(
   playerId: string,
   fotmobId: number,
   details: FotmobMatchDetails,
-  matchFinished: boolean,
+  matchStatus: MatchStatus,
 ): PlayerAppearance {
   const lineup = details.content?.lineup
   const sides = [lineup?.homeTeam, lineup?.awayTeam]
@@ -136,14 +137,16 @@ export function appearanceFromFotmob(
   const goals = statNumber(statsPayload, 'goals')
   const assists = statNumber(statsPayload, 'assists')
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
+  const finished = matchStatus === 'finished'
+  const inPlay = matchStatus === 'live' || matchStatus === 'halftime' || finished
 
-  let squadStatus: SquadStatus = matchFinished ? 'not-in-squad' : 'unknown'
+  let squadStatus: SquadStatus = finished ? 'not-in-squad' : 'unknown'
   if (unavailable && !linePlayer) squadStatus = 'not-in-squad'
   else if (starter) squadStatus = events.subOut != null ? 'subbed-out' : 'starter'
   else if (sub && events.subIn != null) squadStatus = 'subbed-in'
-  else if (sub) squadStatus = 'unused'
+  else if (sub) squadStatus = finished ? 'unused' : 'bench'
 
-  const played = minutes > 0 || Boolean(starter) || events.subIn != null
+  const played = minutes > 0 || (inPlay && (Boolean(starter) || events.subIn != null))
 
   return {
     playerId,
@@ -182,24 +185,27 @@ export function appearanceFromFotmob(
 }
 
 export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails): Match {
-  const finished = match.status === 'finished'
   return {
     ...match,
     players: match.players.map((appearance) => {
       const fotmobId = fotmobPlayerId[appearance.playerId]
       if (!fotmobId) return appearance
-      return appearanceFromFotmob(appearance.playerId, fotmobId, details, finished)
+      return appearanceFromFotmob(appearance.playerId, fotmobId, details, match.status)
     }),
   }
 }
 
-export async function enrichMatchAppearances(matches: Match[]): Promise<Match[]> {
+export function shouldEnrichAppearances(match: Match, now = new Date()): boolean {
+  if (match.fotmobMatchId == null) return false
+  if (match.status === 'postponed' || match.status === 'cancelled') return false
+  if (match.status === 'live' || match.status === 'halftime' || match.status === 'finished') return true
+  return match.status === 'scheduled' && isInLiveWindow(match, now)
+}
+
+export async function enrichMatchAppearances(matches: Match[], now = new Date()): Promise<Match[]> {
   return Promise.all(
     matches.map(async (match) => {
-      if (match.status === 'scheduled' || match.status === 'postponed' || match.status === 'cancelled') {
-        return match
-      }
-      if (match.fotmobMatchId == null) return match
+      if (!shouldEnrichAppearances(match, now)) return match
       try {
         const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.fotmobMatchId}`)
         return mergeMatchAppearances(match, details)

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PlayerAppearance } from '../types'
-import { matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
+import { appearanceStats, matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
 
 function appearance(partial: Partial<PlayerAppearance>): PlayerAppearance {
   return {
@@ -65,6 +65,52 @@ test('uses natural Hebrew for participation', () => {
       }),
     ),
     'שיחק 90 דקות',
+  )
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'starter', started: true, played: false }), 'scheduled'),
+    'פותח בהרכב',
+  )
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'bench', played: false }), 'scheduled'),
+    'על הספסל',
+  )
+})
+
+test('returns the stored 10-stat sheet after the match is underway', () => {
+  const stats = [
+    { label: 'דקות משחק', value: '85' },
+    { label: 'שערים', value: '0' },
+    { label: 'בישולים', value: '0' },
+    { label: 'כרטיסים צהובים', value: '1' },
+    { label: 'כרטיסים אדומים', value: '0' },
+    { label: 'ציון', value: '6.41' },
+    { label: 'מסירות מדויקות', value: '37/41' },
+    { label: 'בעיטות', value: '1' },
+    { label: 'בעיטות למסגרת', value: '0' },
+    { label: 'תיקולים', value: '2' },
+  ]
+  assert.deepEqual(
+    appearanceStats(
+      appearance({
+        squadStatus: 'subbed-out',
+        played: true,
+        minutes: 85,
+        stats,
+      }),
+      'finished',
+    ),
+    stats,
+  )
+  assert.deepEqual(
+    appearanceStats(
+      appearance({
+        squadStatus: 'starter',
+        played: true,
+        stats,
+      }),
+      'scheduled',
+    ),
+    [],
   )
 })
 
