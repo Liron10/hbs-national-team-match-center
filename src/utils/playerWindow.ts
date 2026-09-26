@@ -138,9 +138,9 @@ export function playerWindowProfile(playerId: string, matches: Match[], now = ne
   pushStat(headlineStats, assists, 'בישולים')
 
   const windowStats: NamedStat[] = []
-  pushStat(windowStats, completed.length, 'משחקים ששוחקו')
+  pushStat(windowStats, completed.length, completed.length === 1 ? 'משחק ששוחק' : 'משחקים ששוחקו')
   pushStat(windowStats, minutes, 'דקות')
-  pushStat(windowStats, starts, 'משחקים שפתח בהרכב')
+  pushStat(windowStats, starts, starts === 1 ? 'משחק שפתח בהרכב' : 'משחקים שפתח בהרכב')
   pushStat(windowStats, subs, 'כניסות כמחליף')
   pushStat(windowStats, goals, 'שערים')
   pushStat(windowStats, assists, 'בישולים')
@@ -205,7 +205,7 @@ export function windowBoardStats(matches: Match[]): NamedStat[] {
     0,
   )
   pushStat(stats, minutes, 'דקות')
-  pushStat(stats, completed.length, 'משחקים ששוחקו')
+  pushStat(stats, completed.length, completed.length === 1 ? 'משחק ששוחק' : 'משחקים ששוחקו')
   pushStat(stats, goals, 'שערים')
   pushStat(stats, assists, 'בישולים')
   const teamCodes = new Set(players.map((player) => player.nationalTeamCode))

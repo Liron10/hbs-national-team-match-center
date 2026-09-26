@@ -15,7 +15,7 @@ export function Header({ live, windowLabel, pulse }: HeaderProps) {
           <ClubLogo />
           <div>
             <p className="site-header__kicker">הפועל באר שבע</p>
-            <p className="site-header__title">MATCH CENTER</p>
+            <p className="site-header__title">לוח המשחקים</p>
           </div>
         </div>
         {live ? (

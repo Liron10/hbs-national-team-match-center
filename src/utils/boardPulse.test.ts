@@ -31,6 +31,16 @@ test('counts only players on the pitch as currently playing', () => {
   assert.equal(boardPulse([live]).text, 'נציג של הפועל באר שבע משחק כעת')
 })
 
+test('uses singular Hebrew when there is one match today', () => {
+  const today = match({
+    id: 'today',
+    status: 'scheduled',
+    kickoff: '2026-09-26T18:45:00.000Z',
+  })
+  assert.match(boardPulse([today], new Date('2026-09-26T10:00:00.000Z')).text, /משחק אחד היום/)
+  assert.equal(boardPulse([today], new Date('2026-09-26T10:00:00.000Z')).text.includes('1 משחקים'), false)
+})
+
 test('uses squad copy when nobody is on the pitch yet', () => {
   const live = match({
     id: 'live',

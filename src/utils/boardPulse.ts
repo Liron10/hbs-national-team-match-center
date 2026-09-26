@@ -117,7 +117,10 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
       isSameJerusalemDay(match.kickoff, now),
   ).length
   const squad = `${players.length} נציגי הפועל באר שבע בנבחרות`
-  if (todayCount > 0) {
+  if (todayCount === 1) {
+    return { text: `${squad} • משחק אחד היום`, live: false }
+  }
+  if (todayCount > 1) {
     return { text: `${squad} • ${todayCount} משחקים היום`, live: false }
   }
 

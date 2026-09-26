@@ -188,9 +188,9 @@ a:focus-visible {
 
 .site-header__title {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--red);
 }
 

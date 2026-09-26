@@ -55,7 +55,7 @@ test('builds window totals without empty zeros', () => {
   assert.equal(profile.matches, 1)
   assert.deepEqual(
     profile.windowStats.map((stat) => `${stat.value} ${stat.label}`),
-    ['1 משחקים ששוחקו', '73 דקות', '1 משחקים שפתח בהרכב', '1 שערים'],
+    ['1 משחק ששוחק', '73 דקות', '1 משחק שפתח בהרכב', '1 שערים'],
   )
   assert.equal(profile.lastMatch?.line, 'ישראל 2:1 אירלנד')
   assert.equal(profile.nextMatch?.matchId, 'next')
