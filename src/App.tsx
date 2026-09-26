@@ -89,7 +89,6 @@ export default function App() {
               />
             </section>
           ) : null}
-          <p className="updated-note">הנתונים מוזנים ידנית על ידי מנהל הדף</p>
         </main>
         <Footer />
       </div>

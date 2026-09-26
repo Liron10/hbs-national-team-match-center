@@ -122,7 +122,6 @@ a:focus-visible {
 .match-card__comp,
 .spotlight__comp,
 .site-header__meta,
-.updated-note,
 .player-filter,
 .section-heading p {
   color: var(--muted);
@@ -282,7 +281,6 @@ a:focus-visible {
 
 .section-heading p,
 .site-footer p,
-.updated-note,
 .player-filter {
   margin: 0.2rem 0 0;
 }
@@ -753,12 +751,6 @@ main {
 
 .skeleton--row {
   height: 3rem;
-}
-
-.updated-note {
-  margin-top: 1.1rem;
-  text-align: center;
-  font-size: 0.82rem;
 }
 
 .site-footer {
