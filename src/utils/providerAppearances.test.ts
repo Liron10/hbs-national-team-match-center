@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { appearanceFromProvider, FIXED_STAT_LABELS, shouldEnrichAppearances } from './providerAppearances.ts'
+import { appearanceFromProvider, FIXED_STAT_LABELS, mergeMatchAppearances, shouldEnrichAppearances } from './providerAppearances.ts'
 
 const details = {
   content: {
@@ -155,4 +155,31 @@ test('enriches scheduled matches only inside the 90-minute live window', () => {
     shouldEnrichAppearances({ ...scheduled, status: 'finished' }, new Date('2026-09-26T12:00:00.000Z')),
     true,
   )
+})
+
+test('keeps a known live bench role when the lineup payload is empty', () => {
+  const match = {
+    id: 'bgr-lux',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'BGR' as const, nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+    awayTeam: { code: 'LUX' as const, nameHe: 'לוקסמבורג', nameEn: 'Luxembourg' },
+    kickoff: '2026-09-26T16:00:00.000Z',
+    status: 'live' as const,
+    homeScore: 1,
+    awayScore: 2,
+    lastUpdated: '2026-09-26T17:46:53.854Z',
+    players: [
+      {
+        playerId: 'yoan-stoyanov',
+        squadStatus: 'bench' as const,
+        started: false,
+        played: false,
+        minutes: 0,
+      },
+    ],
+    providerMatchId: 5181949,
+  }
+  const merged = mergeMatchAppearances(match, { content: {} })
+  assert.equal(merged.players[0]?.squadStatus, 'bench')
 })

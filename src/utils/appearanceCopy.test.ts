@@ -82,11 +82,11 @@ test('uses natural Hebrew for participation', () => {
 test('states clearly when a player is not on the pitch during a live match', () => {
   assert.equal(
     participationLine(appearance({ squadStatus: 'bench', played: false }), 'live'),
-    'כרגע לא במשחק • על הספסל',
+    'לא פתח • על הספסל',
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'not-in-squad', played: false }), 'live'),
-    'כרגע לא במשחק • מחוץ לסגל',
+    'מחוץ לסגל',
   )
   assert.equal(
     participationLine(
@@ -99,7 +99,7 @@ test('states clearly when a player is not on the pitch during a live match', () 
       }),
       'live',
     ),
-    'פתח בהרכב והוחלף בדקה 64',
+    'פתח בהרכב • הוחלף בדקה 64 • לא על הדשא',
   )
   assert.equal(
     participationLine(
@@ -111,7 +111,7 @@ test('states clearly when a player is not on the pitch during a live match', () 
       }),
       'live',
     ),
-    '38 דקות על הדשא',
+    'פותח בהרכב • משחק עכשיו • 38 דקות',
   )
   assert.equal(
     participationLine(
@@ -124,8 +124,9 @@ test('states clearly when a player is not on the pitch during a live match', () 
       'live',
       "64'",
     ),
-    'נכנס עכשיו',
+    'לא פתח • נכנס עכשיו • משחק עכשיו',
   )
+  assert.equal(participationLine(appearance({ squadStatus: 'unknown' }), 'live'), 'בסגל הנבחרת')
   assert.equal(
     isOnThePitch(appearance({ squadStatus: 'starter', played: true, minutes: 38 }), 'live'),
     true,

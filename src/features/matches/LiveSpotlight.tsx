@@ -4,6 +4,7 @@ import { PlayerPortrait } from '../../components/PlayerPortrait'
 import { getPlayer } from '../../data/players'
 import { formatMatchTime } from '../../utils/datetime'
 import { livePhaseLabel } from '../../utils/fanDay'
+import { participationLine } from '../../utils/appearanceCopy'
 import { matchLineup, ourNationalSide } from '../../utils/matchLine'
 import { isLiveStatus } from '../../utils/matchStatus'
 import { MatchTeam } from './MatchTeam'
@@ -21,8 +22,12 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
     ? `${match.homeScore}–${match.awayScore}`
     : formatMatchTime(match.kickoff)
   const representatives = match.players
-    .map((appearance) => getPlayer(appearance.playerId))
-    .filter((player) => player != null)
+    .map((appearance) => {
+      const player = getPlayer(appearance.playerId)
+      if (!player) return null
+      return { player, line: participationLine(appearance, match.status, match.clock) }
+    })
+    .filter((item) => item != null)
 
   return (
     <section className="spotlight" aria-label="המשחק המרכזי">
@@ -50,10 +55,13 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
       ) : null}
       {representatives.length > 0 ? (
         <ul className="spotlight__players">
-          {representatives.map((player) => (
+          {representatives.map(({ player, line }) => (
             <li key={player.id}>
               <PlayerPortrait player={player} />
-              <span>{player.nameHe}</span>
+              <div className="spotlight__player">
+                <span>{player.nameHe}</span>
+                {line ? <small>{line}</small> : null}
+              </div>
             </li>
           ))}
         </ul>

@@ -11,11 +11,18 @@ const squadLabels: Record<SquadStatus, string> = {
   unknown: 'בסגל הנבחרת',
 }
 
+export function normalizeClock(clock?: string): string | undefined {
+  if (!clock) return undefined
+  const cleaned = clock.replace(/[\u200e\u200f]/g, '').replace(/[’′]/g, "'").trim()
+  return cleaned || undefined
+}
+
 export function parseClockMinute(clock?: string): number | null {
-  if (!clock) return null
-  const plus = clock.match(/(\d+)\s*\+\s*(\d+)/)
+  const value = normalizeClock(clock)
+  if (!value) return null
+  const plus = value.match(/(\d+)\s*\+\s*(\d+)/)
   if (plus) return Number(plus[1]) + Number(plus[2])
-  const simple = clock.match(/(\d+)/)
+  const simple = value.match(/(\d+)/)
   return simple ? Number(simple[1]) : null
 }
 
@@ -51,29 +58,7 @@ export function participationLine(
   const live = matchStatus === 'live' || matchStatus === 'halftime'
   const finished = matchStatus === 'finished'
 
-  if (live) {
-    if (appearance.squadStatus === 'not-in-squad') return 'כרגע לא במשחק • מחוץ לסגל'
-    if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') {
-      return 'כרגע לא במשחק • על הספסל'
-    }
-    if (appearance.squadStatus === 'subbed-out' || (subOut != null && appearance.squadStatus !== 'subbed-in')) {
-      if (isRecentEvent(subOut, clock)) return 'הוחלף עכשיו'
-      if (subOut != null && (appearance.started || appearance.squadStatus === 'subbed-out')) {
-        return `פתח בהרכב והוחלף בדקה ${subOut}`
-      }
-      return 'כרגע לא במשחק • הוחלף וירד מהדשא'
-    }
-    if (subOut != null && appearance.squadStatus === 'subbed-in') {
-      return isRecentEvent(subOut, clock) ? 'הוחלף עכשיו' : 'כרגע לא במשחק • הוחלף וירד מהדשא'
-    }
-    if (appearance.squadStatus === 'subbed-in') {
-      if (isRecentEvent(subIn, clock)) return 'נכנס עכשיו'
-      if (subIn != null && minutes > 0) return `נכנס כמחליף בדקה ${subIn} • ${minutes} דקות`
-      if (subIn != null) return `נכנס כמחליף בדקה ${subIn}`
-    }
-    if (minutes > 0) return `${minutes} דקות על הדשא`
-    if (appearance.squadStatus === 'starter') return 'פותח בהרכב'
-  }
+  if (live) return liveRoleLine(appearance, clock)
 
   if (appearance.squadStatus === 'unknown') {
     return matchStatus === 'scheduled' || matchStatus == null ? 'בסגל הנבחרת' : ''
@@ -98,6 +83,37 @@ export function participationLine(
   return squadLabels[appearance.squadStatus]
 }
 
+export function liveRoleLine(appearance: PlayerAppearance, clock?: string): string {
+  const minutes = appearance.minutes ?? 0
+  const subIn = appearance.subbedInMinute
+  const subOut = appearance.subbedOutMinute
+
+  if (appearance.squadStatus === 'not-in-squad') return 'מחוץ לסגל'
+  if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') {
+    return 'לא פתח • על הספסל'
+  }
+  if (appearance.squadStatus === 'subbed-out' || (subOut != null && appearance.squadStatus !== 'subbed-in')) {
+    if (isRecentEvent(subOut, clock)) return 'הוחלף עכשיו • לא על הדשא'
+    if (subOut != null) return `פתח בהרכב • הוחלף בדקה ${subOut} • לא על הדשא`
+    return 'הוחלף • לא על הדשא'
+  }
+  if (subOut != null && appearance.squadStatus === 'subbed-in') {
+    return isRecentEvent(subOut, clock)
+      ? 'הוחלף עכשיו • לא על הדשא'
+      : `נכנס כמחליף • הוחלף בדקה ${subOut} • לא על הדשא`
+  }
+  if (appearance.squadStatus === 'subbed-in') {
+    if (isRecentEvent(subIn, clock)) return 'לא פתח • נכנס עכשיו • משחק עכשיו'
+    if (subIn != null) return `לא פתח • נכנס בדקה ${subIn} • משחק עכשיו`
+    return 'לא פתח • נכנס כמחליף • משחק עכשיו'
+  }
+  if (appearance.squadStatus === 'starter' || appearance.started) {
+    if (minutes > 0) return `פותח בהרכב • משחק עכשיו • ${minutes} דקות`
+    return 'פותח בהרכב • משחק עכשיו'
+  }
+  return 'בסגל הנבחרת'
+}
+
 export function squadStatusLabel(status: SquadStatus): string {
   return squadLabels[status]
 }
@@ -119,8 +135,14 @@ export function playerChips(
 ): PlayerChip[] {
   const chips: PlayerChip[] = []
   const line = participationLine(appearance, matchStatus, clock)
-  if (line) {
-    const fresh = line === 'נכנס עכשיו' || line === 'הוחלף עכשיו'
+  if (matchStatus === 'live' || matchStatus === 'halftime') {
+    for (const label of line.split(' • ').filter(Boolean)) {
+      const fresh = label.includes('עכשיו')
+      const offPitch = label.includes('ספסל') || label.includes('לא על הדשא') || label.includes('מחוץ לסגל')
+      chips.push({ kind: fresh ? 'fresh' : offPitch ? 'out' : 'status', label })
+    }
+  } else if (line) {
+    const fresh = line.includes('עכשיו')
     const offPitch = line.startsWith('כרגע לא במשחק')
     chips.push({ kind: fresh ? 'fresh' : offPitch ? 'out' : 'status', label: line })
   }

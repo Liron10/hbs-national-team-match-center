@@ -124,6 +124,7 @@ export function appearanceFromProvider(
   fotmobId: number,
   details: FotmobMatchDetails,
   matchStatus: MatchStatus,
+  previous?: PlayerAppearance,
 ): PlayerAppearance {
   const lineup = details.content?.lineup
   const sides = [lineup?.homeTeam, lineup?.awayTeam]
@@ -139,6 +140,10 @@ export function appearanceFromProvider(
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
   const finished = matchStatus === 'finished'
   const inPlay = matchStatus === 'live' || matchStatus === 'halftime' || finished
+
+  if (!starter && !sub && !unavailable) {
+    return previous ?? { playerId, squadStatus: finished ? 'not-in-squad' : 'unknown', stats: [] }
+  }
 
   let squadStatus: SquadStatus = finished ? 'not-in-squad' : 'unknown'
   if (unavailable && !linePlayer) squadStatus = 'not-in-squad'
@@ -190,7 +195,7 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
     players: match.players.map((appearance) => {
       const fotmobId = fotmobPlayerId[appearance.playerId]
       if (!fotmobId) return appearance
-      return appearanceFromProvider(appearance.playerId, fotmobId, details, match.status)
+      return appearanceFromProvider(appearance.playerId, fotmobId, details, match.status, appearance)
     }),
   }
 }
