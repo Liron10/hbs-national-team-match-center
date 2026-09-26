@@ -1,24 +1,26 @@
 import type { Match } from '../types'
+import { isStartingSoon } from './countdown'
+import { isTomorrowJerusalem } from './datetime'
 import { deriveBucket } from './matchStatus'
 
-const bucketRank: Record<string, number> = {
-  live: 0,
-  today: 1,
-  upcoming: 2,
-  finished: 3,
-  other: 4,
+function rank(match: Match, now: Date): number {
+  const bucket = deriveBucket(match, now)
+  if (bucket === 'live') return 0
+  if (bucket === 'finished') return 6
+  if (bucket === 'other') return 7
+  if (match.status === 'scheduled' && isStartingSoon(match.kickoff, now)) return 1
+  if (bucket === 'today') return 2
+  if (isTomorrowJerusalem(match.kickoff, now)) return 3
+  return 4
 }
 
 export function sortMatches(matches: Match[], now = new Date()): Match[] {
   return [...matches].sort((a, b) => {
-    const bucketA = deriveBucket(a, now)
-    const bucketB = deriveBucket(b, now)
-    const rankDiff = bucketRank[bucketA] - bucketRank[bucketB]
+    const rankDiff = rank(a, now) - rank(b, now)
     if (rankDiff !== 0) return rankDiff
-
     const timeA = new Date(a.kickoff).getTime()
     const timeB = new Date(b.kickoff).getTime()
-    if (bucketA === 'finished') return timeB - timeA
+    if (deriveBucket(a, now) === 'finished') return timeB - timeA
     return timeA - timeB
   })
 }

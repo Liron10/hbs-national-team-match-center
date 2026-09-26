@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { Footer } from './components/Footer'
@@ -12,18 +13,23 @@ import matchDataset from './data/matches.json'
 import { useMatchBoard } from './hooks/useMatchBoard'
 import { useMatches } from './hooks/useMatches'
 import { useNow } from './hooks/useNow'
+import { boardPulse, liveTabTitle, nextScheduledMatch } from './utils/boardPulse'
 import { formatWindowLabel } from './utils/datetime'
 import { deriveBucket, hasLiveMatches } from './utils/matchStatus'
 import { sortMatches } from './utils/sortMatches'
 
+const DEFAULT_TITLE = 'האדומים בנבחרות | הפועל באר שבע'
+
 export default function App() {
   const now = useNow()
-  const { matches, loading, error, refresh } = useMatches()
+  const { matches, loading, error, refresh, refreshing } = useMatches()
   const { filter, setFilter, openMatches, finishedMatches, selectedPlayerId, selectPlayer } =
     useMatchBoard(matches, now)
   const live = hasLiveMatches(matches, now)
   const windowLabel = formatWindowLabel(matchDataset.meta.window)
   const selectedPlayer = selectedPlayerId ? getPlayer(selectedPlayerId) : undefined
+  const pulse = boardPulse(matches, now)
+  const nextMatch = nextScheduledMatch(openMatches, now)
   const spotlight = selectedPlayerId
     ? undefined
     : sortMatches(matches, now).find((match) => {
@@ -34,11 +40,18 @@ export default function App() {
   const showOpen = filter !== 'finished'
   const tabs = <FilterTabs value={filter} onChange={setFilter} liveAvailable={live} />
 
+  useEffect(() => {
+    document.title = liveTabTitle(matches) ?? DEFAULT_TITLE
+    return () => {
+      document.title = DEFAULT_TITLE
+    }
+  }, [matches])
+
   return (
     <div className="page">
       <div className="page-atmosphere" aria-hidden="true" />
       <div className="app-shell">
-        <Header live={live} windowLabel={windowLabel} />
+        <Header live={live} windowLabel={windowLabel} pulse={pulse} refreshing={refreshing} />
         <main>
           <Hero windowLabel={windowLabel} />
           {import.meta.env.DEV && import.meta.env.VITE_USE_DEMO_DATA === 'true' ? (
@@ -86,6 +99,7 @@ export default function App() {
                 matches={openMatches}
                 filter={filter === 'all' ? 'upcoming' : filter}
                 now={now}
+                nextMatchId={nextMatch?.id}
               />
             </section>
           ) : null}

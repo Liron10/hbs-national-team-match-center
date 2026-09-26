@@ -2,6 +2,7 @@ import { players } from '../../data/players'
 import { nationalTeams } from '../../data/teams'
 import { Flag } from '../../components/Flag'
 import { PlayerPortrait } from '../../components/PlayerPortrait'
+import { displayTeamName } from '../../utils/matchLine'
 
 interface PlayersGridProps {
   selectedId: string | null
@@ -30,8 +31,8 @@ export function PlayersGrid({ selectedId, onSelect }: PlayersGridProps) {
               <PlayerPortrait player={player} className="portrait--lg" />
               <span className="player-card__name">{player.nameHe}</span>
               <span className="player-card__team">
-                <Flag code={team.code} title={team.nameHe} className="flag--sm" />
-                {team.nameHe}
+                <Flag code={team.code} title={displayTeamName(team)} className="flag--sm" />
+                {displayTeamName(team)}
               </span>
             </button>
           )

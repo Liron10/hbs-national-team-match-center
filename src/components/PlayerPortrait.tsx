@@ -8,6 +8,15 @@ interface PlayerPortraitProps {
   className?: string
 }
 
+function initials(nameHe: string): string {
+  return nameHe
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('.')
+}
+
 export function PlayerPortrait({ player, className = '' }: PlayerPortraitProps) {
   const [failed, setFailed] = useState(false)
   const meta = playerImages[player.id]
@@ -16,7 +25,7 @@ export function PlayerPortrait({ player, className = '' }: PlayerPortraitProps) 
   if (failed) {
     return (
       <div className={`portrait portrait--fallback ${className}`.trim()} aria-hidden="true">
-        {player.nameHe.slice(0, 1)}
+        {initials(player.nameHe)}
       </div>
     )
   }
@@ -25,6 +34,10 @@ export function PlayerPortrait({ player, className = '' }: PlayerPortraitProps) 
     <img
       src={src}
       alt={player.nameHe}
+      width={56}
+      height={56}
+      loading="lazy"
+      decoding="async"
       className={`portrait ${className}`.trim()}
       onError={() => setFailed(true)}
     />

@@ -1,5 +1,6 @@
 import type { DerivedMatchBucket, Match, MatchFilter, MatchStatus } from '../types'
-import { isBeforeJerusalemDay, isSameJerusalemDay } from './datetime'
+import { isBeforeJerusalemDay, isSameJerusalemDay, isTomorrowJerusalem } from './datetime'
+import { isStartingSoon } from './countdown'
 
 export function isLiveStatus(status: MatchStatus): boolean {
   return status === 'live' || status === 'halftime'
@@ -17,9 +18,11 @@ export function deriveBucket(match: Match, now = new Date()): DerivedMatchBucket
   return 'upcoming'
 }
 
-export function displayStatus(match: Match, now = new Date()): MatchStatus | 'today' {
+export function displayStatus(match: Match, now = new Date()): MatchStatus | 'today' | 'tomorrow' | 'soon' {
   if (match.status !== 'scheduled') return match.status
+  if (isStartingSoon(match.kickoff, now)) return 'soon'
   if (isSameJerusalemDay(match.kickoff, now)) return 'today'
+  if (isTomorrowJerusalem(match.kickoff, now)) return 'tomorrow'
   return 'scheduled'
 }
 

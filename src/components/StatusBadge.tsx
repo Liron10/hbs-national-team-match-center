@@ -1,9 +1,11 @@
 import type { MatchStatus } from '../types'
 import { isLiveStatus } from '../utils/matchStatus'
 
-const labels: Record<MatchStatus | 'today', string> = {
-  scheduled: 'טרם התחיל',
+const labels: Record<MatchStatus | 'today' | 'tomorrow' | 'soon', string> = {
+  scheduled: 'בקרוב',
   today: 'היום',
+  tomorrow: 'מחר',
+  soon: 'מתחיל בקרוב',
   live: 'LIVE',
   halftime: 'מחצית',
   finished: 'הסתיים',
@@ -12,7 +14,7 @@ const labels: Record<MatchStatus | 'today', string> = {
 }
 
 interface StatusBadgeProps {
-  status: MatchStatus | 'today'
+  status: MatchStatus | 'today' | 'tomorrow' | 'soon'
   clock?: string
 }
 

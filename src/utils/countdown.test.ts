@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { countdownUnits, remainingMs, shouldShowCountdown } from './countdown.ts'
+import { countdownUnits, formatStartPhrase, remainingMs, shouldShowCountdown } from './countdown.ts'
 
 test('shows four units when days remain', () => {
   const units = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
@@ -35,4 +35,11 @@ test('computes remaining milliseconds from UTC kickoff', () => {
 test('hides the timer after kickoff statuses', () => {
   assert.equal(shouldShowCountdown('scheduled'), true)
   assert.equal(shouldShowCountdown('live'), false)
+})
+
+test('uses compact start phrases for fans', () => {
+  const now = new Date('2026-09-18T18:00:00.000Z')
+  assert.equal(formatStartPhrase('2026-09-18T18:10:00.000Z', now), 'מתחיל בעוד 10 דקות')
+  assert.equal(formatStartPhrase('2026-09-18T18:45:00.000Z', now), 'מתחיל בקרוב')
+  assert.equal(formatStartPhrase('2026-09-21T18:00:00.000Z', now), 'בעוד 3 ימים')
 })

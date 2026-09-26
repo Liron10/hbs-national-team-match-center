@@ -27,6 +27,13 @@ test('does not invent LIVE from kickoff time', () => {
   assert.equal(displayStatus(liveLooking, now), 'today')
 })
 
+test('marks a match starting within an hour as soon', () => {
+  const now = new Date('2026-09-18T17:30:00.000Z')
+  const soon = match({ kickoff: '2026-09-18T18:00:00.000Z', status: 'scheduled' })
+  assert.equal(displayStatus(soon, now), 'soon')
+  assert.equal(deriveBucket(soon, now), 'today')
+})
+
 test('LIVE only when status is live or halftime', () => {
   const now = new Date('2026-09-18T18:10:00.000Z')
   assert.equal(deriveBucket(match({ status: 'live' }), now), 'live')

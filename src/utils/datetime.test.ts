@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  formatFanKickoff,
   formatMatchDate,
   formatMatchTime,
   formatOvernightContext,
@@ -21,6 +22,15 @@ test('formats Israel time with DST awareness', () => {
 
 test('formats a public last-updated stamp in Israel time', () => {
   assert.equal(formatUpdatedAt('2026-09-18T09:30:00.000Z'), '18.9.26 | 12:30')
+})
+
+test('uses fan-facing kickoff labels', () => {
+  const today = formatFanKickoff('2026-09-18T18:45:00.000Z', new Date('2026-09-18T10:00:00.000Z'))
+  assert.equal(today.primary, 'היום • 21:45')
+  const tomorrow = formatFanKickoff('2026-09-19T16:00:00.000Z', new Date('2026-09-18T10:00:00.000Z'))
+  assert.equal(tomorrow.primary, 'מחר • 19:00')
+  const night = formatFanKickoff('2026-09-26T00:00:00.000Z', new Date('2026-09-25T10:00:00.000Z'))
+  assert.equal(night.primary, 'הלילה • 03:00')
 })
 
 test('formats the international window without a season code', () => {

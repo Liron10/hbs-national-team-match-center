@@ -19,13 +19,18 @@ test('hides player stats before kickoff', () => {
 })
 
 test('uses natural Hebrew for participation', () => {
+  assert.equal(participationLine(appearance({ squadStatus: 'unknown' }), 'scheduled'), 'בסגל הנבחרת')
   assert.equal(
     participationLine(appearance({ squadStatus: 'unused', played: false })),
     'לא שותף',
   )
   assert.equal(
     participationLine(appearance({ squadStatus: 'not-in-squad', played: false })),
-    'לא שיחק',
+    'לא בסגל',
+  )
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'bench', played: false })),
+    'על הספסל',
   )
   assert.equal(
     participationLine(
@@ -59,6 +64,6 @@ test('uses natural Hebrew for participation', () => {
         minutes: 90,
       }),
     ),
-    'שותף משחק מלא 90 דקות',
+    'שיחק 90 דקות',
   )
 })

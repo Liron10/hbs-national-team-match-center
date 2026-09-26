@@ -25,7 +25,14 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
   return (
     <section className="spotlight" aria-label="המשחק המרכזי">
       <p className="spotlight__kicker">
-        {live ? `LIVE${match.clock ? ` · ${match.clock}` : ''}` : 'המשחק המרכזי'}
+        {live ? (
+          <>
+            <span className="live-dot" aria-hidden="true" />
+            {`משחק עכשיו${match.clock ? ` · ${match.clock}` : ''}`}
+          </>
+        ) : (
+          'הבא בתור'
+        )}
       </p>
       <p className="spotlight__comp">{match.competitionHe}</p>
       <div className="spotlight__scoreline">

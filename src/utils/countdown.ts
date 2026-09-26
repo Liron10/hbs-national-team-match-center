@@ -46,6 +46,25 @@ export function countdownUnits(ms: number): CountdownUnit[] {
   return units
 }
 
+export function formatStartPhrase(kickoffIso: string, now = new Date()): string | null {
+  const remaining = remainingMs(kickoffIso, now)
+  if (remaining <= 0) return 'ממתין לשריקה'
+  const minutes = Math.ceil(remaining / 60_000)
+  const hours = Math.ceil(remaining / 3_600_000)
+  const days = Math.ceil(remaining / 86_400_000)
+
+  if (minutes <= 15) return `מתחיל בעוד ${minutes} דקות`
+  if (minutes <= 60) return 'מתחיל בקרוב'
+  if (hours < 24) return hours === 1 ? 'בעוד שעה' : `בעוד ${hours} שעות`
+  if (days === 1) return 'בעוד יום'
+  return `בעוד ${days} ימים`
+}
+
+export function isStartingSoon(kickoffIso: string, now = new Date()): boolean {
+  const remaining = remainingMs(kickoffIso, now)
+  return remaining > 0 && remaining <= 60 * 60 * 1000
+}
+
 export function shouldShowCountdown(status: MatchStatus): boolean {
   return status === 'scheduled'
 }

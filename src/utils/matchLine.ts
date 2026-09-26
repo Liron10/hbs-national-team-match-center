@@ -9,6 +9,10 @@ export function lastNameHe(nameHe: string): string {
   return parts.at(-1) ?? nameHe
 }
 
+export function displayTeamName(team: TeamSide): string {
+  return team.nameHe.replace(' עד 21', ' U21')
+}
+
 export function isIsraelNationalSide(code: TeamSide['code']): boolean {
   return ISRAEL_SIDES.has(code)
 }
@@ -30,7 +34,7 @@ export function opponentNationalSide(match: Match): TeamSide {
 }
 
 export function annotatedTeamLabel(match: Match, team: TeamSide): string {
-  const base = getTeam(team.code).nameHe
+  const base = displayTeamName(getTeam(team.code))
   if (isIsraelNationalSide(team.code)) return base
 
   const names = [

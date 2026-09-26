@@ -78,8 +78,48 @@ export function formatOvernightContext(iso: string): string | null {
   return `בלילה שבין ${WEEKDAY_NAMES[previous]} ל${WEEKDAY_NAMES[clock.weekday]}`
 }
 
+export function jerusalemDayKey(iso: string | Date): string {
+  return dayKeyFormatter.format(toJerusalemDate(iso))
+}
+
+export function jerusalemDayDiff(iso: string, now = new Date()): number {
+  const kick = Date.parse(`${jerusalemDayKey(iso)}T00:00:00.000Z`)
+  const today = Date.parse(`${jerusalemDayKey(now)}T00:00:00.000Z`)
+  return Math.round((kick - today) / 86_400_000)
+}
+
+export function isTomorrowJerusalem(iso: string, now = new Date()): boolean {
+  return jerusalemDayDiff(iso, now) === 1
+}
+
+export function formatFanKickoff(
+  iso: string,
+  now = new Date(),
+  status?: string,
+): { primary: string; date: string } {
+  const time = formatMatchTime(iso)
+  const date = formatMatchDate(iso)
+  const weekday = weekdayFormatter.format(toJerusalemDate(iso))
+  if (status && status !== 'scheduled') {
+    return { primary: `${weekday} • ${time}`, date }
+  }
+  const clock = jerusalemWeekdayAndHour(iso)
+  const overnight = formatOvernightContext(iso)
+  const diff = jerusalemDayDiff(iso, now)
+
+  if (overnight && clock) {
+    if (diff === 0 || (diff === 1 && clock.hour < 6)) {
+      return { primary: `הלילה • ${time}`, date }
+    }
+    return { primary: `${overnight} • ${time}`, date }
+  }
+  if (diff === 0) return { primary: `היום • ${time}`, date }
+  if (diff === 1) return { primary: `מחר • ${time}`, date }
+  return { primary: `${weekday} • ${time}`, date }
+}
+
 export function isSameJerusalemDay(a: string | Date, b: string | Date = new Date()): boolean {
-  return dayKeyFormatter.format(toJerusalemDate(a)) === dayKeyFormatter.format(toJerusalemDate(b))
+  return jerusalemDayKey(a) === jerusalemDayKey(b)
 }
 
 export function isBeforeJerusalemDay(iso: string, now = new Date()): boolean {
@@ -97,6 +137,17 @@ export function formatUpdatedAt(iso: string): string {
   const date = toJerusalemDate(iso)
   const day = updatedDateFormatter.format(date).replaceAll('/', '.')
   return `${day} | ${timeFormatter.format(date)}`
+}
+
+export function formatUpdatedAgo(iso: string, now = new Date()): string | null {
+  const elapsed = now.getTime() - Date.parse(iso)
+  if (!Number.isFinite(elapsed) || elapsed < 0) return null
+  if (elapsed < 15_000) return 'עודכן לפני רגע'
+  const seconds = Math.floor(elapsed / 1000)
+  if (seconds < 60) return `עודכן לפני ${seconds} שניות`
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `עודכן לפני ${minutes} דקות`
+  return null
 }
 
 export function formatWindowLabel(window: string): string {
