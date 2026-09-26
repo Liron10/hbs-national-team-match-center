@@ -9,22 +9,28 @@ function pad(value: number): string {
 }
 
 export interface CountdownUnit {
-  key: 'hours' | 'minutes' | 'seconds'
+  key: 'days' | 'hours' | 'minutes' | 'seconds'
   value: string
   label: string
 }
 
 export function countdownUnits(ms: number): CountdownUnit[] {
   const totalSeconds = Math.max(0, Math.floor(ms / 1000))
-  const hours = Math.floor(totalSeconds / 3_600)
+  const days = Math.floor(totalSeconds / 86_400)
+  const hours = Math.floor((totalSeconds % 86_400) / 3_600)
   const minutes = Math.floor((totalSeconds % 3_600) / 60)
   const seconds = totalSeconds % 60
+  const units: CountdownUnit[] = []
 
-  return [
+  if (days > 0) {
+    units.push({ key: 'days', value: String(days), label: 'ימים' })
+  }
+  units.push(
     { key: 'hours', value: pad(hours), label: 'שעות' },
     { key: 'minutes', value: pad(minutes), label: 'דקות' },
     { key: 'seconds', value: pad(seconds), label: 'שניות' },
-  ]
+  )
+  return units
 }
 
 export function formatStartPhrase(kickoffIso: string, now = new Date()): string | null {

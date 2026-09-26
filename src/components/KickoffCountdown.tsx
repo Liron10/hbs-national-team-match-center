@@ -46,13 +46,8 @@ export function KickoffCountdown({ kickoff, status, featured = false }: KickoffC
       aria-live="off"
       aria-label={units.map((unit) => `${unit.value} ${unit.label}`).join(' | ')}
     >
-      {units.map((unit, index) => (
+      {units.map((unit) => (
         <div key={unit.key} className="countdown__unit">
-          {index > 0 ? (
-            <span className="countdown__sep" aria-hidden="true">
-              |
-            </span>
-          ) : null}
           <span className="countdown__value">{unit.value}</span>
           <span className="countdown__label">{unit.label}</span>
         </div>

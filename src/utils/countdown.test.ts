@@ -2,11 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { countdownUnits, formatStartPhrase, remainingMs, shouldShowCountdown } from './countdown.ts'
 
-test('always shows hours, minutes and seconds', () => {
+test('adds days on the significant end and keeps hours minutes seconds', () => {
   const long = countdownUnits((6 * 86_400 + 14 * 3600 + 22 * 60 + 1) * 1000)
   assert.deepEqual(
     long.map((unit) => `${unit.value} ${unit.label}`),
-    ['158 שעות', '22 דקות', '01 שניות'],
+    ['6 ימים', '14 שעות', '22 דקות', '01 שניות'],
   )
   const mid = countdownUnits((5 * 3600 + 12 * 60 + 8) * 1000)
   assert.deepEqual(
