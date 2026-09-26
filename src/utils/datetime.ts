@@ -139,17 +139,6 @@ export function formatUpdatedAt(iso: string): string {
   return `${day} | ${timeFormatter.format(date)}`
 }
 
-export function formatUpdatedAgo(iso: string, now = new Date()): string | null {
-  const elapsed = now.getTime() - Date.parse(iso)
-  if (!Number.isFinite(elapsed) || elapsed < 0) return null
-  if (elapsed < 15_000) return 'עודכן לפני רגע'
-  const seconds = Math.floor(elapsed / 1000)
-  if (seconds < 60) return `עודכן לפני ${seconds} שניות`
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `עודכן לפני ${minutes} דקות`
-  return null
-}
-
 export function formatWindowLabel(window: string): string {
   const [year, month] = window.split('-').map(Number)
   if (!year || !month) return 'פגרת הנבחרות'

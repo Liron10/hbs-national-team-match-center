@@ -4,10 +4,9 @@ interface HeaderProps {
   live: boolean
   windowLabel: string
   pulse: { text: string; live: boolean }
-  refreshing?: boolean
 }
 
-export function Header({ live, windowLabel, pulse, refreshing = false }: HeaderProps) {
+export function Header({ live, windowLabel, pulse }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="site-header__row">
@@ -30,7 +29,6 @@ export function Header({ live, windowLabel, pulse, refreshing = false }: HeaderP
       <p className={pulse.live ? 'site-header__pulse is-live' : 'site-header__pulse'}>
         {pulse.live ? <span className="live-dot" aria-hidden="true" /> : null}
         <span>{pulse.text}</span>
-        {refreshing ? <span className="site-header__refresh">מתעדכן</span> : null}
       </p>
     </header>
   )

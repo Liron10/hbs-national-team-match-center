@@ -2,7 +2,7 @@ import type { Match } from '../../types'
 import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Flag } from '../../components/Flag'
-import { formatFanKickoff, formatUpdatedAgo } from '../../utils/datetime'
+import { formatFanKickoff } from '../../utils/datetime'
 import { matchLineup } from '../../utils/matchLine'
 import { displayStatus, isLiveStatus } from '../../utils/matchStatus'
 import { competitionBadge } from '../../utils/boardPulse'
@@ -13,9 +13,10 @@ interface MatchCardProps {
   match: Match
   now: Date
   featured?: boolean
+  onOpenPlayer: (playerId: string) => void
 }
 
-export function MatchCard({ match, now, featured = false }: MatchCardProps) {
+export function MatchCard({ match, now, featured = false, onOpenPlayer }: MatchCardProps) {
   const status = displayStatus(match, now)
   const live = isLiveStatus(match.status)
   const finished = match.status === 'finished'
@@ -26,7 +27,6 @@ export function MatchCard({ match, now, featured = false }: MatchCardProps) {
   const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoff.primary
   const { left, right } = matchLineup(match)
   const showPlayers = match.players.length > 0
-  const updated = live ? formatUpdatedAgo(match.lastUpdated, now) : null
   const classes = [
     'match-card',
     live ? 'match-card--live' : '',
@@ -89,11 +89,11 @@ export function MatchCard({ match, now, featured = false }: MatchCardProps) {
               appearance={appearance}
               matchStatus={match.status}
               prominent={live}
+              onOpenPlayer={onOpenPlayer}
             />
           ))}
         </section>
       ) : null}
-      {updated ? <p className="match-card__updated">{updated}</p> : null}
     </article>
   )
 }

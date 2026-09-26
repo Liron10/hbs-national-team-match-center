@@ -23,5 +23,9 @@ export function useMatchBoard(matches: Match[], now: Date) {
     setSelectedPlayerId((current) => (current === id ? null : id))
   }
 
-  return { filter, setFilter, openMatches, finishedMatches, selectedPlayerId, selectPlayer }
+  function clearPlayer() {
+    setSelectedPlayerId(null)
+  }
+
+  return { filter, setFilter, openMatches, finishedMatches, selectedPlayerId, selectPlayer, clearPlayer }
 }

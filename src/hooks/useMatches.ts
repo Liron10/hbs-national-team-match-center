@@ -25,18 +25,14 @@ function liveSignature(matches: Match[]): string {
 export function useMatches() {
   const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const matchesRef = useRef(matches)
   matchesRef.current = matches
 
   const load = useCallback(async (silent = false) => {
-    let refreshTimer = 0
     if (!silent) {
       setLoading(true)
       setError(null)
-    } else {
-      refreshTimer = window.setTimeout(() => setRefreshing(true), 500)
     }
     try {
       const base = await provider.getMatches()
@@ -47,8 +43,6 @@ export function useMatches() {
     } catch {
       if (!silent) setError('לא ניתן להציג את המשחקים כרגע.')
     } finally {
-      window.clearTimeout(refreshTimer)
-      setRefreshing(false)
       if (!silent) setLoading(false)
     }
   }, [])
@@ -75,5 +69,5 @@ export function useMatches() {
     }
   }, [load])
 
-  return { matches, loading, error, refreshing, refresh: () => load(false) }
+  return { matches, loading, error, refresh: () => load(false) }
 }

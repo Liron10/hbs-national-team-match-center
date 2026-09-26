@@ -89,6 +89,23 @@ export function compactHighlights(appearance: PlayerAppearance): AppearanceStat[
   return highlights.slice(0, 4)
 }
 
+export interface TimelineEvent {
+  minute: number
+  label: string
+  kind: 'in' | 'out' | 'goal' | 'assist' | 'yellow' | 'red'
+}
+
+export function playerTimeline(appearance: PlayerAppearance): TimelineEvent[] {
+  const events: TimelineEvent[] = []
+  if (appearance.subbedInMinute != null) {
+    events.push({ minute: appearance.subbedInMinute, label: 'נכנס', kind: 'in' })
+  }
+  if (appearance.subbedOutMinute != null) {
+    events.push({ minute: appearance.subbedOutMinute, label: 'הוחלף', kind: 'out' })
+  }
+  return events.sort((a, b) => a.minute - b.minute)
+}
+
 export function appearanceStats(appearance: PlayerAppearance): AppearanceStat[] {
   if (!appearance.played) return []
   if (appearance.stats?.length === 10) return appearance.stats

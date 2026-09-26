@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PlayerAppearance } from '../types'
-import { matchShowsPlayerStats, participationLine } from './appearanceCopy.ts'
+import { matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
 
 function appearance(partial: Partial<PlayerAppearance>): PlayerAppearance {
   return {
@@ -66,4 +66,24 @@ test('uses natural Hebrew for participation', () => {
     ),
     'שיחק 90 דקות',
   )
+})
+
+test('builds a compact timeline only from timed events', () => {
+  assert.deepEqual(
+    playerTimeline(
+      appearance({
+        squadStatus: 'subbed-in',
+        played: true,
+        minutes: 20,
+        subbedInMinute: 71,
+        subbedOutMinute: 82,
+        goals: 1,
+      }),
+    ),
+    [
+      { minute: 71, label: 'נכנס', kind: 'in' },
+      { minute: 82, label: 'הוחלף', kind: 'out' },
+    ],
+  )
+  assert.deepEqual(playerTimeline(appearance({ squadStatus: 'starter', played: true, minutes: 90 })), [])
 })
