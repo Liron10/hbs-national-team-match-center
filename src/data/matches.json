@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-09-26T17:46:53.996Z",
+    "updatedAt": "2026-09-26T20:11:39.497Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-26T17:46:53.854Z",
+      "lastUpdated": "2026-09-26T20:11:39.318Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-26T17:46:53.854Z",
+      "lastUpdated": "2026-09-26T20:11:39.318Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -291,18 +291,18 @@
         "nameEn": "Luxembourg"
       },
       "kickoff": "2026-09-26T16:00:00.000Z",
-      "status": "live",
+      "status": "finished",
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-09-26T17:46:53.854Z",
+      "lastUpdated": "2026-09-26T20:11:39.318Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
       "players": [
         {
           "playerId": "yoan-stoyanov",
-          "squadStatus": "bench",
+          "squadStatus": "unused",
           "started": false,
           "played": false,
           "minutes": 0,
@@ -313,8 +313,7 @@
           "stats": []
         }
       ],
-      "providerMatchId": 5181949,
-      "clock": "85‎’‎"
+      "providerMatchId": 5181949
     },
     {
       "id": "usa-per-2026-09-26",
@@ -342,7 +341,15 @@
       "players": [
         {
           "playerId": "adrian-ugarriza",
-          "squadStatus": "unknown"
+          "squadStatus": "bench",
+          "started": false,
+          "played": false,
+          "minutes": 0,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0,
+          "stats": []
         }
       ],
       "providerMatchId": 5991873
