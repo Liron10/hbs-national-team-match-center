@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-09-26T00:30:27.342Z",
+    "updatedAt": "2026-09-26T05:22:15.165Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-26T00:30:27.187Z",
+      "lastUpdated": "2026-09-26T05:22:14.963Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -211,11 +211,11 @@
         "nameEn": "Guatemala"
       },
       "kickoff": "2026-09-26T00:00:00.000Z",
-      "status": "live",
-      "homeScore": 0,
-      "awayScore": 1,
+      "status": "finished",
+      "homeScore": 3,
+      "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-26T00:30:27.187Z",
+      "lastUpdated": "2026-09-26T05:22:14.963Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -225,7 +225,7 @@
           "squadStatus": "starter",
           "started": true,
           "played": true,
-          "minutes": 0,
+          "minutes": 45,
           "goals": 0,
           "assists": 0,
           "yellowCards": 1,
@@ -233,7 +233,7 @@
           "stats": [
             {
               "label": "דקות משחק",
-              "value": "0"
+              "value": "45"
             },
             {
               "label": "שערים",
@@ -253,11 +253,11 @@
             },
             {
               "label": "ציון",
-              "value": "5.87"
+              "value": "6.49"
             },
             {
               "label": "מסירות מדויקות",
-              "value": "5/6"
+              "value": "7/9"
             },
             {
               "label": "בעיטות",
@@ -269,13 +269,12 @@
             },
             {
               "label": "תיקולים",
-              "value": "0"
+              "value": "1"
             }
           ]
         }
       ],
-      "fotmobMatchId": 5991890,
-      "clock": "30‎’‎"
+      "fotmobMatchId": 5991890
     },
     {
       "id": "bgr-lux-2026-09-26",
