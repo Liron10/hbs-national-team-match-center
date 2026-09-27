@@ -1,9 +1,9 @@
-name: Refresh live scores
+name: Snapshot live scores
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: write

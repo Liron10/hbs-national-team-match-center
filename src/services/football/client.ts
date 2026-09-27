@@ -8,11 +8,6 @@ function browserHost(): string | undefined {
   return (globalThis as { location?: { hostname?: string } }).location?.hostname
 }
 
-export function canUseFootballApiInBrowser(): boolean {
-  const host = browserHost()
-  return host === 'localhost' || host === '127.0.0.1'
-}
-
 function footballHeaders(): Record<string, string> {
   const headers: Record<string, string> = { Accept: BROWSER_ACCEPT }
   if (!browserHost()) {
