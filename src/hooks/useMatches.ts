@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Match } from '../types'
-import { fetchFootballSnapshots } from '../services/football'
+import { canUseFootballApiInBrowser, fetchFootballSnapshots } from '../services/football'
+import { fetchEspnLiveSnapshots } from '../services/live/espnScoreboard'
 import { createMatchDataProvider } from '../services/matches'
+import { usesSharedMatchDataset } from '../services/matches/sharedDataset'
 import { applyLiveSnapshots, isInLiveWindow } from '../utils/liveScores'
 import { isLiveStatus } from '../utils/matchStatus'
 import { enrichMatchAppearances } from '../utils/providerAppearances'
 
 const provider = createMatchDataProvider()
-const LIVE_POLL_MS = 8_000
+const SCORE_POLL_MS = 8_000
+const SHARED_POLL_EVERY = 3
 
 function liveSignature(matches: Match[]): string {
   return matches
@@ -33,6 +36,7 @@ export function useMatches() {
   const [error, setError] = useState<string | null>(null)
   const matchesRef = useRef(matches)
   const inFlightRef = useRef(false)
+  const sharedTickRef = useRef(0)
   matchesRef.current = matches
 
   const commit = useCallback((next: Match[]) => {
@@ -40,7 +44,7 @@ export function useMatches() {
   }, [])
 
   const load = useCallback(
-    async (silent = false) => {
+    async (silent = false, refreshShared = !silent) => {
       if (silent && inFlightRef.current) return
       inFlightRef.current = true
       if (!silent) {
@@ -49,20 +53,21 @@ export function useMatches() {
       }
       try {
         const skipLive = import.meta.env.DEV && import.meta.env.VITE_USE_DEMO_DATA === 'true'
-        const base =
-          silent && matchesRef.current.length > 0 ? matchesRef.current : await provider.getMatches()
+        const reuseMemory = silent && !refreshShared && matchesRef.current.length > 0
+        const base = reuseMemory ? matchesRef.current : await provider.getMatches()
         if (skipLive) {
           commit(base)
           return
         }
 
         const now = new Date()
-        const scored = applyLiveSnapshots(
-          base,
-          await fetchFootballSnapshots(base, now, silent),
-          now,
-        )
+        const snapshots = canUseFootballApiInBrowser()
+          ? await fetchFootballSnapshots(base, now, silent)
+          : await fetchEspnLiveSnapshots(base, now)
+        const scored = applyLiveSnapshots(base, snapshots, now)
         commit(scored)
+
+        if (!canUseFootballApiInBrowser()) return
 
         const next = await enrichMatchAppearances(scored, now, silent)
         commit(next)
@@ -77,7 +82,7 @@ export function useMatches() {
   )
 
   useEffect(() => {
-    void load(false)
+    void load(false, true)
   }, [load])
 
   useEffect(() => {
@@ -91,20 +96,22 @@ export function useMatches() {
       if (cancelled) return
       timer = window.setTimeout(() => {
         if (!document.hidden && needsLivePoll(matchesRef.current)) {
-          void load(true).finally(() => {
+          sharedTickRef.current += 1
+          const refreshShared = usesSharedMatchDataset() && sharedTickRef.current % SHARED_POLL_EVERY === 0
+          void load(true, refreshShared).finally(() => {
             if (!cancelled) tick()
           })
           return
         }
         tick()
-      }, LIVE_POLL_MS)
+      }, SCORE_POLL_MS)
     }
 
     tick()
     const onVisible = () => {
       if (document.hidden) return
       if (!needsLivePoll(matchesRef.current)) return
-      void load(true)
+      void load(true, usesSharedMatchDataset())
     }
     document.addEventListener('visibilitychange', onVisible)
 
@@ -115,5 +122,5 @@ export function useMatches() {
     }
   }, [load])
 
-  return { matches, loading, error, refresh: () => load(false) }
+  return { matches, loading, error, refresh: () => load(false, true) }
 }

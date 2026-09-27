@@ -1,12 +1,10 @@
 import type { Match, MatchDataProvider, PlayerAppearance } from '../../types'
-import dataset from '../../data/matches.json'
-
-const typedDataset = dataset as { matches: Match[] }
+import { bundledMatches, fetchSharedMatches } from './sharedDataset'
 
 export class ManualDataProvider implements MatchDataProvider {
   private matches: Match[]
 
-  constructor(matches: Match[] = typedDataset.matches) {
+  constructor(matches: Match[] = bundledMatches()) {
     this.matches = matches
   }
 
@@ -15,7 +13,7 @@ export class ManualDataProvider implements MatchDataProvider {
       const { createDemoMatches } = await import('./demoData')
       return [...createDemoMatches(), ...this.matches]
     }
-    return this.matches
+    return fetchSharedMatches(this.matches)
   }
 
   async getMatch(id: string): Promise<Match | undefined> {

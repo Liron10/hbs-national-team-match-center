@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { mapFotmobStatus, snapshotsFromFotmobMatches } from '../services/football/fotmob.ts'
+import { mapFotmobStatus, sanitizeClock, snapshotsFromFotmobMatches } from '../services/football/fotmob.ts'
+
+test('strips bidi marks from a live clock', () => {
+  assert.equal(sanitizeClock('59\u200e’\u200e'), "59'")
+})
 
 test('maps FotMob live, halftime and full-time statuses', () => {
   assert.equal(

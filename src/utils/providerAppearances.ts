@@ -1,6 +1,7 @@
 import type { Match, MatchStatus, PlayerAppearance, SquadStatus } from '../types'
 import { fotmobPlayerId } from '../data/fotmobIds'
 import { footballGet } from '../services/football/client'
+import { mapFotmobStatus, type FotmobStatus } from '../services/football/fotmob'
 import { isInLiveWindow } from './liveScores'
 
 export const FIXED_STAT_LABELS = [
@@ -35,6 +36,10 @@ interface FotmobPlayerStats {
 }
 
 interface FotmobMatchDetails {
+  header?: {
+    teams?: Array<{ score?: number | null }>
+    status?: FotmobStatus
+  }
   content?: {
     lineup?: {
       homeTeam?: { starters?: FotmobLinePlayer[]; subs?: FotmobLinePlayer[]; unavailable?: FotmobLinePlayer[] }
@@ -132,9 +137,12 @@ export function appearanceFromProvider(
   const sub = sides.flatMap((side) => side?.subs ?? []).find((player) => player.id === fotmobId)
   const unavailable = sides.flatMap((side) => side?.unavailable ?? []).find((player) => player.id === fotmobId)
   const linePlayer = starter ?? sub
-  const events = eventsOf(linePlayer)
   const statsPayload = details.content?.playerStats?.[String(fotmobId)]
-  const minutes = statNumber(statsPayload, 'minutes_played')
+  const events = eventsOf(linePlayer)
+  let minutes = statNumber(statsPayload, ['minutes_played', 'Minutes played'])
+  if (!minutes && events.subOut != null) {
+    minutes = events.subIn != null ? Math.max(0, events.subOut - events.subIn) : events.subOut
+  }
   const goals = statNumber(statsPayload, 'goals')
   const assists = statNumber(statsPayload, 'assists')
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
@@ -200,6 +208,25 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
   }
 }
 
+export function applyMatchDetailsOverlay(match: Match, details: FotmobMatchDetails, now = new Date()): Match {
+  const mapped = details.header?.status ? mapFotmobStatus(details.header.status) : null
+  const homeScore = details.header?.teams?.[0]?.score
+  const awayScore = details.header?.teams?.[1]?.score
+  const withStatus =
+    mapped && mapped.status !== 'scheduled'
+      ? {
+          ...match,
+          status: mapped.status,
+          homeScore: mapped.scoresReady && typeof homeScore === 'number' ? homeScore : match.homeScore,
+          awayScore: mapped.scoresReady && typeof awayScore === 'number' ? awayScore : match.awayScore,
+          clock: mapped.clock ?? match.clock,
+          lastUpdated: now.toISOString(),
+        }
+      : match
+
+  return mergeMatchAppearances(withStatus, details)
+}
+
 export function shouldEnrichAppearances(
   match: Match,
   now = new Date(),
@@ -223,7 +250,7 @@ export async function enrichMatchAppearances(
       if (!shouldEnrichAppearances(match, now, inPlayOnly)) return match
       try {
         const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.providerMatchId}`)
-        return mergeMatchAppearances(match, details)
+        return applyMatchDetailsOverlay(match, details, now)
       } catch {
         return match
       }

@@ -9,7 +9,7 @@ interface FotmobTeam {
   name?: string
 }
 
-interface FotmobStatus {
+export interface FotmobStatus {
   utcTime?: string
   started?: boolean
   finished?: boolean
@@ -32,6 +32,11 @@ interface FotmobMatchesResponse {
   leagues?: Array<{ matches?: FotmobMatch[] }>
 }
 
+export function sanitizeClock(value: string | undefined): string | undefined {
+  const clock = value?.replace(/[\u200e\u200f\u202a-\u202e]/g, '').replace(/[’′]/g, "'").trim()
+  return clock || undefined
+}
+
 export function mapFotmobStatus(
   status: FotmobStatus | undefined,
 ): { status: MatchStatus; clock?: string; scoresReady: boolean } {
@@ -39,7 +44,7 @@ export function mapFotmobStatus(
   if (status.cancelled) return { status: 'cancelled', scoresReady: false }
 
   const reason = (status.reason?.short ?? '').toUpperCase()
-  const liveShort = status.liveTime?.short?.trim()
+  const liveShort = sanitizeClock(status.liveTime?.short)
   const clock = liveShort && liveShort !== "0'" ? liveShort : undefined
 
   if (status.finished || reason === 'FT' || reason === 'AET' || reason === 'PEN') {

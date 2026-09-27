@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { appearanceFromProvider, FIXED_STAT_LABELS, mergeMatchAppearances, shouldEnrichAppearances } from './providerAppearances.ts'
+import { appearanceFromProvider, applyMatchDetailsOverlay, FIXED_STAT_LABELS, mergeMatchAppearances, shouldEnrichAppearances } from './providerAppearances.ts'
 
 const details = {
   content: {
@@ -186,4 +186,46 @@ test('keeps a known live bench role when the lineup payload is empty', () => {
   }
   const merged = mergeMatchAppearances(match, { content: {} })
   assert.equal(merged.players[0]?.squadStatus, 'bench')
+})
+
+test('applies live score and starter roles from match details even when the file is still scheduled', () => {
+  const match = {
+    id: 'isr-irl-2026-09-27',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'ISR' as const, nameHe: 'ישראל', nameEn: 'Israel' },
+    awayTeam: { code: 'IRL' as const, nameHe: 'אירלנד', nameEn: 'Ireland' },
+    kickoff: '2026-09-27T18:45:00.000Z',
+    status: 'scheduled' as const,
+    homeScore: null,
+    awayScore: null,
+    lastUpdated: '2026-09-18T09:00:00.000Z',
+    players: [{ playerId: 'eliel-peretz', squadStatus: 'unknown' as const }],
+    providerMatchId: 5181815,
+  }
+  const overlay = applyMatchDetailsOverlay(match, {
+    header: {
+      teams: [{ score: 0 }, { score: 3 }],
+      status: {
+        started: true,
+        finished: false,
+        ongoing: true,
+        liveTime: { short: '59\u200e’\u200e' },
+      },
+    },
+    content: {
+      lineup: {
+        homeTeam: {
+          starters: [{ id: 763312, performance: { rating: 6.3 } }],
+          subs: [],
+        },
+      },
+    },
+  })
+  assert.equal(overlay.status, 'live')
+  assert.equal(overlay.homeScore, 0)
+  assert.equal(overlay.awayScore, 3)
+  assert.equal(overlay.clock, "59'")
+  assert.equal(overlay.players[0]?.squadStatus, 'starter')
+  assert.equal(overlay.players[0]?.played, true)
 })

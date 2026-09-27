@@ -24,7 +24,7 @@ jobs:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
       - name: Commit live score updates
         run: |
-          git add src/data/matches.json
+          git add src/data/matches.json public/matches.json
           if git diff --staged --quiet; then
             echo "No score changes to commit."
             exit 0

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import type { MatchDataset } from '../src/types/index.ts'
 import { fetchFootballSnapshots } from '../src/services/football/fotmob.ts'
@@ -6,6 +6,7 @@ import { applyLiveSnapshots } from '../src/utils/liveScores.ts'
 import { enrichMatchAppearances } from '../src/utils/providerAppearances.ts'
 
 const target = path.resolve('src/data/matches.json')
+const publicTarget = path.resolve('public/matches.json')
 
 async function main() {
   const current = JSON.parse(await readFile(target, 'utf8')) as MatchDataset
@@ -31,7 +32,10 @@ async function main() {
     matches,
   }
 
-  await writeFile(target, `${JSON.stringify(next, null, 2)}\n`, 'utf8')
+  const payload = `${JSON.stringify(next, null, 2)}\n`
+  await writeFile(target, payload, 'utf8')
+  await mkdir(path.dirname(publicTarget), { recursive: true })
+  await writeFile(publicTarget, payload, 'utf8')
   console.log(
     `Updated scores and appearances for ${matches.filter((match) => match.status !== 'scheduled').length} matches.`,
   )
