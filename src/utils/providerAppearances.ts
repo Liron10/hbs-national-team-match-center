@@ -200,17 +200,27 @@ export function mergeMatchAppearances(match: Match, details: FotmobMatchDetails)
   }
 }
 
-export function shouldEnrichAppearances(match: Match, now = new Date()): boolean {
+export function shouldEnrichAppearances(
+  match: Match,
+  now = new Date(),
+  inPlayOnly = false,
+): boolean {
   if (match.providerMatchId == null) return false
   if (match.status === 'postponed' || match.status === 'cancelled') return false
-  if (match.status === 'live' || match.status === 'halftime' || match.status === 'finished') return true
+  if (match.status === 'live' || match.status === 'halftime') return true
+  if (inPlayOnly) return match.status === 'scheduled' && isInLiveWindow(match, now)
+  if (match.status === 'finished') return true
   return match.status === 'scheduled' && isInLiveWindow(match, now)
 }
 
-export async function enrichMatchAppearances(matches: Match[], now = new Date()): Promise<Match[]> {
+export async function enrichMatchAppearances(
+  matches: Match[],
+  now = new Date(),
+  inPlayOnly = false,
+): Promise<Match[]> {
   return Promise.all(
     matches.map(async (match) => {
-      if (!shouldEnrichAppearances(match, now)) return match
+      if (!shouldEnrichAppearances(match, now, inPlayOnly)) return match
       try {
         const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.providerMatchId}`)
         return mergeMatchAppearances(match, details)

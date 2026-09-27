@@ -152,7 +152,11 @@ test('enriches scheduled matches only inside the 90-minute live window', () => {
   assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T16:00:00.000Z')), false)
   assert.equal(shouldEnrichAppearances({ ...scheduled, providerMatchId: undefined }, new Date('2026-09-24T17:20:00.000Z')), false)
   assert.equal(
-    shouldEnrichAppearances({ ...scheduled, status: 'finished' }, new Date('2026-09-26T12:00:00.000Z')),
+    shouldEnrichAppearances({ ...scheduled, status: 'finished' }, new Date('2026-09-26T12:00:00.000Z'), true),
+    false,
+  )
+  assert.equal(
+    shouldEnrichAppearances({ ...scheduled, status: 'live' }, new Date('2026-09-24T18:50:00.000Z'), true),
     true,
   )
 })
