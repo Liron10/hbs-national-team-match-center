@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-09-27T20:05:57.591Z",
+    "updatedAt": "2026-09-27T23:07:32.650Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-27T20:05:57.516Z",
+      "lastUpdated": "2026-09-27T23:07:32.252Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-27T20:05:57.516Z",
+      "lastUpdated": "2026-09-27T23:07:32.252Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -295,7 +295,7 @@
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-09-27T20:05:57.516Z",
+      "lastUpdated": "2026-09-27T23:07:32.252Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
@@ -334,7 +334,7 @@
       "homeScore": 4,
       "awayScore": 1,
       "venue": "Inter&Co Stadium, אורלנדו",
-      "lastUpdated": "2026-09-27T20:05:57.516Z",
+      "lastUpdated": "2026-09-27T23:07:32.252Z",
       "sources": [
         "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
       ],
@@ -369,10 +369,10 @@
         "nameEn": "Republic of Ireland"
       },
       "kickoff": "2026-09-27T18:45:00.000Z",
-      "status": "live",
+      "status": "finished",
       "homeScore": 0,
       "awayScore": 3,
-      "lastUpdated": "2026-09-27T20:05:57.516Z",
+      "lastUpdated": "2026-09-27T23:07:32.252Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -382,7 +382,7 @@
           "squadStatus": "starter",
           "started": true,
           "played": true,
-          "minutes": 0,
+          "minutes": 90,
           "goals": 0,
           "assists": 0,
           "yellowCards": 0,
@@ -390,7 +390,7 @@
           "stats": [
             {
               "label": "דקות משחק",
-              "value": "0"
+              "value": "90"
             },
             {
               "label": "שערים",
@@ -410,11 +410,11 @@
             },
             {
               "label": "ציון",
-              "value": "6.39"
+              "value": "6.93"
             },
             {
               "label": "מסירות מדויקות",
-              "value": "54/67"
+              "value": "83/98"
             },
             {
               "label": "בעיטות",
@@ -432,7 +432,7 @@
         },
         {
           "playerId": "idan-nachmias",
-          "squadStatus": "bench",
+          "squadStatus": "unused",
           "started": false,
           "played": false,
           "minutes": 0,
@@ -447,7 +447,7 @@
           "squadStatus": "subbed-out",
           "started": true,
           "played": true,
-          "minutes": 46,
+          "minutes": 45,
           "goals": 0,
           "assists": 0,
           "yellowCards": 0,
@@ -456,7 +456,7 @@
           "stats": [
             {
               "label": "דקות משחק",
-              "value": "46"
+              "value": "45"
             },
             {
               "label": "שערים",
@@ -476,7 +476,7 @@
             },
             {
               "label": "ציון",
-              "value": "5.45"
+              "value": "5.49"
             },
             {
               "label": "מסירות מדויקות",
@@ -497,8 +497,7 @@
           ]
         }
       ],
-      "providerMatchId": 5181815,
-      "clock": "63'"
+      "providerMatchId": 5181815
     },
     {
       "id": "jam-hon-2026-09-28",
