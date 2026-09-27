@@ -28,6 +28,8 @@ export function MatchCard({ match, matches, now, featured = false, onOpenPlayer 
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const kickoff = formatFanKickoff(match.kickoff, now, match.status)
   const kickoffTime = formatMatchTime(match.kickoff)
+  const relativeDay = status === 'today' || status === 'tomorrow' || status === 'soon'
+  const whenPrimary = relativeDay ? kickoffTime : kickoff.primary
   const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoffTime
   const watermarks = hbsWatermarkCodes(match)
   const { left, right } = matchLineup(match)
@@ -62,14 +64,13 @@ export function MatchCard({ match, matches, now, featured = false, onOpenPlayer 
         : null}
       <header className="match-card__meta">
         <div className="match-card__when">
-          {featured ? <span className="next-badge">המשחק הקרוב</span> : null}
-          {badge === 'first' ? <span className="next-badge">הראשון הערב</span> : null}
-          {badge === 'night' ? <span className="next-badge">סוגר את הלילה</span> : null}
+          {featured ? null : badge === 'first' ? <span className="next-badge">הראשון הערב</span> : null}
+          {featured ? null : badge === 'night' ? <span className="next-badge">סוגר את הלילה</span> : null}
           {postponed || cancelled ? (
             <span className="match-card__date">{kickoff.date}</span>
           ) : (
             <>
-              <time dateTime={match.kickoff}>{kickoff.primary}</time>
+              <time dateTime={match.kickoff}>{whenPrimary}</time>
               <span className="match-card__date">{kickoff.date}</span>
             </>
           )}
