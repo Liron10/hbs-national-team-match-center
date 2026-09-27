@@ -461,11 +461,11 @@ main {
 .filter-tabs {
   display: flex;
   flex-wrap: nowrap;
-  gap: 0.4rem;
+  gap: 0.7rem;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  padding-bottom: 0.35rem;
-  margin-bottom: 1rem;
+  padding: 0.15rem 0.15rem 0.45rem;
+  margin: 1.6rem 0 1.25rem;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -479,7 +479,7 @@ main {
   background: #fff;
   color: var(--text);
   border-radius: var(--radius-chip);
-  padding: 0.5rem 0.85rem;
+  padding: 0.55rem 1.05rem;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
@@ -1496,6 +1496,7 @@ main {
 
   .players-section {
     margin-top: 0.15rem;
+    margin-bottom: 0.25rem;
   }
 
   .spotlight__scoreline,
