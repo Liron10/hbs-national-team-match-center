@@ -65,7 +65,7 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
   const upcomingTonight = tonight.filter((match) => match.status === 'scheduled')
   const finishedTonight = tonight.filter((match) => match.status === 'finished')
   const names = uniqueTonightNames(tonight)
-  const { starters, bench } = tonightLineupCounts(tonight)
+  const { starters, bench } = tonightLineupCounts(upcomingTonight)
 
   if (tonight.length >= 2 && starters + bench > 0 && upcomingTonight.length > 0) {
     if (starters > 0 && bench > 0) {
