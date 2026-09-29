@@ -8,8 +8,7 @@ import { nationalTeams } from '../data/teams'
 
 export function isTonightMatch(match: Match, now = new Date()): boolean {
   if (match.status === 'postponed' || match.status === 'cancelled') return false
-  if (isSameJerusalemDay(match.kickoff, now)) return true
-  return jerusalemDayDiff(match.kickoff, now) === 1 && formatOvernightContext(match.kickoff) != null
+  return isSameJerusalemDay(match.kickoff, now)
 }
 
 export function tonightSlate(matches: Match[], now = new Date()): Match[] {

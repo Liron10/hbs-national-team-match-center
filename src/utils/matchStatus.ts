@@ -27,12 +27,16 @@ export function displayStatus(match: Match, now = new Date()): MatchStatus | 'to
 }
 
 export function matchesFilter(match: Match, filter: MatchFilter, now = new Date()): boolean {
-  const bucket = deriveBucket(match, now)
-  if (filter === 'all') return bucket !== 'other'
-  if (filter === 'live') return bucket === 'live'
-  if (filter === 'today') return bucket === 'today' || bucket === 'live'
-  if (filter === 'upcoming') return bucket === 'upcoming'
-  return bucket === 'finished'
+  if (match.status === 'postponed' || match.status === 'cancelled') {
+    return filter === 'all'
+  }
+  if (filter === 'all') return true
+  if (filter === 'live') return isLiveStatus(match.status)
+  if (filter === 'today') return isSameJerusalemDay(match.kickoff, now)
+  if (filter === 'upcoming') {
+    return match.status === 'scheduled' && new Date(match.kickoff).getTime() > now.getTime()
+  }
+  return match.status === 'finished'
 }
 
 export function splitMatchBoard(matches: Match[], now = new Date()): { open: Match[]; finished: Match[] } {

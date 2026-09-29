@@ -54,3 +54,35 @@ test('splits finished matches out of the open board', () => {
   assert.deepEqual(open.map((item) => item.id), ['next', 'live'])
   assert.deepEqual(finished.map((item) => item.id), ['done'])
 })
+
+test('today is the Jerusalem calendar day and overlaps with not-yet-started', () => {
+  const now = new Date('2026-09-29T07:04:00.000Z')
+  const todayLater = match({
+    id: 'u21',
+    status: 'scheduled',
+    kickoff: '2026-09-29T14:00:00.000Z',
+    homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+    awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+  })
+  const overnightNextDay = match({
+    id: 'peru',
+    status: 'scheduled',
+    kickoff: '2026-09-30T01:00:00.000Z',
+    homeTeam: { code: 'MEX', nameHe: 'מקסיקו', nameEn: 'Mexico' },
+    awayTeam: { code: 'PER', nameHe: 'פרו', nameEn: 'Peru' },
+  })
+  const finishedToday = match({
+    id: 'jam',
+    status: 'finished',
+    kickoff: '2026-09-29T00:00:00.000Z',
+    homeScore: 0,
+    awayScore: 1,
+  })
+
+  assert.equal(matchesFilter(todayLater, 'today', now), true)
+  assert.equal(matchesFilter(todayLater, 'upcoming', now), true)
+  assert.equal(matchesFilter(finishedToday, 'today', now), true)
+  assert.equal(matchesFilter(finishedToday, 'upcoming', now), false)
+  assert.equal(matchesFilter(overnightNextDay, 'today', now), false)
+  assert.equal(matchesFilter(overnightNextDay, 'upcoming', now), true)
+})

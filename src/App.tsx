@@ -53,7 +53,8 @@ export default function App() {
   const spotlight = selectedPlayerId
     ? undefined
     : sortMatches(matches, now).find((match) => deriveBucket(match, now) === 'live')
-  const showFinished = finishedMatches.length > 0 && (filter === 'all' || filter === 'finished')
+  const showFinished =
+    finishedMatches.length > 0 && (filter === 'all' || filter === 'finished' || filter === 'today')
   const showOpen = filter !== 'finished'
   const showLiveList = showOpen && liveOpen.length > 0
   const showNext = Boolean(showOpen && nextMatch)

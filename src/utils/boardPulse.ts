@@ -71,8 +71,8 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
     if (starters > 0 && bench > 0) {
       return { text: `${starters} בהרכב • ${bench} על הספסל`, live: false }
     }
-    if (starters === 1) return { text: 'נציג אחד פותח הערב בהרכב', live: false }
-    if (starters > 1) return { text: `${starters} נציגים פותחים הערב בהרכב`, live: false }
+    if (starters === 1) return { text: 'נציג אחד פותח היום בהרכב', live: false }
+    if (starters > 1) return { text: `${starters} נציגים פותחים היום בהרכב`, live: false }
   }
 
   if (names.length >= 5 && upcomingTonight.length > 0) {
@@ -81,7 +81,7 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
 
   if (tonight.length >= 2 && upcomingTonight.length > 0 && finishedTonight.length === 0) {
     return {
-      text: `הערב: ${names.length} נציגים של הפועל באר שבע בנבחרות`,
+      text: `היום: ${names.length} נציגים של הפועל באר שבע בנבחרות`,
       live: false,
       lines: tonightKickoffLines(upcomingTonight),
     }

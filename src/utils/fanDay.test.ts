@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { dayBrief, eveningBadge, livePhaseLabel, tonightSlate } from './fanDay.ts'
+import { dayBrief, livePhaseLabel, tonightSlate } from './fanDay.ts'
 
 function match(partial: Partial<Match> & Pick<Match, 'id' | 'kickoff' | 'status'>): Match {
   return {
@@ -17,7 +17,7 @@ function match(partial: Partial<Match> & Pick<Match, 'id' | 'kickoff' | 'status'
   }
 }
 
-test('builds a tonight slate including the overnight fixture', () => {
+test('builds a today slate only until midnight, not the next-day overnight match', () => {
   const now = new Date('2026-09-25T18:00:00.000Z')
   const slate = tonightSlate(
     [
@@ -34,9 +34,7 @@ test('builds a tonight slate including the overnight fixture', () => {
     ],
     now,
   )
-  assert.deepEqual(slate.map((item) => item.id), ['evening', 'late'])
-  assert.equal(eveningBadge(slate[0]!, slate, now), 'first')
-  assert.equal(eveningBadge(slate[1]!, slate, now), 'night')
+  assert.deepEqual(slate.map((item) => item.id), ['evening'])
 })
 
 test('summarises the day only after every tonight match is finished', () => {

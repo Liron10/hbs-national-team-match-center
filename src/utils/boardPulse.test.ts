@@ -41,6 +41,31 @@ test('uses singular Hebrew when there is one match today', () => {
   assert.equal(boardPulse([today], new Date('2026-09-26T10:00:00.000Z')).text.includes('1 משחקים'), false)
 })
 
+test('does not count a next-day overnight kickoff as today in the banner', () => {
+  const now = new Date('2026-09-29T07:04:00.000Z')
+  const pulse = boardPulse(
+    [
+      match({
+        id: 'today',
+        status: 'scheduled',
+        kickoff: '2026-09-29T14:00:00.000Z',
+        players: [{ playerId: 'niv-yehoshua', squadStatus: 'unknown' }],
+      }),
+      match({
+        id: 'overnight',
+        status: 'scheduled',
+        kickoff: '2026-09-30T01:00:00.000Z',
+        homeTeam: { code: 'MEX', nameHe: 'מקסיקו', nameEn: 'Mexico' },
+        awayTeam: { code: 'PER', nameHe: 'פרו', nameEn: 'Peru' },
+        players: [{ playerId: 'adrian-ugarriza', squadStatus: 'unknown' }],
+      }),
+    ],
+    now,
+  )
+  assert.match(pulse.text, /משחק אחד היום/)
+  assert.equal(pulse.text.includes('2 משחקים'), false)
+})
+
 test('uses squad copy when nobody is on the pitch yet', () => {
   const live = match({
     id: 'live',
