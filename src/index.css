@@ -1054,6 +1054,11 @@ main {
   color: var(--red);
 }
 
+.chip--out {
+  background: #ece8e4;
+  color: var(--muted);
+}
+
 .window-strip__note {
   margin: 0.35rem 0 0;
   color: var(--muted);

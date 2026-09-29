@@ -129,3 +129,25 @@ test('adds published lineup status to the next-match clip', () => {
   assert.equal(profile.windowStats.some((stat) => stat.label === 'משחקים ששוחקו'), false)
   assert.equal(profile.starts, 0)
 })
+
+test('marks a finished starter without minutes as missing player data', () => {
+  const profile = playerWindowProfile(
+    'niv-yehoshua',
+    [
+      match({
+        id: 'svn-isr-u21',
+        kickoff: '2026-09-29T14:00:00.000Z',
+        status: 'finished',
+        homeScore: 2,
+        awayScore: 3,
+        homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+        awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+        players: [{ playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: false, minutes: 0 }],
+      }),
+    ],
+    new Date('2026-09-29T18:00:00.000Z'),
+  )
+  assert.equal(profile.lastMatch?.detail, 'אין נתונים זמינים עבור השחקן')
+  assert.equal(profile.appearances, 0)
+  assert.equal(profile.minutes, 0)
+})

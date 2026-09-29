@@ -154,10 +154,6 @@ export function appearanceFromProvider(
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
   const finished = matchStatus === 'finished'
   const inPlay = matchStatus === 'live' || matchStatus === 'halftime' || finished
-  if (!minutes && finished && starter && events.subOut == null) minutes = 90
-  if (!minutes && finished && sub && events.subIn != null && events.subOut == null) {
-    minutes = Math.max(1, 90 - events.subIn)
-  }
 
   if (!starter && !sub && !unavailable) {
     return previous ?? { playerId, squadStatus: finished ? 'not-in-squad' : 'unknown', stats: [] }
@@ -169,7 +165,10 @@ export function appearanceFromProvider(
   else if (sub && (events.subIn != null || minutes > 0)) squadStatus = 'subbed-in'
   else if (sub) squadStatus = finished ? 'unused' : 'bench'
 
-  const played = minutes > 0 || (inPlay && (Boolean(starter) || events.subIn != null))
+  const played =
+    minutes > 0 ||
+    events.subIn != null ||
+    (!finished && inPlay && Boolean(starter))
 
   return {
     playerId,

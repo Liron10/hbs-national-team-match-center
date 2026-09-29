@@ -1,5 +1,5 @@
 import type { Match, PlayerAppearance } from '../types'
-import { participationLine } from './appearanceCopy'
+import { NO_PLAYER_DATA_COPY, hasTimedAppearanceData, participationLine } from './appearanceCopy'
 import { displayTeamName } from './matchLine'
 import { remainingMs } from './countdown'
 import { formatFanKickoff } from './datetime'
@@ -63,6 +63,10 @@ function clipDetail(appearance: PlayerAppearance): string | undefined {
     parts.push(`${appearance.minutes}'`)
   } else if (appearance.squadStatus === 'unused' || appearance.squadStatus === 'bench') {
     parts.push('לא שותף')
+  } else if (appearance.squadStatus === 'not-in-squad') {
+    parts.push('מחוץ לסגל')
+  } else if (!hasTimedAppearanceData(appearance)) {
+    parts.push(NO_PLAYER_DATA_COPY)
   }
   if ((appearance.goals ?? 0) > 0) parts.push(appearance.goals === 1 ? 'שער' : `${appearance.goals} שערים`)
   if ((appearance.assists ?? 0) > 0) parts.push(appearance.assists === 1 ? 'בישול' : `${appearance.assists} בישולים`)

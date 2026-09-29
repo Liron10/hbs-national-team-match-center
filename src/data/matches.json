@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-09-29T16:43:37.489Z",
+    "updatedAt": "2026-09-29T17:48:39.610Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -295,7 +295,7 @@
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
@@ -334,7 +334,7 @@
       "homeScore": 4,
       "awayScore": 1,
       "venue": "Inter&Co Stadium, אורלנדו",
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
       ],
@@ -372,7 +372,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 3,
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -518,7 +518,7 @@
       "homeScore": 0,
       "awayScore": 1,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -628,60 +628,19 @@
       "status": "finished",
       "homeScore": 2,
       "awayScore": 3,
-      "lastUpdated": "2026-09-29T16:43:37.320Z",
+      "lastUpdated": "2026-09-29T17:48:39.243Z",
       "players": [
         {
           "playerId": "niv-yehoshua",
           "squadStatus": "starter",
           "started": true,
-          "played": true,
-          "minutes": 90,
+          "played": false,
+          "minutes": 0,
           "goals": 0,
           "assists": 0,
           "yellowCards": 0,
           "redCards": 0,
-          "stats": [
-            {
-              "label": "דקות משחק",
-              "value": "90"
-            },
-            {
-              "label": "שערים",
-              "value": "0"
-            },
-            {
-              "label": "בישולים",
-              "value": "0"
-            },
-            {
-              "label": "כרטיסים צהובים",
-              "value": "0"
-            },
-            {
-              "label": "כרטיסים אדומים",
-              "value": "0"
-            },
-            {
-              "label": "ציון",
-              "value": "—"
-            },
-            {
-              "label": "מסירות מדויקות",
-              "value": "0"
-            },
-            {
-              "label": "בעיטות",
-              "value": "0"
-            },
-            {
-              "label": "בעיטות למסגרת",
-              "value": "0"
-            },
-            {
-              "label": "תיקולים",
-              "value": "0"
-            }
-          ]
+          "stats": []
         },
         {
           "playerId": "mohammed-abu-rumi",
@@ -724,7 +683,15 @@
       "players": [
         {
           "playerId": "yoan-stoyanov",
-          "squadStatus": "unknown"
+          "squadStatus": "bench",
+          "started": false,
+          "played": false,
+          "minutes": 0,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0,
+          "stats": []
         }
       ],
       "providerMatchId": 5181951

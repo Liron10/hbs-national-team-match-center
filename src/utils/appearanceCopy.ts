@@ -55,6 +55,29 @@ export function matchShowsPlayerStats(status: MatchStatus): boolean {
   return status === 'live' || status === 'halftime' || status === 'finished'
 }
 
+export const NO_PLAYER_DATA_COPY = 'אין נתונים זמינים עבור השחקן'
+
+export function hasTimedAppearanceData(appearance: PlayerAppearance): boolean {
+  return (
+    (appearance.minutes ?? 0) > 0 ||
+    appearance.subbedInMinute != null ||
+    appearance.subbedOutMinute != null
+  )
+}
+
+export function missingFinishedPlayerData(
+  appearance: PlayerAppearance,
+  matchStatus?: MatchStatus,
+): boolean {
+  if (matchStatus !== 'finished') return false
+  if (appearance.squadStatus === 'unused') return false
+  if (appearance.squadStatus === 'bench' && !appearance.played && !cameOnAsSubstitute(appearance)) {
+    return false
+  }
+  if (appearance.squadStatus === 'not-in-squad' && !cameOnAsSubstitute(appearance)) return false
+  return !hasTimedAppearanceData(appearance)
+}
+
 export function participationLine(
   appearance: PlayerAppearance,
   matchStatus?: MatchStatus,
@@ -68,10 +91,12 @@ export function participationLine(
 
   if (live) return liveRoleLine(appearance, clock)
 
+  if (appearance.squadStatus === 'not-in-squad' && !cameOnAsSubstitute(appearance)) return 'מחוץ לסגל'
+  if (appearance.squadStatus === 'unused' && !cameOnAsSubstitute(appearance)) return 'לא שותף'
+  if (missingFinishedPlayerData(appearance, matchStatus)) return NO_PLAYER_DATA_COPY
   if (appearance.squadStatus === 'unknown') {
     return matchStatus === 'scheduled' || matchStatus == null ? 'בסגל הנבחרת' : ''
   }
-  if (appearance.squadStatus === 'not-in-squad' && !cameOnAsSubstitute(appearance)) return 'מחוץ לסגל'
   if (cameOnAsSubstitute(appearance)) {
     if (finished && minutes > 0) return `עלה מהספסל ושיחק ${minutes} דקות`
     if (subIn != null && minutes > 0) return `נכנס כמחליף בדקה ${subIn} • ${minutes} דקות`
@@ -79,7 +104,6 @@ export function participationLine(
     if (minutes > 0) return `עלה מהספסל ושיחק ${minutes} דקות`
     return 'נכנס כמחליף'
   }
-  if (appearance.squadStatus === 'unused') return 'לא שותף'
   if (appearance.squadStatus === 'bench' && !finished) return 'על הספסל'
   if (!appearance.played && appearance.squadStatus !== 'starter') return 'לא שותף'
 
@@ -159,7 +183,8 @@ export function playerChips(
     }
   } else if (line) {
     const fresh = line.includes('עכשיו')
-    const offPitch = line.startsWith('כרגע לא במשחק')
+    const missing = line === NO_PLAYER_DATA_COPY
+    const offPitch = missing || line.startsWith('כרגע לא במשחק')
     chips.push({ kind: fresh ? 'fresh' : offPitch ? 'out' : 'status', label: line })
   }
 
@@ -219,6 +244,7 @@ export function playerTimeline(appearance: PlayerAppearance): TimelineEvent[] {
 
 export function appearanceStats(appearance: PlayerAppearance, matchStatus?: MatchStatus): AppearanceStat[] {
   if (matchStatus && !matchShowsPlayerStats(matchStatus)) return []
+  if (missingFinishedPlayerData(appearance, matchStatus)) return []
   if (!appearance.played) return []
   if (appearance.stats && appearance.stats.length > 0) return appearance.stats
 

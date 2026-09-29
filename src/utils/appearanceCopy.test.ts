@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PlayerAppearance } from '../types'
-import { appearanceStats, isOnThePitch, matchShowsPlayerStats, participationLine, playerTimeline } from './appearanceCopy.ts'
+import {
+  appearanceStats,
+  isOnThePitch,
+  matchShowsPlayerStats,
+  missingFinishedPlayerData,
+  NO_PLAYER_DATA_COPY,
+  participationLine,
+  playerChips,
+  playerTimeline,
+} from './appearanceCopy.ts'
 
 function appearance(partial: Partial<PlayerAppearance>): PlayerAppearance {
   return {
@@ -138,6 +147,33 @@ test('states clearly when a player is not on the pitch during a live match', () 
     'לא פתח • נכנס עכשיו • משחק עכשיו',
   )
   assert.equal(participationLine(appearance({ squadStatus: 'unknown' }), 'live'), 'בסגל הנבחרת')
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'starter', started: true, played: false, minutes: 0 }), 'finished'),
+    NO_PLAYER_DATA_COPY,
+  )
+  assert.equal(
+    participationLine(appearance({ squadStatus: 'unknown' }), 'finished'),
+    NO_PLAYER_DATA_COPY,
+  )
+  assert.equal(
+    missingFinishedPlayerData(
+      appearance({ squadStatus: 'starter', started: true, played: false, minutes: 0 }),
+      'finished',
+    ),
+    true,
+  )
+  assert.equal(
+    missingFinishedPlayerData(appearance({ squadStatus: 'unused', played: false, minutes: 0 }), 'finished'),
+    false,
+  )
+  assert.equal(
+    playerChips(appearance({ squadStatus: 'starter', started: true, played: false }), 'finished')[0]?.label,
+    NO_PLAYER_DATA_COPY,
+  )
+  assert.deepEqual(
+    appearanceStats(appearance({ squadStatus: 'starter', started: true, played: true, minutes: 0 }), 'finished'),
+    [],
+  )
   assert.equal(
     isOnThePitch(appearance({ squadStatus: 'starter', played: true, minutes: 38 }), 'live'),
     true,

@@ -7,7 +7,7 @@ import { nationalTeams } from '../data/teams'
 import { displayTeamName, nationalTeamLabel } from '../utils/matchLine'
 import { formatStartPhrase } from '../utils/countdown'
 import { playerWindowProfile } from '../utils/playerWindow'
-import { appearanceStats } from '../utils/appearanceCopy'
+import { appearanceStats, missingFinishedPlayerData, NO_PLAYER_DATA_COPY } from '../utils/appearanceCopy'
 
 interface PlayerSheetProps {
   player: Player
@@ -27,6 +27,10 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
   const sourceAppearance = sourceMatch?.players.find((appearance) => appearance.playerId === player.id)
   const sourceStats =
     sourceMatch && sourceAppearance ? appearanceStats(sourceAppearance, sourceMatch.status) : []
+  const sourceMissing =
+    sourceMatch != null &&
+    sourceAppearance != null &&
+    missingFinishedPlayerData(sourceAppearance, sourceMatch.status)
   const lastFinished = [...matches]
     .filter((match) => match.status === 'finished')
     .sort((a, b) => Date.parse(b.kickoff) - Date.parse(a.kickoff))
@@ -35,9 +39,9 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
       return appearance ? { match, stats: appearanceStats(appearance, match.status) } : null
     })
     .find((item) => item && item.stats.length > 0)
-  const matchStats = sourceStats.length > 0 ? sourceStats : (lastFinished?.stats ?? [])
+  const matchStats = sourceMissing ? [] : sourceStats.length > 0 ? sourceStats : (lastFinished?.stats ?? [])
   const matchStatsTitle =
-    sourceStats.length > 0 ? 'במשחק' : lastFinished ? 'המשחק האחרון — נתונים' : 'במשחק'
+    sourceStats.length > 0 ? 'במשחק' : lastFinished && !sourceMissing ? 'המשחק האחרון — נתונים' : 'במשחק'
   const nextKickoff = matches.find((match) => match.id === profile.nextMatch?.matchId)?.kickoff
   const nextEta = nextKickoff ? formatStartPhrase(nextKickoff, now) : null
   const startY = useRef<number | null>(null)
@@ -138,6 +142,11 @@ export function PlayerSheet({ player, matches, matchId, now, onClose, onShowMatc
                 </li>
               ))}
             </ul>
+          </section>
+        ) : sourceMissing ? (
+          <section className="player-sheet__block">
+            <h3>במשחק</h3>
+            <p className="player-sheet__muted">{NO_PLAYER_DATA_COPY}</p>
           </section>
         ) : null}
         {profile.windowStats.length > 0 ? (

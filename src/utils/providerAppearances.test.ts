@@ -76,6 +76,7 @@ test('reads FotMob tackles from the matchstats header key', () => {
               {
                 key: 'defense',
                 stats: {
+                  'Minutes played': { key: 'minutes_played', stat: { value: 90, type: 'integer' } },
                   Tackles: { key: 'matchstats.headers.tackles', stat: { value: 1, type: 'integer' } },
                 },
               },
@@ -100,7 +101,7 @@ test('does not invent a stat sheet for a player who did not play', () => {
   assert.deepEqual(appearance.stats, [])
 })
 
-test('gives a finished starter 90 minutes when the provider has no stat sheet', () => {
+test('does not invent minutes for a finished starter without a stat sheet', () => {
   const appearance = appearanceFromProvider(
     'niv-yehoshua',
     1605895,
@@ -108,8 +109,9 @@ test('gives a finished starter 90 minutes when the provider has no stat sheet', 
     'finished',
   )
   assert.equal(appearance.squadStatus, 'starter')
-  assert.equal(appearance.played, true)
-  assert.equal(appearance.minutes, 90)
+  assert.equal(appearance.played, false)
+  assert.equal(appearance.minutes, 0)
+  assert.deepEqual(appearance.stats, [])
 })
 
 test('keeps a finished unused substitute off the pitch when there are no minutes', () => {
