@@ -64,6 +64,39 @@ test('summarises the day only after every tonight match is finished', () => {
   assert.match(brief?.line ?? '', /שער אחד/)
 })
 
+test('does not count unused squad members as having played in the day brief', () => {
+  const now = new Date('2026-09-29T20:50:00.000Z')
+  const brief = dayBrief(
+    [
+      match({
+        id: 'u21',
+        kickoff: '2026-09-29T14:00:00.000Z',
+        status: 'finished',
+        homeScore: 2,
+        awayScore: 3,
+        players: [
+          { playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: true, minutes: 90, goals: 1 },
+          { playerId: 'mohammed-abu-rumi', squadStatus: 'unused', played: false, minutes: 0 },
+        ],
+      }),
+      match({
+        id: 'jam',
+        kickoff: '2026-09-29T00:00:00.000Z',
+        status: 'finished',
+        players: [{ playerId: 'javon-east', squadStatus: 'subbed-in', played: true, minutes: 28 }],
+      }),
+      match({
+        id: 'bgr',
+        kickoff: '2026-09-29T18:45:00.000Z',
+        status: 'finished',
+        players: [{ playerId: 'yoan-stoyanov', squadStatus: 'subbed-in', played: true, minutes: 17 }],
+      }),
+    ],
+    now,
+  )
+  assert.equal(brief?.line, '3 נציגים שיחקו · 135 דקות · שער אחד')
+})
+
 test('names halftime extra time and penalties without inventing a new screen', () => {
   assert.equal(livePhaseLabel(match({ id: 'ht', kickoff: '2026-09-24T18:45:00.000Z', status: 'halftime' })), 'מחצית')
   assert.equal(

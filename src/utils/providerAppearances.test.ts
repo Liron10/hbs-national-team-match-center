@@ -101,7 +101,41 @@ test('does not invent a stat sheet for a player who did not play', () => {
   assert.deepEqual(appearance.stats, [])
 })
 
-test('does not invent minutes for a finished starter without a stat sheet', () => {
+test('reads a named goal event even when FotMob leaves the scorer id at zero', () => {
+  const appearance = appearanceFromProvider(
+    'niv-yehoshua',
+    1605895,
+    {
+      content: {
+        lineup: { awayTeam: { starters: [{ id: 1605895, name: 'Niv Yehoshua', firstName: 'Niv', lastName: 'Yehoshua' }] } },
+        playerStats: null,
+        matchFacts: {
+          events: {
+            events: [
+              {
+                type: 'Goal',
+                time: 90,
+                player: { id: 0, name: 'Niv Yehoshua' },
+                playerId: 0,
+                nameStr: 'Niv Yehoshua',
+                fullName: 'Niv Yehoshua',
+                firstName: 'Niv',
+                lastName: 'Yehoshua',
+              },
+            ],
+          },
+        },
+      },
+    },
+    'finished',
+  )
+  assert.equal(appearance.squadStatus, 'starter')
+  assert.equal(appearance.played, true)
+  assert.equal(appearance.minutes, 90)
+  assert.equal(appearance.goals, 1)
+})
+
+test('gives a finished starter 90 minutes when they were not substituted', () => {
   const appearance = appearanceFromProvider(
     'niv-yehoshua',
     1605895,
@@ -109,9 +143,8 @@ test('does not invent minutes for a finished starter without a stat sheet', () =
     'finished',
   )
   assert.equal(appearance.squadStatus, 'starter')
-  assert.equal(appearance.played, false)
-  assert.equal(appearance.minutes, 0)
-  assert.deepEqual(appearance.stats, [])
+  assert.equal(appearance.played, true)
+  assert.equal(appearance.minutes, 90)
 })
 
 test('keeps a finished unused substitute off the pitch when there are no minutes', () => {

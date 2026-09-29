@@ -19,6 +19,9 @@ export const FIXED_STAT_LABELS = [
 
 interface FotmobLinePlayer {
   id?: number | string
+  name?: string
+  firstName?: string
+  lastName?: string
   performance?: {
     rating?: number
     events?: Array<{ type?: string }>
@@ -35,6 +38,19 @@ interface FotmobPlayerStats {
   stats?: Array<{ key?: string; stats?: Record<string, FotmobStatValue> }>
 }
 
+interface FotmobMatchEvent {
+  type?: string
+  ownGoal?: boolean | null
+  player?: { id?: number | string; name?: string }
+  playerId?: number | string
+  nameStr?: string
+  fullName?: string
+  firstName?: string
+  lastName?: string
+  assistPlayerId?: number | string
+  assistStr?: string
+}
+
 interface FotmobMatchDetails {
   header?: {
     teams?: Array<{ score?: number | null }>
@@ -45,7 +61,8 @@ interface FotmobMatchDetails {
       homeTeam?: { starters?: FotmobLinePlayer[]; subs?: FotmobLinePlayer[]; unavailable?: FotmobLinePlayer[] }
       awayTeam?: { starters?: FotmobLinePlayer[]; subs?: FotmobLinePlayer[]; unavailable?: FotmobLinePlayer[] }
     }
-    playerStats?: Record<string, FotmobPlayerStats>
+    playerStats?: Record<string, FotmobPlayerStats> | null
+    matchFacts?: { events?: { events?: FotmobMatchEvent[] } }
   }
 }
 
@@ -101,6 +118,44 @@ function eventsOf(player: FotmobLinePlayer | undefined) {
   }
 }
 
+function eventNames(event: FotmobMatchEvent): string[] {
+  return [event.player?.name, event.nameStr, event.fullName, [event.firstName, event.lastName].filter(Boolean).join(' ')]
+    .map((name) => name?.trim().toLowerCase())
+    .filter((name): name is string => Boolean(name))
+}
+
+function linePlayerNames(player: FotmobLinePlayer | undefined): string[] {
+  if (!player) return []
+  return [player.name, [player.firstName, player.lastName].filter(Boolean).join(' ')]
+    .map((name) => name?.trim().toLowerCase())
+    .filter((name): name is string => Boolean(name))
+}
+
+function eventBelongsToPlayer(event: FotmobMatchEvent, fotmobId: number, linePlayer: FotmobLinePlayer | undefined): boolean {
+  const rawId = event.player?.id ?? event.playerId
+  const id = Number(rawId)
+  if (Number.isFinite(id) && id > 0) return id === fotmobId
+  const names = new Set(linePlayerNames(linePlayer))
+  if (names.size === 0) return false
+  return eventNames(event).some((name) => names.has(name))
+}
+
+function matchFactTotals(details: FotmobMatchDetails, fotmobId: number, linePlayer: FotmobLinePlayer | undefined) {
+  const events = details.content?.matchFacts?.events?.events ?? []
+  let goals = 0
+  let assists = 0
+  for (const event of events) {
+    if (event.type === 'Goal' && !event.ownGoal && eventBelongsToPlayer(event, fotmobId, linePlayer)) {
+      goals += 1
+    }
+    const assistId = Number(event.assistPlayerId)
+    if (event.type === 'Goal' && Number.isFinite(assistId) && assistId > 0 && assistId === fotmobId) {
+      assists += 1
+    }
+  }
+  return { goals, assists }
+}
+
 export function buildFixedStats(input: {
   minutes: number
   goals: number
@@ -145,15 +200,20 @@ export function appearanceFromProvider(
   const linePlayer = starter ?? sub
   const statsPayload = details.content?.playerStats?.[String(fotmobId)]
   const events = eventsOf(linePlayer)
+  const facts = matchFactTotals(details, fotmobId, linePlayer)
   let minutes = statNumber(statsPayload, ['minutes_played', 'Minutes played'])
   if (!minutes && events.subOut != null) {
     minutes = events.subIn != null ? Math.max(0, events.subOut - events.subIn) : events.subOut
   }
-  const goals = statNumber(statsPayload, 'goals')
-  const assists = statNumber(statsPayload, 'assists')
+  const goals = statNumber(statsPayload, 'goals') || facts.goals
+  const assists = statNumber(statsPayload, 'assists') || facts.assists
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
   const finished = matchStatus === 'finished'
   const inPlay = matchStatus === 'live' || matchStatus === 'halftime' || finished
+  if (!minutes && finished && starter && events.subOut == null) minutes = 90
+  if (!minutes && finished && sub && events.subIn != null && events.subOut == null) {
+    minutes = Math.max(1, 90 - events.subIn)
+  }
 
   if (!starter && !sub && !unavailable) {
     return previous ?? { playerId, squadStatus: finished ? 'not-in-squad' : 'unknown', stats: [] }

@@ -159,7 +159,10 @@ export function dayBrief(matches: Match[], now = new Date()): { title: string; l
       if (player) seen.add(player.id)
     }
   }
-  const parts = [`${seen.size} נציגים שיחקו`]
+  const parts = []
+  if (played === 1) parts.push('נציג אחד שיחק')
+  else if (played > 1) parts.push(`${played} נציגים שיחקו`)
+  else if (seen.size > 0) parts.push(`${seen.size} נציגים בסגל`)
   if (minutes > 0) parts.push(`${minutes} דקות`)
   if (goals === 1) parts.push('שער אחד')
   else if (goals > 1) parts.push(`${goals} שערים`)
