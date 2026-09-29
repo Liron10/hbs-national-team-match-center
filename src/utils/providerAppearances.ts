@@ -18,7 +18,7 @@ export const FIXED_STAT_LABELS = [
 ] as const
 
 interface FotmobLinePlayer {
-  id?: number
+  id?: number | string
   performance?: {
     rating?: number
     events?: Array<{ type?: string }>
@@ -83,6 +83,12 @@ function statFraction(payload: FotmobPlayerStats | undefined, key: string): stri
   return String(value)
 }
 
+function samePlayerId(player: FotmobLinePlayer | undefined, fotmobId: number): boolean {
+  if (player?.id == null) return false
+  const id = Number(player.id)
+  return Number.isFinite(id) && id === fotmobId
+}
+
 function eventsOf(player: FotmobLinePlayer | undefined) {
   const sub = player?.performance?.substitutionEvents ?? []
   const cards = player?.performance?.events ?? []
@@ -133,9 +139,9 @@ export function appearanceFromProvider(
 ): PlayerAppearance {
   const lineup = details.content?.lineup
   const sides = [lineup?.homeTeam, lineup?.awayTeam]
-  const starter = sides.flatMap((side) => side?.starters ?? []).find((player) => player.id === fotmobId)
-  const sub = sides.flatMap((side) => side?.subs ?? []).find((player) => player.id === fotmobId)
-  const unavailable = sides.flatMap((side) => side?.unavailable ?? []).find((player) => player.id === fotmobId)
+  const starter = sides.flatMap((side) => side?.starters ?? []).find((player) => samePlayerId(player, fotmobId))
+  const sub = sides.flatMap((side) => side?.subs ?? []).find((player) => samePlayerId(player, fotmobId))
+  const unavailable = sides.flatMap((side) => side?.unavailable ?? []).find((player) => samePlayerId(player, fotmobId))
   const linePlayer = starter ?? sub
   const statsPayload = details.content?.playerStats?.[String(fotmobId)]
   const events = eventsOf(linePlayer)
@@ -249,7 +255,10 @@ export async function enrichMatchAppearances(
     matches.map(async (match) => {
       if (!shouldEnrichAppearances(match, now, inPlayOnly)) return match
       try {
-        const details = await footballGet<FotmobMatchDetails>(`/data/matchDetails?matchId=${match.providerMatchId}`)
+        const details = await footballGet<FotmobMatchDetails>(
+          `/data/matchDetails?matchId=${match.providerMatchId}`,
+          20_000,
+        )
         return applyMatchDetailsOverlay(match, details, now)
       } catch {
         return match

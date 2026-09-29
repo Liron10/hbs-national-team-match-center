@@ -121,6 +121,17 @@ test('maps a published pre-match lineup without inventing minutes or ratings', (
   assert.equal(bench.played, false)
 })
 
+test('matches FotMob lineup ids even when they arrive as strings', () => {
+  const appearance = appearanceFromProvider(
+    'niv-yehoshua',
+    1605895,
+    { content: { lineup: { awayTeam: { starters: [{ id: '1605895' }], subs: [] } } } },
+    'live',
+  )
+  assert.equal(appearance.squadStatus, 'starter')
+  assert.equal(appearance.played, true)
+})
+
 test('keeps a live unused substitute on the bench until they come on', () => {
   const appearance = appearanceFromProvider(
     'eliel-peretz',

@@ -60,7 +60,7 @@ export function useMatches() {
         const scored = applyLiveSnapshots(base, await fetchLiveSnapshots(base, now, silent), now)
         commit(scored)
 
-        const next = await enrichMatchAppearances(scored, now, silent)
+        const next = await enrichMatchAppearances(scored, now, false)
         commit(next)
       } catch {
         if (!silent) setError('לא ניתן להציג את המשחקים כרגע.')

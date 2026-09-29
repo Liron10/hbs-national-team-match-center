@@ -19,11 +19,11 @@ function footballHeaders(): Record<string, string> {
   return headers
 }
 
-export async function footballGet<T>(path: string): Promise<T> {
+export async function footballGet<T>(path: string, timeoutMs?: number): Promise<T> {
   const url = `${getFootballApiBase()}${path.startsWith('/') ? path : `/${path}`}`
   const controller = new AbortController()
-  const timeoutMs = browserHost() ? BROWSER_FETCH_MS : NODE_FETCH_MS
-  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  const wait = timeoutMs ?? (browserHost() ? BROWSER_FETCH_MS : NODE_FETCH_MS)
+  const timer = setTimeout(() => controller.abort(), wait)
   try {
     const response = await fetch(url, {
       cache: 'no-store',
