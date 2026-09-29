@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { playerWindowProfile, windowBoardStats } from './playerWindow.ts'
+import { playerGridItems, playerWindowProfile, windowBoardStats } from './playerWindow.ts'
 
 function match(partial: Partial<Match> & Pick<Match, 'id' | 'kickoff' | 'status'>): Match {
   return {
@@ -150,4 +150,48 @@ test('marks a finished starter without minutes as missing player data', () => {
   assert.equal(profile.lastMatch?.detail, 'אין נתונים זמינים עבור השחקן')
   assert.equal(profile.appearances, 0)
   assert.equal(profile.minutes, 0)
+})
+
+test('keeps a finished U21 appearance on the top squad list even when a later match exists', () => {
+  const now = new Date('2026-09-29T18:00:00.000Z')
+  const matches = [
+    match({
+      id: 'svn-isr-u21',
+      kickoff: '2026-09-29T14:00:00.000Z',
+      status: 'finished',
+      homeScore: 2,
+      awayScore: 3,
+      homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+      awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+      players: [
+        { playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: false, minutes: 0 },
+        { playerId: 'mohammed-abu-rumi', squadStatus: 'unused', played: false, minutes: 0 },
+      ],
+    }),
+    match({
+      id: 'nor-isr-u21',
+      kickoff: '2026-10-10T16:00:00.000Z',
+      status: 'scheduled',
+      homeTeam: { code: 'NOR', nameHe: 'נורווגיה עד 21', nameEn: 'Norway U21' },
+      awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+      players: [
+        { playerId: 'niv-yehoshua', squadStatus: 'unknown' },
+        { playerId: 'mohammed-abu-rumi', squadStatus: 'unknown' },
+      ],
+    }),
+    match({
+      id: 'next-isr',
+      kickoff: '2026-10-11T18:45:00.000Z',
+      status: 'scheduled',
+      players: [{ playerId: 'eliel-peretz', squadStatus: 'unknown' }],
+    }),
+  ]
+  const items = playerGridItems(matches, now)
+  const yehoshua = items.find((item) => item.playerId === 'niv-yehoshua')
+  const rumi = items.find((item) => item.playerId === 'mohammed-abu-rumi')
+  const peretz = items.find((item) => item.playerId === 'eliel-peretz')
+  assert.equal(yehoshua?.line, 'אין נתונים זמינים עבור השחקן')
+  assert.equal(rumi?.line, 'לא שותף')
+  assert.equal(peretz?.line, undefined)
+  assert.ok((items.findIndex((item) => item.playerId === 'niv-yehoshua') ?? 9) < (items.findIndex((item) => item.playerId === 'eliel-peretz') ?? 0))
 })

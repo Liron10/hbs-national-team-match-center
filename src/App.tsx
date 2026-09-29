@@ -125,7 +125,7 @@ export default function App() {
             </section>
           ) : null}
           {!loading && !error ? <WindowStrip matches={matches} /> : null}
-          <PlayersGrid selectedId={selectedPlayerId} onSelect={selectPlayer} />
+          <PlayersGrid matches={matches} now={now} selectedId={selectedPlayerId} onSelect={selectPlayer} />
           {selectedPlayer ? (
             <p className="player-filter">
               <span>משחקים של {selectedPlayer.nameHe}</span>

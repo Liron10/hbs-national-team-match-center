@@ -1,10 +1,11 @@
 import type { Match, PlayerAppearance } from '../types'
-import { NO_PLAYER_DATA_COPY, hasTimedAppearanceData, participationLine } from './appearanceCopy'
+import { isOnThePitch, NO_PLAYER_DATA_COPY, hasTimedAppearanceData, participationLine } from './appearanceCopy'
 import { displayTeamName } from './matchLine'
 import { remainingMs } from './countdown'
-import { formatFanKickoff } from './datetime'
+import { formatFanKickoff, isSameJerusalemDay } from './datetime'
 import { players } from '../data/players'
 import { windowStillOpen } from './fanDay'
+import { isLiveStatus } from './matchStatus'
 
 export interface NamedStat {
   label: string
@@ -268,4 +269,68 @@ export function windowBoardView(matches: Match[], now = new Date()): WindowBoard
     }
   }
   return { stats, closed, notes }
+}
+
+export interface PlayerGridItem {
+  playerId: string
+  line?: string
+}
+
+function currentPlayerRow(
+  playerId: string,
+  matches: Match[],
+  now: Date,
+): { match: Match; appearance: PlayerAppearance } | undefined {
+  const rows = playerMatches(matches, playerId)
+  const live = rows.find((row) => isLiveStatus(row.match.status))
+  if (live) return live
+
+  const today = rows.filter((row) => isSameJerusalemDay(row.match.kickoff, now))
+  const todayUpcoming = today
+    .filter((row) => row.match.status === 'scheduled' && remainingMs(row.match.kickoff, now) > 0)
+    .sort((a, b) => Date.parse(a.match.kickoff) - Date.parse(b.match.kickoff))[0]
+  if (todayUpcoming) return todayUpcoming
+  const todayFinished = [...today]
+    .filter((row) => row.match.status === 'finished')
+    .sort((a, b) => Date.parse(b.match.kickoff) - Date.parse(a.match.kickoff))[0]
+  if (todayFinished) return todayFinished
+
+  const next = rows.find((row) => row.match.status === 'scheduled' && remainingMs(row.match.kickoff, now) > 0)
+  if (next) return next
+  return [...rows].filter((row) => row.match.status === 'finished').reverse()[0]
+}
+
+function playerGridRank(
+  row: { match: Match; appearance: PlayerAppearance } | undefined,
+  now: Date,
+): number {
+  if (!row) return 50
+  if (isLiveStatus(row.match.status) && isOnThePitch(row.appearance, row.match.status)) return 0
+  if (isLiveStatus(row.match.status)) return 1
+  if (isSameJerusalemDay(row.match.kickoff, now) && row.match.status === 'scheduled') return 2
+  if (isSameJerusalemDay(row.match.kickoff, now) && row.match.status === 'finished') return 3
+  if (row.match.status === 'scheduled') return 4
+  if (row.match.status === 'finished') return 5
+  return 40
+}
+
+export function playerGridItems(matches: Match[], now = new Date()): PlayerGridItem[] {
+  return players
+    .map((player, catalogIndex) => {
+      const row = currentPlayerRow(player.id, matches, now)
+      const line = row ? participationLine(row.appearance, row.match.status, row.match.clock) : undefined
+      const hideQuietSquad =
+        line === 'בסגל הנבחרת' &&
+        row != null &&
+        row.match.status === 'scheduled' &&
+        !isSameJerusalemDay(row.match.kickoff, now)
+      return {
+        playerId: player.id,
+        line: hideQuietSquad || !line ? undefined : line,
+        rank: playerGridRank(row, now),
+        catalogIndex,
+      }
+    })
+    .sort((a, b) => a.rank - b.rank || a.catalogIndex - b.catalogIndex)
+    .map(({ playerId, line }) => ({ playerId, line }))
 }
