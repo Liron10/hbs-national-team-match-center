@@ -154,6 +154,10 @@ export function appearanceFromProvider(
   const rating = statByKey(statsPayload, 'rating_title')?.stat?.value ?? events.rating
   const finished = matchStatus === 'finished'
   const inPlay = matchStatus === 'live' || matchStatus === 'halftime' || finished
+  if (!minutes && finished && starter && events.subOut == null) minutes = 90
+  if (!minutes && finished && sub && events.subIn != null && events.subOut == null) {
+    minutes = Math.max(1, 90 - events.subIn)
+  }
 
   if (!starter && !sub && !unavailable) {
     return previous ?? { playerId, squadStatus: finished ? 'not-in-squad' : 'unknown', stats: [] }

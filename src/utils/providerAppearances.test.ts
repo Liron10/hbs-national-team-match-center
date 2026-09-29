@@ -100,6 +100,30 @@ test('does not invent a stat sheet for a player who did not play', () => {
   assert.deepEqual(appearance.stats, [])
 })
 
+test('gives a finished starter 90 minutes when the provider has no stat sheet', () => {
+  const appearance = appearanceFromProvider(
+    'niv-yehoshua',
+    1605895,
+    { content: { lineup: { awayTeam: { starters: [{ id: 1605895 }], subs: [{ id: 1497826 }] } } } },
+    'finished',
+  )
+  assert.equal(appearance.squadStatus, 'starter')
+  assert.equal(appearance.played, true)
+  assert.equal(appearance.minutes, 90)
+})
+
+test('keeps a finished unused substitute off the pitch when there are no minutes', () => {
+  const appearance = appearanceFromProvider(
+    'mohammed-abu-rumi',
+    1497826,
+    { content: { lineup: { awayTeam: { starters: [{ id: 1605895 }], subs: [{ id: 1497826 }] } } } },
+    'finished',
+  )
+  assert.equal(appearance.squadStatus, 'unused')
+  assert.equal(appearance.played, false)
+  assert.equal(appearance.minutes, 0)
+})
+
 test('maps a published pre-match lineup without inventing minutes or ratings', () => {
   const starter = appearanceFromProvider(
     'eliel-peretz',
