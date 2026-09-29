@@ -66,3 +66,32 @@ test('marks Abu Rumi as a 76th-minute substitute when FotMob left him unused', (
   assert.equal(rumi?.minutes, 14)
   assert.equal(merged.players[0]?.goals, 1)
 })
+
+test('does not add a second Yehoshua goal from duplicated ESPN commentary', () => {
+  const match: Match = {
+    id: 'svn-isr-u21',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+    awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+    kickoff: '2026-09-29T14:00:00.000Z',
+    status: 'finished',
+    homeScore: 2,
+    awayScore: 3,
+    lastUpdated: '2026-09-29T14:00:00.000Z',
+    players: [
+      { playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: true, minutes: 90, goals: 1 },
+    ],
+  }
+  const goal = {
+    type: { type: 'goal', text: 'Goal' },
+    text: "Niv Yehoshua (Israel U21) Goal at 90'+1'",
+    clock: { displayValue: "90'+1'" },
+    participants: [{ athlete: { displayName: 'Niv Yehoshua' } }],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [goal],
+    commentary: [{ text: goal.text, play: goal }],
+  })
+  assert.equal(merged.players[0]?.goals, 1)
+})

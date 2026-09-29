@@ -83,10 +83,10 @@ export function parseEspnMinute(display?: string): number | null {
 }
 
 function eventsOf(summary: EspnSummary): EspnKeyEvent[] {
-  const fromCommentary = (summary.commentary ?? [])
+  if ((summary.keyEvents?.length ?? 0) > 0) return summary.keyEvents ?? []
+  return (summary.commentary ?? [])
     .map((item) => item.play)
     .filter((item): item is EspnKeyEvent => item != null)
-  return [...(summary.keyEvents ?? []), ...fromCommentary]
 }
 
 function playerFromEvent(event: EspnKeyEvent, extraText?: string): string[] {
@@ -124,7 +124,8 @@ export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
 
 function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof espnFactsForPlayer>): PlayerAppearance {
   let minutes = appearance.minutes ?? 0
-  let goals = Math.max(appearance.goals ?? 0, facts.goals)
+  const existingGoals = appearance.goals ?? 0
+  let goals = existingGoals > 0 ? existingGoals : facts.goals
   let squadStatus = appearance.squadStatus
   let played = Boolean(appearance.played)
   let subbedInMinute = appearance.subbedInMinute
@@ -136,7 +137,7 @@ function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof 
     if (facts.subIn != null) subbedInMinute = facts.subIn
     if (!minutes && subbedInMinute != null) minutes = Math.max(1, 90 - subbedInMinute)
   }
-  if (facts.goals > (appearance.goals ?? 0)) played = true
+  if (facts.goals > 0 && existingGoals === 0) played = true
 
   if (!played && minutes === 0 && goals === 0 && subbedInMinute == null) return appearance
 
