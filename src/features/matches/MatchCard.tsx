@@ -3,7 +3,7 @@ import { KickoffCountdown } from '../../components/KickoffCountdown'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Flag } from '../../components/Flag'
 import { formatFanKickoff, formatMatchTime, formatOvernightContext } from '../../utils/datetime'
-import { hbsWatermarkCodes, matchLineup, ourNationalSide } from '../../utils/matchLine'
+import { hbsWatermarkCodes, matchLineup, matchScoreDisplay, ourNationalSide } from '../../utils/matchLine'
 import { displayStatus, isLiveStatus } from '../../utils/matchStatus'
 import { competitionBadge } from '../../utils/boardPulse'
 import { eveningBadge, lineupPublished } from '../../utils/fanDay'
@@ -30,7 +30,8 @@ export function MatchCard({ match, matches, now, featured = false, onOpenPlayer 
   const kickoffTime = formatMatchTime(match.kickoff)
   const relativeDay = status === 'today' || status === 'tomorrow' || status === 'soon'
   const whenPrimary = relativeDay ? kickoffTime : kickoff.primary
-  const center = postponed || cancelled ? null : hasScore ? `${match.homeScore}–${match.awayScore}` : kickoffTime
+  const score = matchScoreDisplay(match)
+  const center = postponed || cancelled ? null : score ? score.text : kickoffTime
   const watermarks = hbsWatermarkCodes(match)
   const { left, right } = matchLineup(match)
   const ours = ourNationalSide(match)
@@ -90,7 +91,7 @@ export function MatchCard({ match, matches, now, featured = false, onOpenPlayer 
               className={
                 hasScore ? 'match-card__score match-card__score--result' : 'match-card__score match-card__score--kick'
               }
-              aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}
+              aria-label={score ? score.aria : `שעת משחק ${center}`}
             >
               {center}
             </p>

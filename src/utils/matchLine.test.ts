@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { hbsWatermarkCodes, annotatedTeamLabel, lastNameHe, matchHeadline, matchLineup } from './matchLine.ts'
+import { hbsWatermarkCodes, annotatedTeamLabel, lastNameHe, matchHeadline, matchLineup, matchScoreDisplay } from './matchLine.ts'
 
 function peruMatch(): Match {
   return {
@@ -43,6 +43,21 @@ test('puts home first in the lineup so RTL shows home on the right', () => {
   const lineup = matchLineup(peruMatch())
   assert.equal(lineup.left.team.code, 'USA')
   assert.equal(lineup.right.team.code, 'PER')
+})
+
+test('prints the score in visual left-to-right order on an RTL board', () => {
+  const match: Match = {
+    ...peruMatch(),
+    id: 'svn-isr-u21',
+    status: 'live',
+    homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+    awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+    homeScore: 1,
+    awayScore: 0,
+    players: [{ playerId: 'niv-yehoshua', squadStatus: 'starter' }],
+  }
+  assert.equal(matchScoreDisplay(match)?.text, '0–1')
+  assert.match(matchScoreDisplay(match)?.aria ?? '', /סלובניה U21 1/)
 })
 
 test('uses the HBS player national side for the card watermark', () => {

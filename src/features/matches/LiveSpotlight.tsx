@@ -5,7 +5,7 @@ import { getPlayer } from '../../data/players'
 import { formatMatchTime } from '../../utils/datetime'
 import { livePhaseLabel } from '../../utils/fanDay'
 import { participationLine } from '../../utils/appearanceCopy'
-import { matchLineup, ourNationalSide } from '../../utils/matchLine'
+import { matchLineup, matchScoreDisplay, ourNationalSide } from '../../utils/matchLine'
 import { isLiveStatus } from '../../utils/matchStatus'
 import { MatchTeam } from './MatchTeam'
 
@@ -18,9 +18,8 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
   const hasScore = match.homeScore !== null && match.awayScore !== null
   const { left, right } = matchLineup(match)
   const ours = ourNationalSide(match)
-  const center = hasScore
-    ? `${match.homeScore}–${match.awayScore}`
-    : formatMatchTime(match.kickoff)
+  const score = matchScoreDisplay(match)
+  const center = score ? score.text : formatMatchTime(match.kickoff)
   const representatives = match.players
     .map((appearance) => {
       const player = getPlayer(appearance.playerId)
@@ -46,7 +45,7 @@ export function LiveSpotlight({ match }: LiveSpotlightProps) {
         <MatchTeam team={left.team} label={left.label} size="lg" ours={left.team.code === ours.code} />
         <div className="spotlight__center">
           {hasScore ? null : <span className="spotlight__vs">VS</span>}
-          <strong aria-label={hasScore ? `תוצאה ${center}` : `שעת משחק ${center}`}>{center}</strong>
+          <strong aria-label={score ? score.aria : `שעת משחק ${center}`}>{center}</strong>
         </div>
         <MatchTeam team={right.team} label={right.label} size="lg" ours={right.team.code === ours.code} />
       </div>

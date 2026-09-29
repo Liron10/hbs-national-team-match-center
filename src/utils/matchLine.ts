@@ -67,6 +67,16 @@ export function matchLineup(match: Match): {
   }
 }
 
+export function matchScoreDisplay(match: Match): { text: string; aria: string } | null {
+  if (match.homeScore == null || match.awayScore == null) return null
+  const home = displayTeamName(match.homeTeam)
+  const away = displayTeamName(match.awayTeam)
+  return {
+    text: `${match.awayScore}–${match.homeScore}`,
+    aria: `תוצאה ${home} ${match.homeScore}, ${away} ${match.awayScore}`,
+  }
+}
+
 export function matchHeadline(match: Match): string {
   const { left, right } = matchLineup(match)
   return `${left.label} – ${right.label}`
