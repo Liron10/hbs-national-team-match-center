@@ -34,13 +34,21 @@ function isRecentEvent(eventMinute: number | undefined, clock?: string): boolean
   return delta >= 0 && delta <= 4
 }
 
+export function cameOnAsSubstitute(appearance: PlayerAppearance): boolean {
+  if (appearance.squadStatus === 'subbed-in' || appearance.subbedInMinute != null) return true
+  if (appearance.started || appearance.squadStatus === 'starter' || appearance.squadStatus === 'subbed-out') {
+    return false
+  }
+  return Boolean(appearance.played) || (appearance.minutes ?? 0) > 0
+}
+
 export function isOnThePitch(appearance: PlayerAppearance, matchStatus?: MatchStatus): boolean {
   if (matchStatus !== 'live' && matchStatus !== 'halftime') return false
-  if (appearance.squadStatus === 'subbed-out') return false
+  if (appearance.squadStatus === 'subbed-out' || appearance.subbedOutMinute != null) return false
+  if (cameOnAsSubstitute(appearance)) return true
   if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') return false
   if (appearance.squadStatus === 'not-in-squad' || appearance.squadStatus === 'unknown') return false
-  if (appearance.subbedOutMinute != null) return false
-  return appearance.squadStatus === 'starter' || appearance.squadStatus === 'subbed-in'
+  return appearance.squadStatus === 'starter' || appearance.started === true
 }
 
 export function matchShowsPlayerStats(status: MatchStatus): boolean {
@@ -63,7 +71,14 @@ export function participationLine(
   if (appearance.squadStatus === 'unknown') {
     return matchStatus === 'scheduled' || matchStatus == null ? 'בסגל הנבחרת' : ''
   }
-  if (appearance.squadStatus === 'not-in-squad') return 'מחוץ לסגל'
+  if (appearance.squadStatus === 'not-in-squad' && !cameOnAsSubstitute(appearance)) return 'מחוץ לסגל'
+  if (cameOnAsSubstitute(appearance)) {
+    if (finished && minutes > 0) return `עלה מהספסל ושיחק ${minutes} דקות`
+    if (subIn != null && minutes > 0) return `נכנס כמחליף בדקה ${subIn} • ${minutes} דקות`
+    if (subIn != null) return `נכנס כמחליף בדקה ${subIn}`
+    if (minutes > 0) return `עלה מהספסל ושיחק ${minutes} דקות`
+    return 'נכנס כמחליף'
+  }
   if (appearance.squadStatus === 'unused') return 'לא שותף'
   if (appearance.squadStatus === 'bench' && !finished) return 'על הספסל'
   if (!appearance.played && appearance.squadStatus !== 'starter') return 'לא שותף'
@@ -88,7 +103,18 @@ export function liveRoleLine(appearance: PlayerAppearance, clock?: string): stri
   const subIn = appearance.subbedInMinute
   const subOut = appearance.subbedOutMinute
 
-  if (appearance.squadStatus === 'not-in-squad') return 'מחוץ לסגל'
+  if (appearance.squadStatus === 'not-in-squad' && !cameOnAsSubstitute(appearance)) return 'מחוץ לסגל'
+  if (cameOnAsSubstitute(appearance) && appearance.squadStatus !== 'subbed-out') {
+    if (subOut != null) {
+      return isRecentEvent(subOut, clock)
+        ? 'הוחלף עכשיו • לא על הדשא'
+        : `נכנס כמחליף • הוחלף בדקה ${subOut} • לא על הדשא`
+    }
+    if (isRecentEvent(subIn, clock)) return 'לא פתח • נכנס עכשיו • משחק עכשיו'
+    if (subIn != null) return `לא פתח • נכנס בדקה ${subIn} • משחק עכשיו`
+    if (minutes > 0) return `לא פתח • נכנס כמחליף • משחק עכשיו • ${minutes} דקות`
+    return 'לא פתח • נכנס כמחליף • משחק עכשיו'
+  }
   if (appearance.squadStatus === 'bench' || appearance.squadStatus === 'unused') {
     return 'לא פתח • על הספסל'
   }
@@ -96,16 +122,6 @@ export function liveRoleLine(appearance: PlayerAppearance, clock?: string): stri
     if (isRecentEvent(subOut, clock)) return 'הוחלף עכשיו • לא על הדשא'
     if (subOut != null) return `פתח בהרכב • הוחלף בדקה ${subOut} • לא על הדשא`
     return 'הוחלף • לא על הדשא'
-  }
-  if (subOut != null && appearance.squadStatus === 'subbed-in') {
-    return isRecentEvent(subOut, clock)
-      ? 'הוחלף עכשיו • לא על הדשא'
-      : `נכנס כמחליף • הוחלף בדקה ${subOut} • לא על הדשא`
-  }
-  if (appearance.squadStatus === 'subbed-in') {
-    if (isRecentEvent(subIn, clock)) return 'לא פתח • נכנס עכשיו • משחק עכשיו'
-    if (subIn != null) return `לא פתח • נכנס בדקה ${subIn} • משחק עכשיו`
-    return 'לא פתח • נכנס כמחליף • משחק עכשיו'
   }
   if (appearance.squadStatus === 'starter' || appearance.started) {
     if (minutes > 0) return `פותח בהרכב • משחק עכשיו • ${minutes} דקות`

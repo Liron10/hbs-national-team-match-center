@@ -77,6 +77,17 @@ test('uses natural Hebrew for participation', () => {
     participationLine(appearance({ squadStatus: 'bench', played: false }), 'scheduled'),
     'על הספסל',
   )
+  assert.equal(
+    participationLine(
+      appearance({
+        squadStatus: 'unused',
+        played: true,
+        minutes: 28,
+      }),
+      'finished',
+    ),
+    'עלה מהספסל ושיחק 28 דקות',
+  )
 })
 
 test('states clearly when a player is not on the pitch during a live match', () => {

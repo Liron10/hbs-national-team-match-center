@@ -305,6 +305,12 @@ a:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
+.match-card__score--result,
+.spotlight__center strong {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 .match-card--live .match-card__score--result,
 .spotlight .spotlight__center strong {
   font-size: clamp(2rem, 5vw, 2.8rem);

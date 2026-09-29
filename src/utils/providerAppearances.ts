@@ -156,7 +156,7 @@ export function appearanceFromProvider(
   let squadStatus: SquadStatus = finished ? 'not-in-squad' : 'unknown'
   if (unavailable && !linePlayer) squadStatus = 'not-in-squad'
   else if (starter) squadStatus = events.subOut != null ? 'subbed-out' : 'starter'
-  else if (sub && events.subIn != null) squadStatus = 'subbed-in'
+  else if (sub && (events.subIn != null || minutes > 0)) squadStatus = 'subbed-in'
   else if (sub) squadStatus = finished ? 'unused' : 'bench'
 
   const played = minutes > 0 || (inPlay && (Boolean(starter) || events.subIn != null))

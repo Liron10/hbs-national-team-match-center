@@ -132,6 +132,37 @@ test('keeps a live unused substitute on the bench until they come on', () => {
   assert.equal(appearance.played, false)
 })
 
+test('treats a bench player with minutes as a substitute even without a sub-in event', () => {
+  const appearance = appearanceFromProvider(
+    'javon-east',
+    919525,
+    {
+      content: {
+        lineup: {
+          homeTeam: { starters: [], subs: [{ id: 919525, performance: { rating: 6.3 } }] },
+        },
+        playerStats: {
+          '919525': {
+            stats: [
+              {
+                key: 'top_stats',
+                stats: {
+                  'Minutes played': { key: 'minutes_played', stat: { value: 28, type: 'integer' } },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+    'finished',
+  )
+  assert.equal(appearance.squadStatus, 'subbed-in')
+  assert.equal(appearance.started, false)
+  assert.equal(appearance.played, true)
+  assert.equal(appearance.minutes, 28)
+})
+
 test('enriches scheduled matches only inside the 90-minute live window', () => {
   const kickoff = '2026-09-24T18:45:00.000Z'
   const scheduled = {

@@ -1,5 +1,6 @@
 import type { Match, PlayerAppearance } from '../types'
 import { getPlayer } from '../data/players'
+import { cameOnAsSubstitute } from './appearanceCopy'
 import { displayTeamName, ourNationalSide } from './matchLine'
 
 function resultClause(match: Match): string {
@@ -25,10 +26,14 @@ function appearanceSentence(name: string, appearance: PlayerAppearance, result: 
   const minutes = appearance.minutes ?? 0
   const goals = appearance.goals ?? 0
   const subIn = appearance.subbedInMinute
-  if (!appearance.played) return null
-  if (subIn != null) {
-    const played = minutes > 0 ? ` ושיחק ${minutes} דקות` : ''
-    return `${name} עלה מהספסל בדקה ${subIn}${played}.`
+  if (!appearance.played && minutes === 0) return null
+  if (cameOnAsSubstitute(appearance) || subIn != null) {
+    if (subIn != null) {
+      const played = minutes > 0 ? ` ושיחק ${minutes} דקות` : ''
+      return `${name} עלה מהספסל בדקה ${subIn}${played}.`
+    }
+    if (minutes > 0) return `${name} עלה מהספסל ושיחק ${minutes} דקות.`
+    return `${name} עלה מהספסל.`
   }
   if (minutes >= 90 && goals > 0) return `${name} השלים 90 דקות וכבש${result}.`
   if (minutes >= 90) return `${name} השלים 90 דקות${result}.`

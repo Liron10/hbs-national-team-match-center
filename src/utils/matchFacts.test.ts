@@ -28,3 +28,28 @@ test('writes one factual sentence after a finished match', () => {
   }
   assert.equal(matchFactLine(match), 'אליאל פרץ השלים 90 דקות וכבש בהפסד ישראל.')
 })
+
+test('says a substitute came off the bench when minutes exist without a sub-in stamp', () => {
+  const match: Match = {
+    id: 'jam-hon',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'JAM', nameHe: 'ג׳מייקה', nameEn: 'Jamaica' },
+    awayTeam: { code: 'HON', nameHe: 'הונדורס', nameEn: 'Honduras' },
+    kickoff: '2026-09-29T00:00:00.000Z',
+    status: 'finished',
+    homeScore: 0,
+    awayScore: 1,
+    lastUpdated: '2026-09-29T03:55:00.000Z',
+    players: [
+      {
+        playerId: 'javon-east',
+        squadStatus: 'unused',
+        started: false,
+        played: true,
+        minutes: 28,
+      },
+    ],
+  }
+  assert.equal(matchFactLine(match), 'ג׳בון איסט עלה מהספסל ושיחק 28 דקות.')
+})
