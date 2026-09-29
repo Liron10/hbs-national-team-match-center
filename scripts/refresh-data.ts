@@ -3,6 +3,7 @@ import path from 'node:path'
 import type { MatchDataset } from '../src/types/index.ts'
 import { fetchFootballSnapshots } from '../src/services/football/fotmob.ts'
 import { applyLiveSnapshots } from '../src/utils/liveScores.ts'
+import { overlayEspnAppearances } from '../src/utils/espnAppearances.ts'
 import { enrichMatchAppearances } from '../src/utils/providerAppearances.ts'
 
 const target = path.resolve('src/data/matches.json')
@@ -12,7 +13,7 @@ async function main() {
   const current = JSON.parse(await readFile(target, 'utf8')) as MatchDataset
   const snapshots = await fetchFootballSnapshots(current.matches)
   const scored = applyLiveSnapshots(current.matches, snapshots)
-  const matches = await enrichMatchAppearances(scored)
+  const matches = await overlayEspnAppearances(await enrichMatchAppearances(scored))
   const changed = JSON.stringify(matches) !== JSON.stringify(current.matches)
 
   if (!changed) {

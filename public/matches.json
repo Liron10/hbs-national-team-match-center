@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-09-29T21:05:26.560Z",
+    "updatedAt": "2026-09-29T21:08:12.443Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -66,7 +66,7 @@
             },
             {
               "label": "ציון",
-              "value": "6.41"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",
@@ -119,7 +119,7 @@
             },
             {
               "label": "ציון",
-              "value": "5.56"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",
@@ -173,7 +173,7 @@
             },
             {
               "label": "ציון",
-              "value": "6.63"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -295,7 +295,7 @@
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
@@ -334,7 +334,7 @@
       "homeScore": 4,
       "awayScore": 1,
       "venue": "Inter&Co Stadium, אורלנדו",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
       ],
@@ -372,7 +372,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 3,
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -410,7 +410,7 @@
             },
             {
               "label": "ציון",
-              "value": "6.93"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",
@@ -476,7 +476,7 @@
             },
             {
               "label": "ציון",
-              "value": "5.49"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",
@@ -518,7 +518,7 @@
       "homeScore": 0,
       "awayScore": 1,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -628,7 +628,7 @@
       "status": "finished",
       "homeScore": 2,
       "awayScore": 3,
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "players": [
         {
           "playerId": "niv-yehoshua",
@@ -636,7 +636,7 @@
           "started": true,
           "played": true,
           "minutes": 90,
-          "goals": 1,
+          "goals": 2,
           "assists": 0,
           "yellowCards": 0,
           "redCards": 0,
@@ -647,7 +647,7 @@
             },
             {
               "label": "שערים",
-              "value": "1"
+              "value": "2"
             },
             {
               "label": "בישולים",
@@ -685,15 +685,57 @@
         },
         {
           "playerId": "mohammed-abu-rumi",
-          "squadStatus": "unused",
+          "squadStatus": "subbed-in",
           "started": false,
-          "played": false,
-          "minutes": 0,
+          "played": true,
+          "minutes": 14,
           "goals": 0,
           "assists": 0,
           "yellowCards": 0,
           "redCards": 0,
-          "stats": []
+          "subbedInMinute": 76,
+          "stats": [
+            {
+              "label": "דקות משחק",
+              "value": "14"
+            },
+            {
+              "label": "שערים",
+              "value": "0"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "—"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "0"
+            },
+            {
+              "label": "בעיטות",
+              "value": "0"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "0"
+            }
+          ]
         }
       ],
       "providerMatchId": 4785797
@@ -717,7 +759,7 @@
       "homeScore": 0,
       "awayScore": 0,
       "venue": "פלודיב",
-      "lastUpdated": "2026-09-29T21:05:26.529Z",
+      "lastUpdated": "2026-09-29T21:08:12.318Z",
       "sources": [
         "https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/4824880"
       ],
@@ -732,7 +774,7 @@
           "assists": 0,
           "yellowCards": 0,
           "redCards": 0,
-          "subbedInMinute": 73,
+          "subbedInMinute": 45,
           "stats": [
             {
               "label": "דקות משחק",
@@ -756,7 +798,7 @@
             },
             {
               "label": "ציון",
-              "value": "6.91"
+              "value": "—"
             },
             {
               "label": "מסירות מדויקות",

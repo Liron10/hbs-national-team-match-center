@@ -4,6 +4,7 @@ import { fetchLiveSnapshots } from '../services/live/snapshots'
 import { createMatchDataProvider } from '../services/matches'
 import { applyLiveSnapshots, isInLiveWindow } from '../utils/liveScores'
 import { isLiveStatus } from '../utils/matchStatus'
+import { overlayEspnAppearances } from '../utils/espnAppearances'
 import { enrichMatchAppearances } from '../utils/providerAppearances'
 
 const provider = createMatchDataProvider()
@@ -60,7 +61,7 @@ export function useMatches() {
         const scored = applyLiveSnapshots(base, await fetchLiveSnapshots(base, now, silent), now)
         commit(scored)
 
-        const next = await enrichMatchAppearances(scored, now, false)
+        const next = await overlayEspnAppearances(await enrichMatchAppearances(scored, now, false))
         commit(next)
       } catch {
         if (!silent) setError('לא ניתן להציג את המשחקים כרגע.')
