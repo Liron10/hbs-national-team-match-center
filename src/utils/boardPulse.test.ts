@@ -134,9 +134,38 @@ test('does not keep a finished U21 lineup in the header pulse', () => {
     ],
     now,
   )
-  assert.equal(pulse.text, 'נותר עוד משחק אחד היום')
+  assert.equal(pulse.text, '1 על הספסל')
   assert.equal(pulse.text.includes('בהרכב'), false)
-  assert.equal(pulse.text.includes('על הספסל'), false)
+  assert.equal(pulse.text.includes('2 על הספסל'), false)
+})
+
+test('ignores a stale scheduled U21 after kickoff when counting the bench', () => {
+  const now = new Date('2026-09-29T17:52:00.000Z')
+  const pulse = boardPulse(
+    [
+      match({
+        id: 'u21',
+        status: 'scheduled',
+        kickoff: '2026-09-29T14:00:00.000Z',
+        homeTeam: { code: 'SVN', nameHe: 'סלובניה עד 21', nameEn: 'Slovenia U21' },
+        awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+        players: [
+          { playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: false },
+          { playerId: 'mohammed-abu-rumi', squadStatus: 'unused', played: false },
+        ],
+      }),
+      match({
+        id: 'bgr',
+        status: 'scheduled',
+        kickoff: '2026-09-29T18:45:00.000Z',
+        homeTeam: { code: 'BGR', nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+        awayTeam: { code: 'EST', nameHe: 'אסטוניה', nameEn: 'Estonia' },
+        players: [{ playerId: 'yoan-stoyanov', squadStatus: 'bench', played: false }],
+      }),
+    ],
+    now,
+  )
+  assert.equal(pulse.text, '1 על הספסל')
 })
 
 test('uses squad copy when nobody is on the pitch yet', () => {

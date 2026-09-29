@@ -62,17 +62,23 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
   }
 
   const tonight = tonightSlate(matches, now)
-  const upcomingTonight = tonight.filter((match) => match.status === 'scheduled')
-  const finishedTonight = tonight.filter((match) => match.status === 'finished')
+  const upcomingTonight = tonight.filter(
+    (match) => match.status === 'scheduled' && remainingMs(match.kickoff, now) > 0,
+  )
+  const finishedTonight = tonight.filter(
+    (match) => match.status === 'finished' || (match.status === 'scheduled' && remainingMs(match.kickoff, now) <= 0),
+  )
   const names = uniqueTonightNames(tonight)
   const { starters, bench } = tonightLineupCounts(upcomingTonight)
 
-  if (tonight.length >= 2 && starters + bench > 0 && upcomingTonight.length > 0) {
+  if (starters + bench > 0 && upcomingTonight.length > 0) {
     if (starters > 0 && bench > 0) {
       return { text: `${starters} בהרכב • ${bench} על הספסל`, live: false }
     }
     if (starters === 1) return { text: 'נציג אחד פותח היום בהרכב', live: false }
     if (starters > 1) return { text: `${starters} נציגים פותחים היום בהרכב`, live: false }
+    if (bench === 1) return { text: '1 על הספסל', live: false }
+    if (bench > 1) return { text: `${bench} על הספסל`, live: false }
   }
 
   if (names.length >= 5 && upcomingTonight.length > 0) {
