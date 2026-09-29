@@ -66,6 +66,42 @@ test('does not count a next-day overnight kickoff as today in the banner', () =>
   assert.equal(pulse.text.includes('2 משחקים'), false)
 })
 
+test('says two matches remain today, not two matches left in the window', () => {
+  const now = new Date('2026-09-29T07:09:00.000Z')
+  const pulse = boardPulse(
+    [
+      match({
+        id: 'jam',
+        status: 'finished',
+        kickoff: '2026-09-29T00:00:00.000Z',
+        players: [{ playerId: 'javon-east', squadStatus: 'subbed-in', played: true, minutes: 28 }],
+      }),
+      match({
+        id: 'u21',
+        status: 'scheduled',
+        kickoff: '2026-09-29T14:00:00.000Z',
+        players: [{ playerId: 'niv-yehoshua', squadStatus: 'unknown' }],
+      }),
+      match({
+        id: 'bgr',
+        status: 'scheduled',
+        kickoff: '2026-09-29T18:45:00.000Z',
+        homeTeam: { code: 'BGR', nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+        awayTeam: { code: 'EST', nameHe: 'אסטוניה', nameEn: 'Estonia' },
+        players: [{ playerId: 'yoan-stoyanov', squadStatus: 'unknown' }],
+      }),
+      match({
+        id: 'later',
+        status: 'scheduled',
+        kickoff: '2026-10-01T18:45:00.000Z',
+        players: [{ playerId: 'eliel-peretz', squadStatus: 'unknown' }],
+      }),
+    ],
+    now,
+  )
+  assert.equal(pulse.text, 'נותרו עוד 2 משחקים היום')
+})
+
 test('uses squad copy when nobody is on the pitch yet', () => {
   const live = match({
     id: 'live',

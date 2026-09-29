@@ -104,9 +104,9 @@ export function remainingCopy(remaining: Match[]): string | null {
   if (remaining.length === 0) return null
   const night = remaining.every((match) => formatOvernightContext(match.kickoff))
   if (remaining.length === 1) {
-    return night ? 'נותר עוד משחק אחד הלילה' : 'נותר עוד משחק אחד לנציגי הפועל באר שבע'
+    return night ? 'נותר עוד משחק אחד הלילה' : 'נותר עוד משחק אחד היום'
   }
-  return `נותרו עוד ${remaining.length} משחקים לנציגי הפועל באר שבע`
+  return night ? `נותרו עוד ${remaining.length} משחקים הלילה` : `נותרו עוד ${remaining.length} משחקים היום`
 }
 
 export function nextMatchLine(match: Match, now = new Date()): string {
