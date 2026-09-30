@@ -28,7 +28,8 @@ function appearanceSentence(name: string, appearance: PlayerAppearance, result: 
   const subIn = appearance.subbedInMinute
   if (!appearance.played && minutes === 0) return null
   if (cameOnAsSubstitute(appearance) || subIn != null) {
-    if (subIn != null) {
+    const stampFits = subIn != null && (minutes === 0 || Math.abs(90 - minutes - subIn) <= 2)
+    if (stampFits) {
       const played = minutes > 0 ? ` ושיחק ${minutes} דקות` : ''
       return `${name} עלה מהספסל בדקה ${subIn}${played}.`
     }

@@ -3,7 +3,7 @@ import { getPlayer } from '../data/players'
 import { formatMatchTime, formatOvernightContext, isSameJerusalemDay, jerusalemDayDiff } from './datetime'
 import { remainingMs } from './countdown'
 import { isLiveStatus } from './matchStatus'
-import { displayTeamName } from './matchLine'
+import { displayTeamName, opponentNationalSide, ourNationalSide } from './matchLine'
 import { nationalTeams } from '../data/teams'
 
 export function isTonightMatch(match: Match, now = new Date()): boolean {
@@ -110,31 +110,14 @@ export function remainingCopy(remaining: Match[]): string | null {
 }
 
 export function nextMatchLine(match: Match, now = new Date()): string {
-  const player = match.players.map((appearance) => getPlayer(appearance.playerId)?.nameHe).find(Boolean)
+  const ours = displayTeamName(ourNationalSide(match))
+  const them = displayTeamName(opponentNationalSide(match))
   const when = isSameJerusalemDay(match.kickoff, now)
     ? `היום ב-${formatMatchTime(match.kickoff)}`
     : jerusalemDayDiff(match.kickoff, now) === 1
       ? `מחר ב-${formatMatchTime(match.kickoff)}`
       : `${formatMatchTime(match.kickoff)}`
-  if (player) return `המשחק הבא: ${player} • ${when}`
-  return `המשחק הבא: ${when}`
-}
-
-export function stillInWindowNames(matches: Match[], now = new Date()): string[] {
-  const names: string[] = []
-  const seen = new Set<string>()
-  for (const match of matches) {
-    const open =
-      isLiveStatus(match.status) || (match.status === 'scheduled' && remainingMs(match.kickoff, now) > 0)
-    if (!open) continue
-    for (const appearance of match.players) {
-      const player = getPlayer(appearance.playerId)
-      if (!player || seen.has(player.id)) continue
-      seen.add(player.id)
-      names.push(player.nameHe)
-    }
-  }
-  return names
+  return `המשחק הבא: ${ours} מול ${them} • ${when}`
 }
 
 export function dayBrief(matches: Match[], now = new Date()): { title: string; line: string } | null {

@@ -53,3 +53,29 @@ test('says a substitute came off the bench when minutes exist without a sub-in s
   }
   assert.equal(matchFactLine(match), 'ג׳בון איסט עלה מהספסל ושיחק 28 דקות.')
 })
+
+test('does not claim a 45th-minute entry when the player only had 17 minutes', () => {
+  const match: Match = {
+    id: 'bgr-est',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'BGR', nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+    awayTeam: { code: 'EST', nameHe: 'אסטוניה', nameEn: 'Estonia' },
+    kickoff: '2026-09-29T18:45:00.000Z',
+    status: 'finished',
+    homeScore: 0,
+    awayScore: 0,
+    lastUpdated: '2026-09-29T21:00:00.000Z',
+    players: [
+      {
+        playerId: 'yoan-stoyanov',
+        squadStatus: 'subbed-in',
+        started: false,
+        played: true,
+        minutes: 17,
+        subbedInMinute: 45,
+      },
+    ],
+  }
+  assert.equal(matchFactLine(match), 'יואן סטויאנוב עלה מהספסל ושיחק 17 דקות.')
+})

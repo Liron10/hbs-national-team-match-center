@@ -95,3 +95,79 @@ test('does not add a second Yehoshua goal from duplicated ESPN commentary', () =
   })
   assert.equal(merged.players[0]?.goals, 1)
 })
+
+test('keeps a FotMob sub-in that matches minutes instead of ESPN 45', () => {
+  const match: Match = {
+    id: 'bgr-est',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'BGR', nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+    awayTeam: { code: 'EST', nameHe: 'אסטוניה', nameEn: 'Estonia' },
+    kickoff: '2026-09-29T18:45:00.000Z',
+    status: 'finished',
+    homeScore: 0,
+    awayScore: 0,
+    lastUpdated: '2026-09-29T21:00:00.000Z',
+    players: [
+      {
+        playerId: 'yoan-stoyanov',
+        squadStatus: 'subbed-in',
+        started: false,
+        played: true,
+        minutes: 17,
+        subbedInMinute: 73,
+      },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [
+      {
+        type: { type: 'substitution', text: 'Substitution' },
+        text: "Yoan Stoyanov (Bulgaria) Substitution at 45'",
+        clock: { displayValue: "45'" },
+        participants: [{ athlete: { displayName: 'Yoan Stoyanov' } }],
+      },
+    ],
+    rosters: [{ roster: [{ starter: false, subbedIn: true, athlete: { displayName: 'Yoan Stoyanov' } }] }],
+  })
+  assert.equal(merged.players[0]?.subbedInMinute, 73)
+  assert.equal(merged.players[0]?.minutes, 17)
+})
+
+test('derives sub-in from minutes when ESPN 45 does not match 17 minutes played', () => {
+  const match: Match = {
+    id: 'bgr-est',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'BGR', nameHe: 'בולגריה', nameEn: 'Bulgaria' },
+    awayTeam: { code: 'EST', nameHe: 'אסטוניה', nameEn: 'Estonia' },
+    kickoff: '2026-09-29T18:45:00.000Z',
+    status: 'finished',
+    homeScore: 0,
+    awayScore: 0,
+    lastUpdated: '2026-09-29T21:00:00.000Z',
+    players: [
+      {
+        playerId: 'yoan-stoyanov',
+        squadStatus: 'subbed-in',
+        started: false,
+        played: true,
+        minutes: 17,
+        subbedInMinute: 45,
+      },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [
+      {
+        type: { type: 'substitution', text: 'Substitution' },
+        text: "Yoan Stoyanov (Bulgaria) Substitution at 45'",
+        clock: { displayValue: "45'" },
+        participants: [{ athlete: { displayName: 'Yoan Stoyanov' } }],
+      },
+    ],
+    rosters: [{ roster: [{ starter: false, subbedIn: true, athlete: { displayName: 'Yoan Stoyanov' } }] }],
+  })
+  assert.equal(merged.players[0]?.subbedInMinute, 73)
+  assert.equal(merged.players[0]?.minutes, 17)
+})

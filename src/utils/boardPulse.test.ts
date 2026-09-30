@@ -179,3 +179,35 @@ test('uses squad copy when nobody is on the pitch yet', () => {
   })
   assert.equal(boardPulse([live]).text, '2 נציגים בסגל במשחק שמתקיים עכשיו')
 })
+
+test('after tonight is done, names the next fixture without leftover window players', () => {
+  const now = new Date('2026-09-30T07:20:00.000Z')
+  const pulse = boardPulse(
+    [
+      match({
+        id: 'mex-per',
+        status: 'finished',
+        kickoff: '2026-09-30T01:00:00.000Z',
+        homeTeam: { code: 'MEX', nameHe: 'מקסיקו', nameEn: 'Mexico' },
+        awayTeam: { code: 'PER', nameHe: 'פרו', nameEn: 'Peru' },
+        players: [{ playerId: 'adrian-ugarriza', squadStatus: 'subbed-in', played: true, minutes: 68 }],
+      }),
+      match({
+        id: 'isr-xkx',
+        status: 'scheduled',
+        kickoff: '2026-10-01T18:45:00.000Z',
+        homeTeam: { code: 'ISR', nameHe: 'ישראל', nameEn: 'Israel' },
+        awayTeam: { code: 'XKX', nameHe: 'קוסובו', nameEn: 'Kosovo' },
+        players: [
+          { playerId: 'eliel-peretz', squadStatus: 'unknown' },
+          { playerId: 'idan-nachmias', squadStatus: 'unknown' },
+          { playerId: 'guy-mizrahi', squadStatus: 'unknown' },
+        ],
+      }),
+    ],
+    now,
+  )
+  assert.equal(pulse.text, 'נציגי הפועל באר שבע סיימו את משחקיהם להיום')
+  assert.deepEqual(pulse.lines, ['המשחק הבא: ישראל מול קוסובו • מחר ב-21:45'])
+  assert.equal((pulse.lines ?? []).join(' ').includes('עדיין במשחקי הנבחרות'), false)
+})

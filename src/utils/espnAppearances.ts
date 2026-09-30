@@ -122,6 +122,21 @@ export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
   return { subIn, goals, onAsSub }
 }
 
+export function subInFitsMinutes(subIn: number, minutes: number): boolean {
+  return Math.abs(90 - minutes - subIn) <= 2
+}
+
+function chooseSubInMinute(
+  existing: number | undefined,
+  espn: number | undefined,
+  minutes: number,
+): number | undefined {
+  const derived = minutes > 0 ? Math.max(1, 90 - minutes) : undefined
+  if (existing != null && (minutes === 0 || subInFitsMinutes(existing, minutes))) return existing
+  if (espn != null && (minutes === 0 || subInFitsMinutes(espn, minutes))) return espn
+  return derived ?? existing ?? espn
+}
+
 function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof espnFactsForPlayer>): PlayerAppearance {
   let minutes = appearance.minutes ?? 0
   const existingGoals = appearance.goals ?? 0
@@ -134,8 +149,10 @@ function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof 
   if (facts.onAsSub && !started) {
     squadStatus = 'subbed-in'
     played = true
-    if (facts.subIn != null) subbedInMinute = facts.subIn
+    subbedInMinute = chooseSubInMinute(appearance.subbedInMinute, facts.subIn, minutes)
     if (!minutes && subbedInMinute != null) minutes = Math.max(1, 90 - subbedInMinute)
+  } else if (minutes > 0 && subbedInMinute != null && !subInFitsMinutes(subbedInMinute, minutes)) {
+    subbedInMinute = Math.max(1, 90 - minutes)
   }
   if (facts.goals > 0 && existingGoals === 0) played = true
 

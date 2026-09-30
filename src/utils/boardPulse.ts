@@ -7,7 +7,6 @@ import {
   liveOnPitchLines,
   nextMatchLine,
   remainingCopy,
-  stillInWindowNames,
   tonightKickoffLines,
   tonightLineupCounts,
   tonightSlate,
@@ -100,14 +99,10 @@ export function boardPulse(matches: Match[], now = new Date()): BoardPulse {
 
   if (tonight.length > 0 && upcomingTonight.length === 0 && finishedTonight.length > 0) {
     const next = nextScheduledMatch(matches, now)
-    const still = stillInWindowNames(matches, now)
-    const lines: string[] = []
-    if (next) lines.push(nextMatchLine(next, now))
-    if (still.length > 0 && next) lines.push(`עדיין במשחקי הנבחרות: ${still.join(', ')}`)
     return {
       text: 'נציגי הפועל באר שבע סיימו את משחקיהם להיום',
       live: false,
-      lines: lines.length > 0 ? lines : undefined,
+      lines: next ? [nextMatchLine(next, now)] : undefined,
     }
   }
 

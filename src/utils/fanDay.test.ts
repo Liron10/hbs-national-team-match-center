@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Match } from '../types'
-import { dayBrief, livePhaseLabel, tonightSlate } from './fanDay.ts'
+import { dayBrief, livePhaseLabel, nextMatchLine, tonightSlate } from './fanDay.ts'
 
 function match(partial: Partial<Match> & Pick<Match, 'id' | 'kickoff' | 'status'>): Match {
   return {
@@ -111,4 +111,24 @@ test('names halftime extra time and penalties without inventing a new screen', (
     ),
     'פנדלים',
   )
+})
+
+test('names the next match by national team and opponent, not a single player', () => {
+  const line = nextMatchLine(
+    match({
+      id: 'isr-xkx',
+      kickoff: '2026-10-01T18:45:00.000Z',
+      status: 'scheduled',
+      homeTeam: { code: 'ISR', nameHe: 'ישראל', nameEn: 'Israel' },
+      awayTeam: { code: 'XKX', nameHe: 'קוסובו', nameEn: 'Kosovo' },
+      players: [
+        { playerId: 'eliel-peretz', squadStatus: 'unknown' },
+        { playerId: 'idan-nachmias', squadStatus: 'unknown' },
+        { playerId: 'guy-mizrahi', squadStatus: 'unknown' },
+      ],
+    }),
+    new Date('2026-09-30T07:20:00.000Z'),
+  )
+  assert.equal(line, 'המשחק הבא: ישראל מול קוסובו • מחר ב-21:45')
+  assert.equal(line.includes('אליאל'), false)
 })
