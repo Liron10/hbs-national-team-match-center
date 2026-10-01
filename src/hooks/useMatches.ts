@@ -61,7 +61,7 @@ export function useMatches() {
         const scored = applyLiveSnapshots(base, await fetchLiveSnapshots(base, now, silent), now)
         commit(scored)
 
-        const next = await overlayEspnAppearances(await enrichMatchAppearances(scored, now, false))
+        const next = await overlayEspnAppearances(await enrichMatchAppearances(scored, now, true), now, true)
         commit(next)
       } catch {
         if (!silent) setError('לא ניתן להציג את המשחקים כרגע.')

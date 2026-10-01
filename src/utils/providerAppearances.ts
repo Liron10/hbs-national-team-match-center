@@ -293,7 +293,11 @@ export function applyMatchDetailsOverlay(match: Match, details: FotmobMatchDetai
         }
       : match
 
-  return mergeMatchAppearances(withStatus, details)
+  const merged = mergeMatchAppearances(withStatus, details)
+  if (JSON.stringify(merged.players) === JSON.stringify(match.players) && merged.status === match.status) {
+    return merged
+  }
+  return { ...merged, lastUpdated: now.toISOString() }
 }
 
 export function shouldEnrichAppearances(
@@ -320,7 +324,6 @@ export async function enrichMatchAppearances(
       try {
         const details = await footballGet<FotmobMatchDetails>(
           `/data/matchDetails?matchId=${match.providerMatchId}`,
-          20_000,
         )
         return applyMatchDetailsOverlay(match, details, now)
       } catch {

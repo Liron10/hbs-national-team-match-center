@@ -260,6 +260,7 @@ test('enriches scheduled matches only inside the 90-minute live window', () => {
     shouldEnrichAppearances({ ...scheduled, status: 'live' }, new Date('2026-09-24T18:50:00.000Z'), true),
     true,
   )
+  assert.equal(shouldEnrichAppearances(scheduled, new Date('2026-09-24T17:20:00.000Z'), true), true)
 })
 
 test('keeps a known live bench role when the lineup payload is empty', () => {

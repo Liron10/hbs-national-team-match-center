@@ -1,6 +1,7 @@
 import type { Match, Player, PlayerAppearance, TeamSide } from '../types'
 import { players } from '../data/players'
-import { espnDateKeys, espnLeagueForMatch } from './liveScores'
+import { espnDateKeys, espnLeagueForMatch, isInLiveWindow } from './liveScores'
+import { isLiveStatus } from './matchStatus'
 import { buildFixedStats } from './providerAppearances'
 
 const ESPN_WEB = 'https://site.web.api.espn.com/apis/site/v2/sports/soccer'
@@ -98,11 +99,15 @@ export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
   let subIn: number | undefined
   let goals = 0
   let onAsSub = false
+  let startedOnRoster = false
+  let onBench = false
 
   for (const roster of summary.rosters ?? []) {
     for (const item of roster.roster ?? []) {
       if (!labelsMatchPlayer(espnLabels(item.athlete), player)) continue
+      if (item.starter) startedOnRoster = true
       if (item.subbedIn) onAsSub = true
+      else if (!item.starter) onBench = true
     }
   }
 
@@ -119,7 +124,7 @@ export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
     if (kind === 'goal') goals += 1
   }
 
-  return { subIn, goals, onAsSub }
+  return { subIn, goals, onAsSub, startedOnRoster, onBench }
 }
 
 export function subInFitsMinutes(subIn: number, minutes: number): boolean {
@@ -137,14 +142,30 @@ function chooseSubInMinute(
   return derived ?? existing ?? espn
 }
 
-function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof espnFactsForPlayer>): PlayerAppearance {
+function patchAppearance(
+  appearance: PlayerAppearance,
+  facts: ReturnType<typeof espnFactsForPlayer>,
+  matchStatus: Match['status'],
+): PlayerAppearance {
   let minutes = appearance.minutes ?? 0
   const existingGoals = appearance.goals ?? 0
   let goals = existingGoals > 0 ? existingGoals : facts.goals
   let squadStatus = appearance.squadStatus
   let played = Boolean(appearance.played)
   let subbedInMinute = appearance.subbedInMinute
-  const started = appearance.started
+  let started = appearance.started
+
+  if (matchStatus === 'scheduled') {
+    if (facts.startedOnRoster) {
+      return { ...appearance, squadStatus: 'starter', started: true, played: false, minutes: 0, stats: [] }
+    }
+    if (facts.onBench || facts.onAsSub) {
+      return { ...appearance, squadStatus: 'bench', started: false, played: false, minutes: 0, stats: [] }
+    }
+    return appearance
+  }
+
+  if (facts.startedOnRoster && !started) started = true
 
   if (facts.onAsSub && !started) {
     squadStatus = 'subbed-in'
@@ -161,6 +182,7 @@ function patchAppearance(appearance: PlayerAppearance, facts: ReturnType<typeof 
   return {
     ...appearance,
     squadStatus,
+    started,
     played,
     minutes,
     goals,
@@ -187,7 +209,7 @@ export function mergeEspnSummary(match: Match, summary: EspnSummary): Match {
     players: match.players.map((appearance) => {
       const player = players.find((item) => item.id === appearance.playerId)
       if (!player) return appearance
-      return patchAppearance(appearance, espnFactsForPlayer(summary, player))
+      return patchAppearance(appearance, espnFactsForPlayer(summary, player), match.status)
     }),
   }
 }
@@ -219,10 +241,16 @@ async function espnGet<T>(url: string): Promise<T | null> {
   }
 }
 
-export async function overlayEspnAppearances(matches: Match[]): Promise<Match[]> {
-  const targets = matches.filter(
-    (match) => match.status === 'finished' || match.status === 'live' || match.status === 'halftime',
-  )
+export async function overlayEspnAppearances(
+  matches: Match[],
+  now = new Date(),
+  inPlayOnly = false,
+): Promise<Match[]> {
+  const targets = matches.filter((match) => {
+    if (isLiveStatus(match.status)) return true
+    if (match.status === 'scheduled' && isInLiveWindow(match, now)) return true
+    return !inPlayOnly && match.status === 'finished'
+  })
   if (targets.length === 0) return matches
 
   const boards = new Map<string, Promise<EspnScoreboardEvent[] | null>>()

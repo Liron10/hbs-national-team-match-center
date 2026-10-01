@@ -171,3 +171,39 @@ test('derives sub-in from minutes when ESPN 45 does not match 17 minutes played'
   assert.equal(merged.players[0]?.subbedInMinute, 73)
   assert.equal(merged.players[0]?.minutes, 17)
 })
+
+test('reads a published ESPN lineup before kickoff without inventing minutes', () => {
+  const match: Match = {
+    id: 'isr-xkx',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'ISR', nameHe: 'ישראל', nameEn: 'Israel' },
+    awayTeam: { code: 'XKX', nameHe: 'קוסובו', nameEn: 'Kosovo' },
+    kickoff: '2026-10-01T18:45:00.000Z',
+    status: 'scheduled',
+    homeScore: null,
+    awayScore: null,
+    lastUpdated: '2026-09-18T09:00:00.000Z',
+    players: [
+      { playerId: 'eliel-peretz', squadStatus: 'unknown' },
+      { playerId: 'idan-nachmias', squadStatus: 'unknown' },
+      { playerId: 'guy-mizrahi', squadStatus: 'unknown' },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    rosters: [
+      {
+        roster: [
+          { starter: true, subbedIn: false, athlete: { displayName: 'Eliel Peretz' } },
+          { starter: true, subbedIn: false, athlete: { displayName: 'Idan Nachmias' } },
+          { starter: false, subbedIn: false, athlete: { displayName: 'Guy Mizrahi' } },
+        ],
+      },
+    ],
+  })
+  assert.equal(merged.players.find((item) => item.playerId === 'eliel-peretz')?.squadStatus, 'starter')
+  assert.equal(merged.players.find((item) => item.playerId === 'idan-nachmias')?.squadStatus, 'starter')
+  assert.equal(merged.players.find((item) => item.playerId === 'guy-mizrahi')?.squadStatus, 'bench')
+  assert.equal(merged.players[0]?.played, false)
+  assert.equal(merged.players[0]?.minutes, 0)
+})
