@@ -13,6 +13,44 @@ test('matches ESPN spellings of Abu Rumi and Yehoshua', () => {
   assert.equal(espnNameMatchesPlayer('Niv Yehoshua (Israel U21) Goal at 90\'+1\'', yehoshua!), true)
 })
 
+test('does not credit Eliel Peretz with a Dor Peretz goal', () => {
+  const eliel = getPlayer('eliel-peretz')
+  assert.equal(espnNameMatchesPlayer('Eliel Peretz', eliel!), true)
+  assert.equal(espnNameMatchesPlayer('Eliel Peretz (Israel) Goal at 47\'', eliel!), true)
+  assert.equal(espnNameMatchesPlayer('Dor Peretz', eliel!), false)
+  assert.equal(espnNameMatchesPlayer('Dor Peretz (Israel) Goal at 47\'', eliel!), false)
+  assert.equal(espnNameMatchesPlayer('Peretz', eliel!), false)
+})
+
+test('does not add Dor Peretz\'s goal onto Eliel from ESPN key events', () => {
+  const match: Match = {
+    id: 'irl-isr',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'IRL', nameHe: 'אירלנד', nameEn: 'Ireland' },
+    awayTeam: { code: 'ISR', nameHe: 'ישראל', nameEn: 'Israel' },
+    kickoff: '2026-10-04T18:45:00.000Z',
+    status: 'finished',
+    homeScore: 1,
+    awayScore: 1,
+    lastUpdated: '2026-10-04T20:45:00.000Z',
+    players: [
+      { playerId: 'eliel-peretz', squadStatus: 'starter', started: true, played: true, minutes: 90, goals: 0 },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [
+      {
+        type: { type: 'goal', text: 'Goal' },
+        text: "Dor Peretz (Israel) Goal at 47'",
+        clock: { displayValue: "47'" },
+        participants: [{ athlete: { displayName: 'Dor Peretz', lastName: 'Peretz' } }],
+      },
+    ],
+  })
+  assert.equal(merged.players[0]?.goals, 0)
+})
+
 test('reads a 90+1 clock as the 90th minute', () => {
   assert.equal(parseEspnMinute("90'+1'"), 90)
   assert.equal(parseEspnMinute("76'"), 76)

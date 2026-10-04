@@ -65,10 +65,16 @@ export function espnNameMatchesPlayer(espnName: string, player: Player): boolean
   const n = foldName(espnName)
   if (!n) return false
   const aliases = [player.nameEn, ...player.searchKeys].map(foldName).filter(Boolean)
-  if (aliases.some((alias) => alias === n || n.includes(alias) || alias.includes(n))) return true
+  if (aliases.some((alias) => alias === n || n.includes(alias))) return true
   if (n.includes('abu rumi') && player.id === 'mohammed-abu-rumi') return true
-  const last = foldName(player.nameEn.split(' ').slice(-1)[0] ?? '')
-  return last.length >= 5 && n.split(' ').includes(last)
+
+  const parts = player.nameEn.split(' ').map(foldName).filter(Boolean)
+  const last = parts.at(-1) ?? ''
+  const given = parts.slice(0, -1)
+  if (last.length < 5 || !n.split(' ').includes(last)) return false
+  if (given.length === 0) return true
+  const tokens = n.split(' ')
+  return given.some((name) => name.length >= 3 && tokens.includes(name))
 }
 
 function labelsMatchPlayer(labels: string[], player: Player): boolean {
