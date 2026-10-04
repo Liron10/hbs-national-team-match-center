@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-10-04T16:58:21.577Z",
+    "updatedAt": "2026-10-04T20:00:15.107Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -295,7 +295,7 @@
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
@@ -334,7 +334,7 @@
       "homeScore": 4,
       "awayScore": 1,
       "venue": "Inter&Co Stadium, אורלנדו",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
       ],
@@ -372,7 +372,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 3,
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -518,7 +518,7 @@
       "homeScore": 0,
       "awayScore": 1,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -598,7 +598,7 @@
       "homeScore": 1,
       "awayScore": 1,
       "venue": "Sports Illustrated Stadium, ניו ג׳רזי",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.peruinforma.com/ya-estan-los-convocados-mano-menezes-sorprende-con-su-lista-para-los-amistosos-de-peru/"
       ],
@@ -678,7 +678,7 @@
       "status": "finished",
       "homeScore": 2,
       "awayScore": 3,
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "players": [
         {
           "playerId": "niv-yehoshua",
@@ -809,7 +809,7 @@
       "homeScore": 0,
       "awayScore": 0,
       "venue": "פלודיב",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/4824880"
       ],
@@ -889,7 +889,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 0,
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -1034,7 +1034,7 @@
       "homeScore": 0,
       "awayScore": 2,
       "venue": "Estadio Cuscatlán, סן סלוודור",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -1114,7 +1114,7 @@
       "homeScore": 2,
       "awayScore": 0,
       "venue": "Stade Saputo, מונטריאול",
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "players": [
         {
           "playerId": "adrian-ugarriza",
@@ -1146,28 +1146,135 @@
         "nameEn": "Israel"
       },
       "kickoff": "2026-10-04T18:45:00.000Z",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
-      "lastUpdated": "2026-09-18T09:00:00.000Z",
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 1,
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
       "players": [
         {
           "playerId": "eliel-peretz",
-          "squadStatus": "unknown"
+          "squadStatus": "starter",
+          "started": true,
+          "played": true,
+          "minutes": 0,
+          "goals": 1,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0,
+          "stats": [
+            {
+              "label": "דקות משחק",
+              "value": "0"
+            },
+            {
+              "label": "שערים",
+              "value": "1"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "—"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "32/39"
+            },
+            {
+              "label": "בעיטות",
+              "value": "1"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "1"
+            }
+          ]
         },
         {
           "playerId": "idan-nachmias",
-          "squadStatus": "unknown"
+          "squadStatus": "starter",
+          "started": true,
+          "played": true,
+          "minutes": 0,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 1,
+          "redCards": 0,
+          "stats": [
+            {
+              "label": "דקות משחק",
+              "value": "0"
+            },
+            {
+              "label": "שערים",
+              "value": "0"
+            },
+            {
+              "label": "בישולים",
+              "value": "0"
+            },
+            {
+              "label": "כרטיסים צהובים",
+              "value": "1"
+            },
+            {
+              "label": "כרטיסים אדומים",
+              "value": "0"
+            },
+            {
+              "label": "ציון",
+              "value": "—"
+            },
+            {
+              "label": "מסירות מדויקות",
+              "value": "25/29"
+            },
+            {
+              "label": "בעיטות",
+              "value": "0"
+            },
+            {
+              "label": "בעיטות למסגרת",
+              "value": "0"
+            },
+            {
+              "label": "תיקולים",
+              "value": "1"
+            }
+          ]
         },
         {
           "playerId": "guy-mizrahi",
-          "squadStatus": "unknown"
+          "squadStatus": "bench",
+          "started": false,
+          "played": false,
+          "minutes": 0,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0,
+          "stats": []
         }
       ],
-      "providerMatchId": 5181819
+      "providerMatchId": 5181819,
+      "clock": "57'"
     },
     {
       "id": "hon-jam-2026-10-05",
@@ -1218,7 +1325,7 @@
       "status": "finished",
       "homeScore": 3,
       "awayScore": 0,
-      "lastUpdated": "2026-10-04T16:58:20.858Z",
+      "lastUpdated": "2026-10-04T20:00:13.883Z",
       "players": [
         {
           "playerId": "yoan-stoyanov",
