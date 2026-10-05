@@ -3,7 +3,7 @@
     "source": "manual",
     "sourceLabelHe": "הנתונים מוזנים ידנית על ידי מנהל הדף",
     "sourceLabelEn": "Entered by the page administrator",
-    "updatedAt": "2026-10-04T23:00:53.756Z",
+    "updatedAt": "2026-10-05T01:49:01.111Z",
     "window": "2026-09",
     "notesHe": "משחקים מתוזמנים בלבד. אין תוצאות, דקות או הרכבים כל עוד לא פורסמו ממקור מאומת."
   },
@@ -27,7 +27,7 @@
       "homeScore": 3,
       "awayScore": 1,
       "venue": "אוסטריה",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -215,7 +215,7 @@
       "homeScore": 3,
       "awayScore": 2,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -295,7 +295,7 @@
       "homeScore": 1,
       "awayScore": 2,
       "venue": "פלודיב",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-by-team/"
       ],
@@ -334,7 +334,7 @@
       "homeScore": 4,
       "awayScore": 1,
       "venue": "Inter&Co Stadium, אורלנדו",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://ussoccer.com/stories/2026/08/usmnt/four-fall-matches-us-mens-national-team-peru-chile-mexico-canada"
       ],
@@ -372,7 +372,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 3,
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -518,7 +518,7 @@
       "homeScore": 0,
       "awayScore": 1,
       "venue": "National Stadium, קינגסטון",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -598,7 +598,7 @@
       "homeScore": 1,
       "awayScore": 1,
       "venue": "Sports Illustrated Stadium, ניו ג׳רזי",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.peruinforma.com/ya-estan-los-convocados-mano-menezes-sorprende-con-su-lista-para-los-amistosos-de-peru/"
       ],
@@ -678,7 +678,7 @@
       "status": "finished",
       "homeScore": 2,
       "awayScore": 3,
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "players": [
         {
           "playerId": "niv-yehoshua",
@@ -809,7 +809,7 @@
       "homeScore": 0,
       "awayScore": 0,
       "venue": "פלודיב",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.transfermarkt.co.uk/spielbericht/index/spielbericht/4824880"
       ],
@@ -889,7 +889,7 @@
       "status": "finished",
       "homeScore": 0,
       "awayScore": 0,
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -1034,7 +1034,7 @@
       "homeScore": 0,
       "awayScore": 2,
       "venue": "Estadio Cuscatlán, סן סלוודור",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-september-october-schedule-confirmed"
       ],
@@ -1114,7 +1114,7 @@
       "homeScore": 2,
       "awayScore": 0,
       "venue": "Stade Saputo, מונטריאול",
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "players": [
         {
           "playerId": "adrian-ugarriza",
@@ -1149,7 +1149,7 @@
       "status": "finished",
       "homeScore": 1,
       "awayScore": 1,
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "sources": [
         "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures/"
       ],
@@ -1244,7 +1244,7 @@
             },
             {
               "label": "מסירות מדויקות",
-              "value": "36/42"
+              "value": "35/39"
             },
             {
               "label": "בעיטות",
@@ -1324,7 +1324,7 @@
       "status": "finished",
       "homeScore": 3,
       "awayScore": 0,
-      "lastUpdated": "2026-10-04T23:00:52.684Z",
+      "lastUpdated": "2026-10-05T01:49:00.220Z",
       "players": [
         {
           "playerId": "yoan-stoyanov",
