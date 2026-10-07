@@ -245,3 +245,88 @@ test('reads a published ESPN lineup before kickoff without inventing minutes', (
   assert.equal(merged.players[0]?.played, false)
   assert.equal(merged.players[0]?.minutes, 0)
 })
+
+test('turns an inferred 90-minute starter into a 53rd-minute substitution', () => {
+  const match: Match = {
+    id: 'per-col',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'COL', nameHe: 'קולומביה', nameEn: 'Colombia' },
+    awayTeam: { code: 'PER', nameHe: 'פרו', nameEn: 'Peru' },
+    kickoff: '2026-10-06T23:45:00.000Z',
+    status: 'finished',
+    homeScore: 2,
+    awayScore: 0,
+    lastUpdated: '2026-10-07T02:00:00.000Z',
+    players: [
+      {
+        playerId: 'adrian-ugarriza',
+        squadStatus: 'starter',
+        started: true,
+        played: true,
+        minutes: 90,
+      },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [
+      {
+        type: { type: 'substitution', text: 'Substitution' },
+        text: 'Substitution, Peru. Gianluca Lapadula replaces Adrián Ugarriza.',
+        clock: { displayValue: "53'" },
+        participants: [
+          { athlete: { displayName: 'Gianluca Lapadula' } },
+          { athlete: { displayName: 'Adrián Ugarriza' } },
+        ],
+      },
+    ],
+    rosters: [{ roster: [{ starter: true, subbedOut: true, athlete: { displayName: 'Adrián Ugarriza' } }] }],
+  })
+  assert.equal(merged.players[0]?.squadStatus, 'subbed-out')
+  assert.equal(merged.players[0]?.minutes, 53)
+  assert.equal(merged.players[0]?.subbedOutMinute, 53)
+})
+
+test('does not keep Abu Rumi on for 90 when ESPN has him replaced at 77', () => {
+  const match: Match = {
+    id: 'nor-isr-u21',
+    competition: 'c',
+    competitionHe: 'c',
+    homeTeam: { code: 'NOR', nameHe: 'נורווגיה עד 21', nameEn: 'Norway U21' },
+    awayTeam: { code: 'ISR-U21', nameHe: 'ישראל עד 21', nameEn: 'Israel U21' },
+    kickoff: '2026-10-06T16:45:00.000Z',
+    status: 'finished',
+    homeScore: 1,
+    awayScore: 1,
+    lastUpdated: '2026-10-06T18:45:00.000Z',
+    players: [
+      { playerId: 'niv-yehoshua', squadStatus: 'starter', started: true, played: true, minutes: 90 },
+      { playerId: 'mohammed-abu-rumi', squadStatus: 'starter', started: true, played: true, minutes: 90 },
+    ],
+  }
+  const merged = mergeEspnSummary(match, {
+    keyEvents: [
+      {
+        type: { type: 'substitution', text: 'Substitution' },
+        text: "Niv Michael Gabay (Israel U21) Substitution at 77'",
+        clock: { displayValue: "77'" },
+        participants: [
+          { athlete: { displayName: 'Niv Michael Gabay' } },
+          { athlete: { displayName: 'Mohamad Abu Rumi' } },
+        ],
+      },
+    ],
+    rosters: [
+      {
+        roster: [
+          { starter: true, subbedOut: false, athlete: { displayName: 'Niv Yehoshua' } },
+          { starter: true, subbedOut: true, athlete: { displayName: 'Mohamad Abu Rumi' } },
+        ],
+      },
+    ],
+  })
+  assert.equal(merged.players[0]?.minutes, 90)
+  assert.equal(merged.players[1]?.squadStatus, 'subbed-out')
+  assert.equal(merged.players[1]?.minutes, 77)
+  assert.equal(merged.players[1]?.subbedOutMinute, 77)
+})

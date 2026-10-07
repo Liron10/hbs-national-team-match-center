@@ -314,11 +314,28 @@ function playerGridRank(
   return 40
 }
 
+function windowCardLine(playerId: string, matches: Match[], now: Date): string | undefined {
+  const profile = playerWindowProfile(playerId, matches, now)
+  if (!profile.windowDone) return undefined
+  if (profile.appearances === 0) {
+    const inFinishedSquad = playerMatches(matches, playerId).some((row) => row.match.status === 'finished')
+    return inFinishedSquad ? 'לא שותף בפגרה' : undefined
+  }
+  const parts: string[] = []
+  parts.push(profile.appearances === 1 ? 'הופעה אחת' : `${profile.appearances} הופעות`)
+  if (profile.minutes > 0) parts.push(`${profile.minutes} דקות`)
+  if (profile.goals === 1) parts.push('שער אחד')
+  else if (profile.goals > 1) parts.push(`${profile.goals} שערים`)
+  return parts.join(' · ')
+}
+
 export function playerGridItems(matches: Match[], now = new Date()): PlayerGridItem[] {
+  const windowClosed = !windowStillOpen(matches, now) && matches.some((match) => match.status === 'finished')
   return players
     .map((player, catalogIndex) => {
       const row = currentPlayerRow(player.id, matches, now)
-      const line = row ? participationLine(row.appearance, row.match.status, row.match.clock) : undefined
+      const windowLine = windowClosed ? windowCardLine(player.id, matches, now) : undefined
+      const line = windowLine ?? (row ? participationLine(row.appearance, row.match.status, row.match.clock) : undefined)
       const hideQuietSquad =
         line === 'בסגל הנבחרת' &&
         row != null &&

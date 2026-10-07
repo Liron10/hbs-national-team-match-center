@@ -195,3 +195,25 @@ test('keeps a finished U21 appearance on the top squad list even when a later ma
   assert.equal(peretz?.line, undefined)
   assert.ok((items.findIndex((item) => item.playerId === 'niv-yehoshua') ?? 9) < (items.findIndex((item) => item.playerId === 'eliel-peretz') ?? 0))
 })
+
+test('after the window closes, squad cards show window totals instead of a leftover 90-minute line', () => {
+  const now = new Date('2026-10-07T12:00:00.000Z')
+  const matches = [
+    match({
+      id: 'one',
+      kickoff: '2026-09-24T18:45:00.000Z',
+      status: 'finished',
+      players: [{ playerId: 'eliel-peretz', squadStatus: 'starter', started: true, played: true, minutes: 85 }],
+    }),
+    match({
+      id: 'two',
+      kickoff: '2026-10-04T18:45:00.000Z',
+      status: 'finished',
+      players: [{ playerId: 'eliel-peretz', squadStatus: 'starter', started: true, played: true, minutes: 90 }],
+    }),
+  ]
+  const items = playerGridItems(matches, now)
+  const peretz = items.find((item) => item.playerId === 'eliel-peretz')
+  assert.equal(peretz?.line, '2 הופעות · 175 דקות')
+  assert.equal(peretz?.line?.includes('השלים 90'), false)
+})

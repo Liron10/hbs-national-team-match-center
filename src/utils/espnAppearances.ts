@@ -101,17 +101,26 @@ function playerFromEvent(event: EspnKeyEvent, extraText?: string): string[] {
   return [...fromAthletes, ...espnLabels(undefined, extraText ?? event.text)]
 }
 
+function replacedPlayerName(text?: string): string | null {
+  if (!text) return null
+  const match = text.match(/replaces\s+([^.(]+)/i)
+  return match?.[1]?.trim() ?? null
+}
+
 export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
   let subIn: number | undefined
+  let subOut: number | undefined
   let goals = 0
   let onAsSub = false
   let startedOnRoster = false
   let onBench = false
+  let subbedOutOnRoster = false
 
   for (const roster of summary.rosters ?? []) {
     for (const item of roster.roster ?? []) {
       if (!labelsMatchPlayer(espnLabels(item.athlete), player)) continue
       if (item.starter) startedOnRoster = true
+      if (item.subbedOut) subbedOutOnRoster = true
       if (item.subbedIn) onAsSub = true
       else if (!item.starter) onBench = true
     }
@@ -119,18 +128,37 @@ export function espnFactsForPlayer(summary: EspnSummary, player: Player) {
 
   for (const event of eventsOf(summary)) {
     const kind = event.type?.type ?? event.type?.text?.toLowerCase()
-    const labels = playerFromEvent(event)
-    const named = labelsMatchPlayer(labels, player) || (event.text != null && espnNameMatchesPlayer(event.text, player))
-    if (!named) continue
+    const athletes = (event.participants ?? []).map((item) => espnLabels(item.athlete))
+    const incoming = athletes[0] ?? []
+    const outgoing = athletes[1] ?? []
+    const text = event.text
+    const replaced = replacedPlayerName(text)
+    const namedInText = text != null && espnNameMatchesPlayer(text, player)
     const minute = parseEspnMinute(event.clock?.displayValue)
+
     if (kind === 'substitution' || event.type?.text === 'Substitution') {
-      onAsSub = true
-      if (minute != null && subIn == null) subIn = minute
+      const cameOn = labelsMatchPlayer(incoming, player) && !labelsMatchPlayer(outgoing, player)
+      const wentOff =
+        (replaced != null && espnNameMatchesPlayer(replaced, player)) ||
+        (labelsMatchPlayer(outgoing, player) && !labelsMatchPlayer(incoming, player))
+      if (wentOff) {
+        if (minute != null && subOut == null) subOut = minute
+        continue
+      }
+      if (cameOn || (namedInText && !wentOff && !replaced)) {
+        onAsSub = true
+        if (minute != null && subIn == null) subIn = minute
+      }
+      continue
     }
+
+    const labels = playerFromEvent(event)
+    const named = labelsMatchPlayer(labels, player) || namedInText
+    if (!named) continue
     if (kind === 'goal') goals += 1
   }
 
-  return { subIn, goals, onAsSub, startedOnRoster, onBench }
+  return { subIn, subOut, onAsSub, startedOnRoster, onBench, subbedOutOnRoster, goals }
 }
 
 export function subInFitsMinutes(subIn: number, minutes: number): boolean {
@@ -159,6 +187,7 @@ function patchAppearance(
   let squadStatus = appearance.squadStatus
   let played = Boolean(appearance.played)
   let subbedInMinute = appearance.subbedInMinute
+  let subbedOutMinute = appearance.subbedOutMinute
   let started = appearance.started
 
   if (matchStatus === 'scheduled') {
@@ -181,6 +210,15 @@ function patchAppearance(
   } else if (minutes > 0 && subbedInMinute != null && !subInFitsMinutes(subbedInMinute, minutes)) {
     subbedInMinute = Math.max(1, 90 - minutes)
   }
+  if ((facts.subOut != null || facts.subbedOutOnRoster) && (started || facts.startedOnRoster)) {
+    started = true
+    played = true
+    squadStatus = 'subbed-out'
+    if (facts.subOut != null) subbedOutMinute = facts.subOut
+    if (subbedOutMinute != null && (minutes === 0 || minutes >= 90 || Math.abs(minutes - subbedOutMinute) > 5)) {
+      minutes = subbedOutMinute
+    }
+  }
   if (facts.goals > 0 && existingGoals === 0) played = true
 
   if (!played && minutes === 0 && goals === 0 && subbedInMinute == null) return appearance
@@ -193,6 +231,7 @@ function patchAppearance(
     minutes,
     goals,
     subbedInMinute,
+    subbedOutMinute,
     stats: played
       ? buildFixedStats({
           minutes,
